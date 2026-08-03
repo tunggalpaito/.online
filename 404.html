@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mengalihkan...</title>
+    <script>
+        // Mengambil jalur URL yang diakses (misal: /sdy/senin)
+        let path = window.location.pathname.split('/');
+        if (path.length >= 3) {
+            let pasaran = path[1]; // Mengambil 'sdy'
+            let hari = path[2];    // Mengambil 'senin'
+            
+            // Otomatis mengarahkan kembali ke file asli tanpa disadari pengunjung
+            window.location.replace("/" + pasaran + ".html?hari=" + hari);
+        } else {
+            // Jika memang halamannya benar-benar tidak ada, lempar ke beranda
+            window.location.replace("/");
+        }
+    </script>
+</head>
+<body>
+    <p>Memuat halaman, mohon tunggu...</p>
+</body>
+</html>

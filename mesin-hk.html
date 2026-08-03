@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesin Pintar Pangkas 4D HK</title>
+    <style>
+        body {
+            background-color: #0d0118;
+            color: #e0d5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: linear-gradient(135deg, #1e0b36 0%, #0f051d 100%);
+            border: 2px solid #00d2ff;
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.3), inset 0 0 15px rgba(155, 38, 182, 0.4);
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #00d2ff;
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #b992ff;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .status-loading {
+            font-size: 14px;
+            color: #ff00ff;
+            font-style: italic;
+            text-shadow: 0 0 8px rgba(255, 0, 255, 0.6);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .data-monitor {
+            background: #140627;
+            border: 1px solid #9b26b6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .data-title {
+            font-size: 11px;
+            color: #00d2ff;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .badge-container {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .badge {
+            background: #250c46;
+            border: 1px solid #00d2ff;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Desain Tombol Hasilkan Angka Main */
+        .btn-proses {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #8a2be2, #00d2ff);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .btn-proses:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 210, 255, 0.7);
+        }
+
+        .btn-proses:active {
+            transform: translateY(0);
+        }
+
+        .result-panel {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #120422;
+            border: 1px dashed #00d2ff;
+            border-radius: 10px;
+            text-align: left;
+            display: none; /* Disembunyikan dulu, muncul setelah tombol diklik */
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(155, 38, 182, 0.2);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .label-res {
+            font-size: 14px;
+            color: #b992ff;
+        }
+
+        .val-res {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .highlight-blue {
+            color: #00d2ff;
+            text-shadow: 0 0 8px rgba(0, 210, 255, 0.5);
+        }
+        
+        .highlight-tunggal {
+            color: #ff00ff;
+            text-shadow: 0 0 8px rgba(255, 0, 255, 0.5);
+            font-size: 18px;
+        }
+
+        .debug-text {
+            font-size: 11px;
+            color: #7a63a5;
+            word-break: break-all;
+            background: #090113;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mesin Pintar HK</h1>
+    <div class="subtitle">Logika Urutan Paito Bottom-Up Async Fetch</div>
+
+    <!-- Teks Status Memuat File Real -->
+    <div id="loadingStatus" class="status-loading">Menghubungkan ke hk.js...</div>
+
+    <div class="data-monitor">
+        <div class="data-title">3 Result Terbawah dari hk.js:</div>
+        <div class="badge-container">
+            <div class="badge" id="viewRes1">----</div>
+            <div class="badge" id="viewRes2">----</div>
+            <div class="badge" id="viewRes3">----</div>
+        </div>
+    </div>
+
+    <!-- TOMBOL KHUSUS UNTUK MEMPROSES LOGIKA -->
+    <button class="btn-proses" onclick="hitungLogikaMesin()">Hasilkan Angka Main</button>
+
+    <!-- Panel Hasil Prediksi Angka -->
+    <div class="result-panel" id="panelHasil">
+        <div class="result-row">
+            <span class="label-res">Angka Main (AM):</span>
+            <span class="val-res highlight-blue" id="outAM">-</span>
+        </div>
+        <div class="result-row">
+            <span class="label-res">Angka Kuat (2D):</span>
+            <span class="val-res highlight-blue" id="outKuat">-</span>
+        </div>
+        <div class="result-row">
+            <span class="label-res">Angka Tunggal:</span>
+            <span class="val-res highlight-tunggal" id="outTunggal">-</span>
+        </div>
+        <div style="margin-top: 15px; text-align: left;">
+            <span class="label-res" style="font-size: 11px;">Alur Deret Mundur Frekuensi:</span>
+            <div class="debug-text" id="outDeret">-</div>
+        </div>
+    </div>
+</div>
+<script>
+    const INDEX_MAP = {'0':'5', '1':'6', '2':'7', '3':'8', '4':'9', '5':'0', '6':'1', '7':'2', '8':'3', '9':'4'};
+    const ML_MAP    = {'1':'0', '0':'1', '2':'5', '5':'2', '3':'8', '8':'3', '4':'7', '7':'4', '6':'9', '9':'6'};
+
+    let arrayPaito = [];
+    let dataSiap = false;
+
+    // Saat dibuka, sistem langsung mengambil data real tanpa memproses angka main terlebih dahulu
+    window.onload = function() {
+        ambilDataReal();
+    };
+
+    function ambilDataReal() {
+        const loadingText = document.getElementById('loadingStatus');
+        loadingText.innerText = "Sedang mengambil data real...";
+        loadingText.style.color = "#ff00ff";
+
+        fetch('result/hk.js?v=1785678839?v=' + new Date().getTime())
+            .then(response => {
+                if (!response.ok) throw new Error("Gagal memuat file.");
+                return response.text();
+            })
+            .then(textData => {
+                const paitoRegex = /DATA_PAITO_HK\s*=\s*`([\s\S]*?)`/;
+                const match = textData.match(paitoRegex);
+
+                if (match && match[1]) {
+                    let paitoRaw = match[1];
+                    let paitoClean = paitoRaw.replace(/[\r\n\s\t]+/g, ''); 
+                    arrayPaito = paitoClean.split(',').filter(item => item.trim().length === 4);
+
+                    if (arrayPaito.length >= 3) {
+                        let r3 = arrayPaito[arrayPaito.length - 1]; 
+                        let r2 = arrayPaito[arrayPaito.length - 2]; 
+                        let r1 = arrayPaito[arrayPaito.length - 3]; 
+
+                        document.getElementById('viewRes3').innerText = r3 + " (Baru)";
+                        document.getElementById('viewRes2').innerText = r2;
+                        document.getElementById('viewRes1').innerText = r1 + " (Lama)";
+                        
+                        dataSiap = true;
+                        
+                        setTimeout(() => {
+                            loadingText.innerText = "Data real siap diproses!";
+                            loadingText.style.color = "#00d2ff";
+                        }, 400);
+                    } else {
+                        loadingText.innerText = "Gagal: Data paito kurang!";
+                        loadingText.style.color = "#ff0000";
+                    }
+                }
+            })
+            .catch(error => {
+                loadingText.innerText = "Gagal memuat data dari result/hk.js?v=1785678839";
+                loadingText.style.color = "#ff0000";
+            });
+    }
+
+    // Fungsi ini hanya berjalan ketika tombol "Hasilkan Angka Main" diklik
+    function hitungLogikaMesin() {
+        if (!dataSiap || arrayPaito.length < 3) {
+            alert("Data belum siap atau gagal dimuat dari file hk.js!");
+            return;
+        }
+
+        let r3 = arrayPaito[arrayPaito.length - 1]; 
+
+        const as3 = parseInt(r3.charAt(0));
+        const cop3 = parseInt(r3.charAt(1));
+        const kep3 = parseInt(r3.charAt(2));
+        const ekr3 = parseInt(r3.charAt(3));
+
+        const kelompok_as_cop = as3 + cop3;
+        const kelompok_kep_ekr = kep3 + ekr3;
+
+        let selisih = Math.abs(kelompok_as_cop - kelompok_kep_ekr);
+        let angka_dasar = (selisih % 10).toString(); 
+        
+        let angka_index = INDEX_MAP[angka_dasar];
+        let angka_ml = ML_MAP[angka_index] || "0"; 
+
+        let am_mentah = [angka_dasar, angka_index, engine_ml = angka_ml];
+
+        let deretMundur = "";
+        for (let i = arrayPaito.length - 1; i >= 0; i--) {
+            let res = arrayPaito[i];
+            let resTerbalik = res.charAt(3) + res.charAt(2) + res.charAt(1) + res.charAt(0);
+            deretMundur += resTerbalik;
+        }
+
+        let am_skor = [];
+        am_mentah.forEach(angka => {
+            let posisi = deretMundur.indexOf(angka);
+            if(posisi === -1) { posisi = 999; } 
+            am_skor.push({ angka: angka, indexTerkecil: posisi });
+        });
+
+        am_skor.sort((a, b) => b.indexTerkecil - a.indexTerkecil);
+
+        let am_final = am_skor.map(item => item.angka);
+        let am_bersih = [...new Set(am_final)];
+
+        // Mengisi data ke elemen HTML
+        document.getElementById('outAM').innerText = am_bersih.join(", ");
+        document.getElementById('outKuat').innerText = am_bersih.slice(0, 2).join(", ");
+        document.getElementById('outTunggal').innerText = am_bersih[0] || "-";
+        document.getElementById('outDeret').innerText = deretMundur.substring(0, 36) + "...";
+        
+        // Memunculkan panel hasil dengan efek transisi display
+        document.getElementById('panelHasil').style.display = 'block';
+    }
+</script>
+
+<script>
+  document.querySelectorAll('a').forEach(link => {
+    let href = link.getAttribute('href');
+    if (href && href.includes('.html?hari=')) {
+      let pasaran = href.split('.html')[0];
+      let hari = href.split('?hari=')[1];
+      link.setAttribute('href', '/' + pasaran + '/' + hari);
+    }
+  });
+  const urlParams = new URLSearchParams(window.location.search);
+  const hariParam = urlParams.get('hari');
+  if (hariParam) {
+    const namaHalaman = window.location.pathname.split('/').pop().replace('.html', '');
+    window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
+  }
+</script>
+
+</html>

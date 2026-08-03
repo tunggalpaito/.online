@@ -1,0 +1,5 @@
+name: 'Sitemap Fixer Action v24'
+description: 'Memperbaiki format sitemap.xml menggunakan Node.js v24'
+runs:
+  using: 'node24' # Setelan Node.js versi 24 murni sesuai dokumen Anda
+  main: 'main.js'  # Memanggil file JavaScript yang dibuat di Langkah 1

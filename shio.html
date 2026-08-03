@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabel Angka Shio Otomatis</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; text-align: center; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; }
+        .year-title { font-weight: bold; color: #d32f2f; margin-bottom: 25px; font-size: 1.2em; }
+        
+        /* Gaya Tombol Navigasi Pilihan */
+        .nav-buttons { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .btn { padding: 10px 15px; font-size: 0.9em; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.1s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-back { background-color: #555; color: white; }
+        .btn-back:hover { background-color: #333; }
+        .btn-home { background-color: #007bc2; color: white; }
+        .btn-home:hover { background-color: #005a91; }
+        
+        /* Gaya Tabel (Bisa diklik untuk kembali) */
+        table { width: 100%; border-collapse: collapse; cursor: pointer; transition: transform 0.2s; }
+        table:hover { transform: scale(1.01); }
+        
+        th, td { border: 1px solid #dddddd; padding: 12px; text-align: left; }
+        th { background-color: #d32f2f; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .shio-name { font-weight: bold; color: #333; padding-left: 20px; }
+        .shio-number { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #007bc2; letter-spacing: 1px; }
+        
+        /* Gaya Copyright & Link */
+        .footer-copyright { margin-top: 25px; font-size: 0.9em; color: #666; font-weight: 500; }
+        .footer-copyright a { color: #d32f2f; text-decoration: none; font-weight: bold; }
+        .footer-copyright a:hover { text-decoration: underline; }
+        .hint-text { font-size: 0.8em; color: #999; margin-bottom: 10px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>TABEL ANGKA SHIO</h2>
+    <div class="year-title" id="tahun-aktif">Periode Tahun...</div>
+    
+    <!-- Tombol Pilihan Navigasi -->
+    <div class="nav-buttons">
+        <button class="btn btn-back" onclick="kembaliHalaman()">← Halaman Sebelumnya</button>
+        <a href="https://angkastatistik.my.id" class="btn btn-home">Halaman Utama (Home) 🏠</a>
+    </div>
+    
+    <div class="hint-text">*Klik tabel atau tombol abu-abu untuk kembali ke halaman sebelumnya</div>
+
+    <table id="tabel-shio">
+        <thead>
+            <tr>
+                <th style="padding-left: 20px; width: 30%;">Nama Shio</th>
+                <th>Angka Shio</th>
+            </tr>
+        </thead>
+        <tbody id="tabel-shio-body">
+            <!-- Data muncul otomatis lewat JavaScript -->
+        </tbody>
+    </table>
+
+    <!-- Bagian Copyright dengan Link Aktif -->
+    <div class="footer-copyright">
+        &copy; <span id="copyright-year"></span> <a href="https://angkastatistik.my.id" target="_blank">ANGKA STATISTIK</a>. All Rights Reserved.
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // 1. GENERATE DATA SHIO & ANGKA OTOMATIS
+    // ==========================================
+    const masterShio = ["Tikus", "Kerbau", "Macan", "Kelinci", "Naga", "Ular", "Kuda", "Kambing", "Monyet", "Ayam", "Anjing", "Babi"];
+    const tahunSekarang = new Date().getFullYear();
+    
+    document.getElementById("tahun-aktif").innerText = `PERIODE TAHUN: ${tahunSekarang}`;
+    document.getElementById("copyright-year").innerText = tahunSekarang;
+
+    let indeksShioAktif = (tahunSekarang - 4) % 12;
+    if (indeksShioAktif < 0) indeksShioAktif += 12;
+
+    let shioTerurut = [];
+    for (let i = 0; i < 12; i++) {
+        let idx = (indeksShioAktif - i) % 12;
+        if (idx < 0) idx += 12;
+        shioTerurut.push(masterShio[idx]);
+    }
+
+    const kontainerTabel = document.getElementById("tabel-shio-body");
+    let htmlInput = "";
+
+    shioTerurut.forEach((namaShio, indeksBaris) => {
+        let angkaAwal = indeksBaris + 1;
+        let kumpulanAngka = [];
+        
+        for (let angka = angkaAwal; angka < 100; angka += 12) {
+            kumpulanAngka.push(angka.toString().padStart(2, '0'));
+        }
+        
+        if (indeksBaris === 3) {
+            kumpulanAngka.push('00');
+        }
+
+        htmlInput += `<tr>
+            <td class="shio-name">${namaShio}</td>
+            <td class="shio-number">${kumpulanAngka.join(', ')}</td>
+        </tr>`;
+    });
+    kontainerTabel.innerHTML = htmlInput;
+
+    // ==========================================
+    // 2. FUNGSI NAVIGASI (KEMBALI & AMAN)
+    // ==========================================
+    function kembaliHalaman() {
+        if (document.referrer && document.referrer !== "") {
+            window.history.back();
+        } else {
+            // Jika masuk langsung tanpa riwayat, arahkan ke beranda utama
+            window.location.href = "https://angkastatistik.my.id";
+        }
+    }
+
+    // Pasang fungsi klik kembali pada area tabel shio
+    document.getElementById("tabel-shio").addEventListener("click", kembaliHalaman);
+</script>
+
+
+<script>
+  document.querySelectorAll('a').forEach(link => {
+    let href = link.getAttribute('href');
+    if (href && href.includes('.html?hari=')) {
+      let pasaran = href.split('.html')[0];
+      let hari = href.split('?hari=')[1];
+      link.setAttribute('href', '/' + pasaran + '/' + hari);
+    }
+  });
+  const urlParams = new URLSearchParams(window.location.search);
+  const hariParam = urlParams.get('hari');
+  if (hariParam) {
+    const namaHalaman = window.location.pathname.split('/').pop().replace('.html', '');
+    window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
+  }
+</script>
+
+</html>

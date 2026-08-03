@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel Premium</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a, #1e293b); color: #f8fafc; padding: 20px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; }
+        
+        .admin-container { background: #1e293b; width: 100%; max-width: 500px; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #334155; margin-bottom: 20px; }
+        
+        /* Widget Tracker Di Paling Atas */
+        .top-tracker { display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px; background: rgba(30, 41, 59, 0.5); padding: 5px; border-radius: 8px; border: 1px dashed #334155; }
+        
+        /* Header & Navigasi Atas */
+        .header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #334155; }
+        h2 { color: #38bdf8; font-size: 22px; font-weight: 800; letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; }
+        
+        /* Bar Tombol Utama Sejajar */
+        .main-nav { display: flex; gap: 12px; justify-content: center; width: 100%; }
+        
+        .btn-utama { flex: 1; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; font-size: 13px; color: #fff; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-menu-awal { background: #00b894; }
+        .btn-menu-awal:hover { background: #009473; transform: translateY(-2px); }
+        .btn-stat { background: #6366f1; }
+        .btn-stat:hover { background: #4f46e5; transform: translateY(-2px); }
+
+        /* Judul Kategori & List Menu */
+        .section-title { font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; text-align: left; margin: 25px 0 12px 5px; display: flex; align-items: center; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #334155; margin-left: 10px; }
+
+        /* Struktur List Vertikal Ke Bawah */
+        .list-menu { display: flex; flex-direction: column; gap: 6px; }
+        
+        .btn-sub { display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 11px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #fff; text-align: center; transition: all 0.2s ease; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.05); width: 100%; }
+        .btn-sub:hover { transform: translateY(-1px); filter: brightness(1.2); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        
+        /* Tema Warna Per Kategori */
+        .c-result { background: #0284c7; }
+        .c-prediksi { background: #b45309; }
+        .c-top2d { background: #6d28d9; }
+        .c-live { background: #be123c; }
+
+        /* Footer */
+        footer { text-align: center; font-size: 12px; color: #64748b; margin-top: 10px; margin-bottom: 20px; }
+        footer span { color: #38bdf8; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    
+    <!-- Histats Counter Dipindah Ke Sini (Paling Atas Dalam Wadah Khusus) -->
+    <div class="top-tracker">
+        <div id="histats_counter" style="display:flex; justify-content:center; align-items:center; height:18px; overflow:hidden; transform:scale(.75); transform-origin:center; opacity:.95;"></div>
+    </div>
+
+    <div class="header">
+        <h2>PANEL ADMIN</h2>
+        <div class="main-nav">
+            <a href="index.html" class="btn-utama btn-menu-awal">🏠 MENU UTAMA</a>
+            <a href="https://angkastatistik.my.id/angkastatistik.html" class="btn-utama btn-stat">ANGKA STATISTIK</a>
+        </div>
+    </div>
+
+    <!-- KATEGORI 1: RESULT -->
+    <div class="section-title">📌 DATA RESULT</div>
+    <div class="list-menu">
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/macau.js?v=1785678839" class="btn-sub c-result">Macau</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/cambodia.js?v=1785678839" class="btn-sub c-result">Cambodia</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/sdy.js?v=1785678839" class="btn-sub c-result">SDY</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/china.js?v=1785678839" class="btn-sub c-result">China</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/japan.js?v=1785678839" class="btn-sub c-result">Japan</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/sgp.js?v=1785678839" class="btn-sub c-result">SGP</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/taiwan.js?v=1785678839" class="btn-sub c-result">Taiwan</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/result/hk.js?v=1785678839" class="btn-sub c-result">HK</a>
+    </div>
+
+    <!-- KATEGORI 2: PREDIKSI -->
+    <div class="section-title">📌 DATA PREDIKSI</div>
+    <div class="list-menu">
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/macau.js?v=1785678839" class="btn-sub c-prediksi">Macau</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/cambodia.js?v=1785678839" class="btn-sub c-prediksi">Cambodia</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/sdy.js?v=1785678839" class="btn-sub c-prediksi">SDY</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/china.js?v=1785678839" class="btn-sub c-prediksi">China</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/japan.js?v=1785678839" class="btn-sub c-prediksi">Japan</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/sgp.js?v=1785678839" class="btn-sub c-prediksi">SGP</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/taiwan.js?v=1785678839" class="btn-sub c-prediksi">Taiwan</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/data/hk.js?v=1785678839" class="btn-sub c-prediksi">HK</a>
+    </div>
+
+    <div class="section-title">📌 DHASBORD</div>
+    <div class="list-menu">
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/new/main" class="btn-sub c-top2d">+ Code</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/actions" class="btn-sub c-top2d">Robot</a>
+        <a href="https://github.com/angkastatistik-prediksi/angkastatistik.my.id/edit/main/admin.html" class="btn-sub c-top2d">Admin</a>
+        <a href="https://search.google.com/search-console/inspect?resource_id=https%3A%2F%2Fangkastatistik.my.id%2F&id=vMcwKBJ9NNYmZ4ftF0kP_A" class="btn-sub c-top2d">Inspeksi URL</a>
+    </div>
+
+    <!-- KATEGORI 3: TOP 2D -->
+    <div class="section-title">📌 TOP 2D</div>
+    <div class="list-menu">
+        <a href="https://angkastatistik.my.id/analisa-macau.html" class="btn-sub c-top2d">Macau</a>
+        <a href="https://angkastatistik.my.id/analisa-cambodia.html" class="btn-sub c-top2d">Cambodia</a>
+        <a href="https://angkastatistik.my.id/analisa-sdy.html" class="btn-sub c-top2d">SDY</a>
+        <a href="https://angkastatistik.my.id/analisa-china.html" class="btn-sub c-top2d">China</a>
+        <a href="https://angkastatistik.my.id/analisa-japan.html" class="btn-sub c-top2d">Japan</a>
+        <a href="https://angkastatistik.my.id/analisa-sgp.html" class="btn-sub c-top2d">SGP</a>
+        <a href="https://angkastatistik.my.id/analisa-taiwan.html" class="btn-sub c-top2d">Taiwan</a>
+        <a href="https://angkastatistik.my.id/analisa-hk.html" class="btn-sub c-top2d">HK</a>
+    </div>
+
+    <!-- KATEGORI 4: LIVE 4D -->
+    <div class="section-title">📌 LIVE 4D</div>
+    <div class="list-menu">
+        <a href="https://angkastatistik.my.id/result-macau.html" class="btn-sub c-live">Macau</a>
+        <a href="https://angkastatistik.my.id/result-cambodia.html" class="btn-sub c-live">Cambodia</a>
+        <a href="https://angkastatistik.my.id/result-sdy.html" class="btn-sub c-live">SDY</a>
+        <a href="https://angkastatistik.my.id/result-china.html" class="btn-sub c-live">China</a>
+        <a href="https://angkastatistik.my.id/result-japan.html" class="btn-sub c-live">Japan</a>
+        <a href="https://angkastatistik.my.id/result-sgp.html" class="btn-sub c-live">SGP</a>
+        <a href="https://angkastatistik.my.id/result-taiwan.html" class="btn-sub c-live">Taiwan</a>
+        <a href="https://angkastatistik.my.id/result-hk.html" class="btn-sub c-live">HK</a>
+        <a href="https://angkastatistik.my.id/bola-merah.html" class="btn-sub c-live">Bola Merah</a>
+    </div>
+
+    <!-- KATEGORI 5: KUMPULAN PING MANUAL -->
+    <div class="section-title">📌 PING WEB</div>
+    <div class="list-menu">
+        <a href="https://pingomatic.com" target="_blank" class="btn-sub c-ping">🌐 Ping-O-Matic</a>
+        <a href="https://pingler.com" target="_blank" class="btn-sub c-ping">🌐 Pingler</a>
+        <a href="http://totalping.com" target="_blank" class="btn-sub c-ping">🌐 TotalPing</a>
+        <a href="http://brainbliss.com" target="_blank" class="btn-sub c-ping">🌐 Feed Shark</a>
+        <a href="https://smallseotools.com" target="_blank" class="btn-sub c-ping">🌐 SmallSEOTools Ping</a>
+    </div>
+</div>
+    
+<!-- FOOTER & COPYRIGHT -->
+<footer>
+    <p>&copy; 2026 <span>ANGKA STATISTIK</span>. All Rights Reserved.</p>
+</footer>
+
+
+<!-- Histats.com START -->
+<script type="text/javascript">
+var _Hasync= _Hasync || [];
+
+_Hasync.push(['Histats.start',
+'1,5037448,4,600,110,30,00001001'
+]);
+
+_Hasync.push(['Histats.fasi','1']);
+
+_Hasync.push(['Histats.track_hits','']);
+
+(function(){
+
+var hs=document.createElement('script');
+hs.type='text/javascript';
+hs.async=true;
+hs.src='//s10.histats.com/js15_as.js';
+
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0])
+.appendChild(hs);
+
+})();
+</script>
+
+<noscript>
+<a href="/" target="_blank">
+<img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0">
+</a>
+</noscript>
+
+<!-- Histats.com END -->
+
+
+<script>
+  document.querySelectorAll('a').forEach(link => {
+    let href = link.getAttribute('href');
+    if (href && href.includes('.html?hari=')) {
+      let pasaran = href.split('.html')[0];
+      let hari = href.split('?hari=')[1];
+      link.setAttribute('href', '/' + pasaran + '/' + hari);
+    }
+  });
+  const urlParams = new URLSearchParams(window.location.search);
+  const hariParam = urlParams.get('hari');
+  if (hariParam) {
+    const namaHalaman = window.location.pathname.split('/').pop().replace('.html', '');
+    window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
+  }
+</script>
+
+</html>
