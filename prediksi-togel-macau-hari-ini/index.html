@@ -382,21 +382,35 @@
         return list6Digit;
     }
 
+    // FUNGSI PERBAIKAN LOGIKA AI 3 DIGIT (DETERMINISTIK & TERKUNCI)
     function cari3DigitTerkait(resultStr, list6Digit) {
         let kep = parseInt(resultStr.charAt(2));
         let ekor = parseInt(resultStr.charAt(3));
-        let mistikEkor = (ekor + 5) % 10;
+
+        // 1. PANGKAS / SKIP DIGIT RESULT 2D (KEPALA DAN EKOR)
+        let sisaLayak = list6Digit.filter(num => num !== kep && num !== ekor);
 
         let kandidat = [];
-        if (list6Digit.includes(ekor)) kandidat.push(ekor);
-        if (list6Digit.includes(kep) && !kandidat.includes(kep)) kandidat.push(kep);
-        if (list6Digit.includes(mistikEkor) && !kandidat.includes(mistikEkor)) kandidat.push(mistikEkor);
 
-        let sisaDigit = list6Digit.filter(num => !kandidat.includes(num));
-        sisaDigit.sort(() => Math.random() - 0.5);
+        // 2. PRIORITAS 1: MISTIK / INDEX EKOR (ekor + 5 % 10)
+        let mistikEkor = (ekor + 5) % 10;
+        if (sisaLayak.includes(mistikEkor) && !kandidat.includes(mistikEkor)) {
+            kandidat.push(mistikEkor);
+        }
 
-        while (kandidat.length < 3 && sisaDigit.length > 0) {
-            kandidat.push(sisaDigit.pop());
+        // 3. PRIORITAS 2: NAİK / TURUN EKOR (-1 STEP)
+        let turunEkor = (ekor - 1 + 10) % 10;
+        if (sisaLayak.includes(turunEkor) && !kandidat.includes(turunEkor)) {
+            kandidat.push(turunEkor);
+        }
+
+        // 4. PENUHI SISA HINGGA 3 DIGIT BERDASARKAN URUTAN ASLI KIAT (TANPA Math.random)
+        for (let i = 0; i < sisaLayak.length; i++) {
+            if (kandidat.length >= 3) break;
+            let num = sisaLayak[i];
+            if (!kandidat.includes(num)) {
+                kandidat.push(num);
+            }
         }
 
         return kandidat.slice(0, 3);
@@ -455,8 +469,11 @@
             `;
         }
 
+        // ANGKA TUNGGAL DILAKUKAN DARI POSISI SEDANG (MODERAT) = INDEX KE-1 / ELEMEN KEDUA
+        let angkaTunggal = (am3Digit.length > 1) ? am3Digit[1] : am3Digit[0];
+
         if(document.getElementById('angka-tunggal-box')) {
-            document.getElementById('angka-tunggal-box').innerText = am3Digit[0];
+            document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
         }
 
         const boxHasil = document.getElementById('box-hasil');
