@@ -1,0 +1,31 @@
+name: Tutup Isu atau Branch Basi (Stale Bot)
+
+on:
+  schedule:
+    # Robot ini akan bangun setiap hari otomatis jam 1 malam
+    - cron: '0 1 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Berapa hari isu dibiarkan tanpa komentar sebelum dicap "basi"? (Misal: 60 hari)
+          days-before-stale: 60
+          
+          # Pesan yang dikirim robot ke isu tersebut
+          stale-issue-message: 'Isu ini otomatis ditandai basi karena sudah 60 hari tidak ada aktivitas. Jika masih penting, silakan beri komentar!'
+          
+          # Berapa hari setelah dicap basi lalu isu tersebut ditutup permanen?
+          days-before-close: 7
+          close-issue-message: 'Isu ini ditutup otomatis karena tidak ada respons setelah ditandai basi.'
+          
+          # Lakukan hal yang sama untuk Pull Request
+          days-before-stale-pr: 30
+          stale-pr-message: 'Pull request ini sudah tidak aktif selama 30 hari dan akan segera ditutup.'
