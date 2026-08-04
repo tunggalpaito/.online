@@ -1,0 +1,51 @@
+name: Build and Deploy Website
+
+# Pemicu: Robot akan bekerja setiap kali Anda melakukan Push ke branch main
+on:
+  push:
+    branches:
+      - main
+
+# Memberi izin robot untuk membaca repo dan menayangkan ke GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # ----------------------------------------------------
+  # ROBOT 1: Khusus merapikan sitemap
+  # ----------------------------------------------------
+  fix-sitemap-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ambil Kode Repositori
+        uses: actions/checkout@v4
+
+      - name: Jalankan Sitemap Fixer v24
+        uses: ./ # Memanggil action.yml milik Anda
+
+  # ----------------------------------------------------
+  # ROBOT 2: Khusus build & deploy website
+  # ----------------------------------------------------
+  deploy-job:
+    needs: fix-sitemap-job # Robot ini baru bekerja SETELAH Robot 1 selesai
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Ambil Kode Repositori
+        uses: actions/checkout@v4
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Artifact Website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.' # Mengunggah semua file di folder utama
+
+      - name: Deploy ke GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
