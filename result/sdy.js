@@ -1,5 +1,5 @@
 const LIVE_RESULT_SDY = {
-    latestResult: "9135"
+    latestResult: "7037"
 };
 
 const DATA_PAITO_SDY = `
@@ -22,4 +22,5 @@ const DATA_PAITO_SDY = `
   5694,3402,2380,4782,2394,6163,7706,
   3781,0856,8866,5382,2429,5214,1092,
   1546,0916,9204,9057,7801,8587,9135,
+  7037,
 `;
