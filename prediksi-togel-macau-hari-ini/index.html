@@ -450,7 +450,7 @@ document.addEventListener("DOMContentLoaded", function() {
         daftarHariIndo.forEach(h => {
             const activeClass = (h === hari) ? 'active' : '';
             const namaHariTeks = h.charAt(0).toUpperCase() + h.slice(1);
-            hariContainer.innerHTML += `<a href="tunggalpaito.online/prediksi-togel-macau-hari-ini?hari=${h}&putaran=${putaran}" class="btn-nav-link ${activeClass}">${namaHariTeks}</a>`;
+            hariContainer.innerHTML += `<a href="tunggalpaito.online/prediksi-togel-macau-hari-ini/index.html?hari=${h}&putaran=${putaran}" class="btn-nav-link ${activeClass}">${namaHariTeks}</a>`;
         });
         hariContainer.innerHTML += `<a href="almanak.html" class="btn-nav-link">Almanak</a>`;
     }
@@ -460,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function() {
         putaranContainer.innerHTML = '';
         Object.keys(mapNamaPutaran).forEach(p => {
             const activeClass = (p === putaran) ? 'active' : '';
-            putaranContainer.innerHTML += `<a href="tunggalpaito.online/prediksi-togel-macau-hari-ini?hari=${hari}&putaran=${p}" class="btn-nav-link ${activeClass}">${p.toUpperCase()}</a>`;
+            putaranContainer.innerHTML += `<a href="tunggalpaito.online/prediksi-togel-macau-hari-ini/index.html?hari=${hari}&putaran=${p}" class="btn-nav-link ${activeClass}">${p.toUpperCase()}</a>`;
         });
     }
 
