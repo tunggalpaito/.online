@@ -20,15 +20,6 @@ jobs:
       - name: Jalankan Sitemap Fixer v24
         uses: ./ # Memanggil action.yml milik Anda
 
-      # ----------------------------------------------------
-      # TEMPEL DI SINI (Robot Optimasi Gambar)
-      # ----------------------------------------------------
-      - name: Optimasi Gambar Otomatis
-        uses: calibreapp/image-actions@main
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          # Robot ini otomatis mengecilkan file PNG/JPG baru yang Anda upload
-
   deploy-job:
     needs: fix-sitemap-job
     runs-on: ubuntu-latest
