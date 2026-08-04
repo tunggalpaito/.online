@@ -370,14 +370,16 @@
         }
     });
 
-    // RUMUS HONGKONG 6 DIGIT: DARI RATUSAN / KOP (Contoh 1234 -> Ratusan = 2 -> 2,3,4,5,6,7)
-    // Formula: [Ratusan, Ratusan+1, Ratusan+2, Ratusan+3, Ratusan+4, Ratusan+5]
+    // RUMUS 6 DIGIT: PATOKAN KOP, DIAMBIL DARI ANGKA SETELAHNYA NAIK KE ATAS 
+    // Contoh Result 1234 -> Kop = 2 -> Hasil: 3, 4, 5, 6, 7, 8
     function hitung6DigitKuatHk(resultStr) {
-        let ratusan = parseInt(resultStr.charAt(1));
+        // Ambil posisi KOP (indeks ke-1 dari string 4-digit)
+        let kop = parseInt(resultStr.charAt(1));
         let list6Digit = [];
         
-        for (let i = 0; i < 6; i++) {
-            list6Digit.push((ratusan + i) % 10);
+        // Mulai dari (kop + 1) naik ke atas sebanyak 6 digit
+        for (let i = 1; i <= 6; i++) {
+            list6Digit.push((kop + i) % 10);
         }
 
         return list6Digit;
