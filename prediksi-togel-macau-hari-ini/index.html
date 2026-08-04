@@ -109,7 +109,7 @@
         }
 
         .am-badge { color: #ffffff; font-weight: 600; background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 6px; }
-        .status-check { font-weight: bold; font-size: 16px; min-width: 25px; text-align: right; }
+        .status-check { font-weight: bold; font-size: 16px; min-width: 25px; text-align: right; display: inline-block; }
         .status-win { color: #2ecc71; text-shadow: 0 0 6px rgba(46, 204, 113, 0.6); }
         .status-lose { color: #e74c3c; text-shadow: 0 0 6px rgba(231, 76, 60, 0.6); }
 
@@ -195,7 +195,6 @@
 
     <main class="container">
         <section class="result-container">
-            <!-- JUDUL KATA "EVALUASI" SUDAH DIHAPUS -->
             <div class="result-title">TRACK & ANGKA KUAT MACAU</div>
             <div id="live-update-time" class="update-time-box">Memuat Waktu Update...</div>
             
@@ -263,7 +262,65 @@
         <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
     </footer>
 
-    <!-- MENGAMBIL BERKAS MACAU.JS -->
+    <footer>
+<div style="text-align:center; margin:20px 0;">
+    <script async="async" data-cfasync="false"
+    src="https://pl30187165.effectivecpmnetwork.com/285abe3dfa3645b0c5001d78494f7ebb/invoke.js"></script>
+
+    <div id="container-285abe3dfa3645b0c5001d78494f7ebb"></div>
+</div><script src="https://pl30187164.effectivecpmnetwork.com/27/ba/bd/27babd93febcd37a091303b95048fdf4.js"></script><script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
+<!-- Histats Counter -->
+<div id="histats_counter" style="
+display:flex;
+justify-content:center;
+align-items:center;
+height:18px;
+overflow:hidden;
+transform:scale(.55);
+transform-origin:center;
+opacity:.85;
+">
+</div>
+
+</footer>
+
+
+<!-- Histats.com START -->
+<script type="text/javascript">
+var _Hasync= _Hasync || [];
+
+_Hasync.push(['Histats.start',
+'1,5037448,4,600,110,30,00001001'
+]);
+
+_Hasync.push(['Histats.fasi','1']);
+
+_Hasync.push(['Histats.track_hits','']);
+
+(function(){
+
+var hs=document.createElement('script');
+hs.type='text/javascript';
+hs.async=true;
+hs.src='//s10.histats.com/js15_as.js';
+
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0])
+.appendChild(hs);
+
+})();
+</script>
+
+<noscript>
+<a href="/" target="_blank">
+<img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0">
+</a>
+</noscript>
+
+<!-- Histats.com END -->
+<script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
+
+
+    <!-- BERKAS MACAU.JS -->
     <script src="/result/macau.js"></script>
 
     <script>
@@ -310,61 +367,13 @@
         }
     });
 
+    // LOGIKA RUMUS AWAL / PERTAMA MACAU
     function hitungAM(resultStr) {
-        let dKepala = parseInt(resultStr.charAt(2));
-        let dEkor = parseInt(resultStr.charAt(3));
-
-        const ML = { 0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4 };
-        const MB = { 0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3 };
-        const IN = { 0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4 };
-        const TY = { 0:7, 1:4, 2:9, 3:6, 4:1, 5:8, 6:3, 7:0, 8:5, 9:2 };
-
-        let kandidatUtama = [];
-        for (let i = 0; i <= 5; i++) {
-            kandidatUtama.push((dEkor + i) % 10);
-        }
-
-        let poolPelarian = [];
-        [parseInt(resultStr.charAt(0)), parseInt(resultStr.charAt(1)), dKepala, dEkor].forEach(d => {
-            poolPelarian.push(ML[d], MB[d], IN[d], TY[d]);
-        });
-
-        [dKepala, dEkor].forEach(d => {
-            poolPelarian.push((d - 1 + 10) % 10, (d - 2 + 10) % 10, (d + 1) % 10, (d + 2) % 10);
-        });
-
-        let skorKandidat = kandidatUtama.map(angka => {
-            let count = poolPelarian.filter(p => p === angka).length;
-            return { angka: angka, skor: count };
-        });
-
-        let skorUnik = [...new Set(skorKandidat.map(k => k.skor))].sort((a, b) => b - a);
-
-        let gAtas = skorKandidat.filter(k => k.skor === skorUnik[0]);
-        let gTengah = skorUnik.length > 1 ? skorKandidat.filter(k => k.skor === skorUnik[1]) : gAtas;
-        let gBawah = skorUnik.length > 2 ? skorKandidat.filter(k => k.skor === skorUnik[2]) : (skorUnik.length > 1 ? gTengah : gAtas);
-
-        function hashDapatAngka(str, arrayInput) {
-            let hash = 0;
-            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            let idx = Math.abs(hash) % arrayInput.length;
-            return arrayInput[idx].angka;
-        }
-
-        let aiAtas = hashDapatAngka(resultStr + "Atas", gAtas);
-        let aiTengah = hashDapatAngka(resultStr + "Tengah", gTengah);
-        let aiBawah = hashDapatAngka(resultStr + "Bawah", gBawah);
-
-        if (aiTengah === aiAtas) {
-            let opsi = gTengah.filter(k => k.angka !== aiAtas);
-            aiTengah = opsi.length > 0 ? opsi[0].angka : (aiAtas + 1) % 10;
-        }
-        if (aiBawah === aiAtas || aiBawah === aiTengah) {
-            let opsi = gBawah.filter(k => k.angka !== aiAtas && k.angka !== aiTengah);
-            aiBawah = opsi.length > 0 ? opsi[0].angka : (aiTengah + 1) % 10;
-        }
-
-        return [aiAtas, aiTengah, aiBawah];
+        let ekor = parseInt(resultStr.charAt(3));
+        let am1 = (ekor + 1) % 10;
+        let am2 = (ekor + 2) % 10;
+        let am3 = (ekor + 3) % 10;
+        return [am1, am2, am3];
     }
 
     function prosesDanTampilkanTrack(dataResult) {
@@ -393,8 +402,8 @@
                     htmlStatus = `<span class="status-check status-lose">✘</span>`;
                 }
             } else {
-                // KETEXT "(Hari Ini)" SUDAH DIHILANGKAN SECARA TOTAL SAMA SEPERTI PERMINTAAN
-                htmlStatus = ``;
+                // SEJAJAR: Menggunakan span status-check kosong agar posisi AM tidak bergeser ke pojok kanan
+                htmlStatus = `<span class="status-check"></span>`;
             }
 
             containerTrek.innerHTML += `
@@ -408,35 +417,7 @@
 
         let resTerbaru = dataResult[dataResult.length - 1];
         let amHariIni = hitungAM(resTerbaru);
-
-        let dKepala = parseInt(resTerbaru.charAt(2));
-        let dEkor = parseInt(resTerbaru.charAt(3));
-        const ML = { 0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4 };
-        const MB = { 0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3 };
-        const IN = { 0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4 };
-        const TY = { 0:7, 1:4, 2:9, 3:6, 4:1, 5:8, 6:3, 7:0, 8:5, 9:2 };
-
-        let ikatanKepalaEkor = [
-            ML[dKepala], MB[dKepala], IN[dKepala], TY[dKepala],
-            ML[dEkor], MB[dEkor], IN[dEkor], TY[dEkor],
-            (dKepala + 1)%10, (dKepala - 1 + 10)%10,
-            (dEkor + 1)%10, (dEkor - 1 + 10)%10
-        ];
-
-        let kandidatTunggal = amHariIni.map(angka => {
-            let bobot = ikatanKepalaEkor.filter(x => x === angka).length;
-            return { angka: angka, bobot: bobot };
-        }).sort((a, b) => b.bobot - a.bobot);
-
-        let angkaTunggalFinal;
-        if (kandidatTunggal[0].bobot > kandidatTunggal[1].bobot) {
-            angkaTunggalFinal = kandidatTunggal[0].angka;
-        } else {
-            let hash = 0;
-            for (let i = 0; i < resTerbaru.length; i++) hash = resTerbaru.charCodeAt(i) + ((hash << 5) - hash);
-            let opsiSama = kandidatTunggal.filter(k => k.bobot === kandidatTunggal[0].bobot);
-            angkaTunggalFinal = opsiSama[Math.abs(hash) % opsiSama.length].angka;
-        }
+        let angkaTunggalFinal = amHariIni[0]; // Mengambil angka pertama sebagai angka tunggal
 
         const elemAI = document.getElementById('res-ai');
         if(elemAI) {
