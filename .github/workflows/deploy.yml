@@ -1,21 +1,16 @@
 name: Build and Deploy Website
 
-# Pemicu: Robot akan bekerja setiap kali Anda melakukan Push ke branch main
 on:
   push:
     branches:
       - main
 
-# Memberi izin robot untuk membaca repo dan menayangkan ke GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
 jobs:
-  # ----------------------------------------------------
-  # ROBOT 1: Khusus merapikan sitemap
-  # ----------------------------------------------------
   fix-sitemap-job:
     runs-on: ubuntu-latest
     steps:
@@ -25,11 +20,17 @@ jobs:
       - name: Jalankan Sitemap Fixer v24
         uses: ./ # Memanggil action.yml milik Anda
 
-  # ----------------------------------------------------
-  # ROBOT 2: Khusus build & deploy website
-  # ----------------------------------------------------
+      # ----------------------------------------------------
+      # TEMPEL DI SINI (Robot Optimasi Gambar)
+      # ----------------------------------------------------
+      - name: Optimasi Gambar Otomatis
+        uses: calibreapp/image-actions@main
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Robot ini otomatis mengecilkan file PNG/JPG baru yang Anda upload
+
   deploy-job:
-    needs: fix-sitemap-job # Robot ini baru bekerja SETELAH Robot 1 selesai
+    needs: fix-sitemap-job
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -44,7 +45,7 @@ jobs:
       - name: Upload Artifact Website
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' # Mengunggah semua file di folder utama
+          path: '.'
 
       - name: Deploy ke GitHub Pages
         id: deployment
