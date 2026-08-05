@@ -1,0 +1,34 @@
+name: Generate Sitemap
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'sitemap.xml' # Mencegah infinite loop (bot tidak akan trigger ulang saat sitemap berubah)
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Izin agar bot boleh menyimpan perubahan sitemap
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 'latest'
+
+      - name: Generate Sitemap
+        run: node main.js # Menjalankan skrip sitemap Anda
+
+      - name: Commit and Push Sitemap
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-update sitemap.xml"
+          file_pattern: sitemap.xml
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "actions@github.com"
