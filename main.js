@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 
-// Konfigurasi URL utama website Anda
-const DOMAIN = 'https://tunggalpaito.github.io'; // Ganti dengan alamat website Anda
+// DOMAIN UTAMA ANDA
+const DOMAIN = 'https://tunggalpaito.online';
 
 // Fungsi untuk mencari file .html atau .md secara otomatis
 function getFiles(dir, fileList = []) {
@@ -11,15 +11,15 @@ function getFiles(dir, fileList = []) {
     files.forEach(file => {
         const filePath = path.join(dir, file);
         
-        // Abaikan folder node_modules, .git, dan .github
-        if (filePath.includes('node_modules') || filePath.includes('.git') || filePath.includes('.github')) {
+        // Abaikan folder sistem yang tidak perlu masuk sitemap
+        if (filePath.includes('node_modules') || filePath.includes('.git') || filePath.includes('.github') || filePath.includes('_site')) {
             return;
         }
 
         if (fs.statSync(filePath).isDirectory()) {
             getFiles(filePath, fileList);
         } else {
-            // Ambil file yang berakhiran .html atau .md
+            // Ambil file yang berakhiran .html atau .md saja
             if (file.endsWith('.html') || file.endsWith('.md')) {
                 fileList.push(filePath);
             }
@@ -37,15 +37,16 @@ function generateSitemap() {
     sitemapContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     files.forEach(filePath => {
-        // Bersihkan path file untuk dijadikan URL
+        // Bersihkan path file agar URL menjadi bersih tanpa /index.html atau .html
         let cleanPath = filePath
             .replace(/\\/g, '/')
             .replace(/^\.\//, '')
-            .replace(/\.md$/, '')
-            .replace(/\.html$/, '');
+            .replace(/\/index\.html$/, '') // Menghilangkan /index.html di akhir folder
+            .replace(/\.html$/, '')
+            .replace(/\.md$/, '');
 
-        // Jika file bernama index, jadikan halaman utama (root)
-        if (cleanPath === 'index') {
+        // Jika file adalah index utama di root
+        if (cleanPath === 'index' || cleanPath === '') {
             cleanPath = '';
         }
 
@@ -62,7 +63,7 @@ function generateSitemap() {
 
     // Simpan ke file sitemap.xml
     fs.writeFileSync('sitemap.xml', sitemapContent);
-    console.log('Sitemap berhasil dibuat secara otomatis!');
+    console.log('Sitemap berhasil dibuat dengan URL bersih!');
 }
 
 generateSitemap();
