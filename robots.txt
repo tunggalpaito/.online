@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /prediksi/
-Allow: /result/
-Allow: /data/
-
-Sitemap: https://angkastatistik.my.id
