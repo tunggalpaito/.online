@@ -239,7 +239,7 @@
 
     <div class="card">
         <div id="resultContainer" class="result-list">
-            Memuat data...
+            Sabar bosku data sedang di uji dan dicocok kan dengan logika frekuensi...
         </div>
     </div>
 
@@ -498,7 +498,7 @@
         container.innerHTML = `
             <div style="text-align: center; padding: 25px;">
                 <span class="status-loading" style="font-size: 32px;">☢︎</span>
-                <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted);">File Data Belum Siap / Menunggu Sinkronisasi Server...</div>
+                <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted);">Sabar bosku data sedang di uji dan dicocok kan dengan logika frekuensi...</div>
             </div>
         `;
         document.getElementById('predBbfs').innerText = "RADAR OFF";
@@ -538,17 +538,18 @@
                     <span style="color: var(--text-muted); font-size: 12px; font-style: italic;">(Acuan Tebakan)</span>
                 `;
             } else {
-                // Ambil result selanjutnya di baris bawahnya
+                // Ambil result tepat di bawahnya (result selanjutnya)
                 let nextRes = results[absoluteIndex + 1];
-                let next2D = nextRes.slice(-2); // Ambil 2D belakang (contoh: '34' dari '1234')
+                let next2D = nextRes.slice(-2); // Ambil 2D belakang (contoh: '71' dari '1871')
                 
                 let digit1 = next2D.charAt(0);
                 let digit2 = next2D.charAt(1);
 
-                // Cek apakah kedua digit 2D tersebut ada di dalam BBFS baris ini
+                // Cek apakah kedua digit 2D dari result SELANJUTNYA ada di dalam BBFS baris INI
                 let match1 = rowBbfs.includes(digit1);
                 let match2 = rowBbfs.includes(digit2);
                 
+                // Syarat masuk: Kepala DAN Ekor dari result selanjutnya harus ada di BBFS
                 let isPassed = match1 && match2; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
