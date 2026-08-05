@@ -206,11 +206,106 @@
             .btn-floating { width: 40px; height: 40px; }
             body { padding-bottom: 120px; }
         }
+
+        /* CSS STYLING MODAL SAMBUTAN Keren */
+        .welcome-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .welcome-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .welcome-modal-card {
+            background: linear-gradient(145deg, #161a26, #0e111b);
+            border: 2px solid #ffb703;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 420px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(255, 183, 3, 0.25);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .welcome-modal-overlay.active .welcome-modal-card {
+            transform: translateY(0);
+        }
+        .welcome-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            animation: bounceIcon 1.5s infinite alternate;
+        }
+        @keyframes bounceIcon {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+        .welcome-title {
+            font-size: 1.25rem;
+            color: #ffb703;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .welcome-desc {
+            font-size: 0.95rem;
+            color: #f0f2f5;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .welcome-btn {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            color: #090b11;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 183, 3, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .welcome-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 183, 3, 0.6);
+        }
+
+        @media (max-width: 900px) {
+            .share-sidebar-left, .share-sidebar-right { position: fixed; top: auto; bottom: 0; transform: none; flex-direction: row; justify-content: center; width: 50%; background: rgba(9, 11, 17, 0.95); padding: 10px 0; }
+            .share-sidebar-left { left: 0; border-top: 1px solid #2d3142; border-right: 1px solid #2d3142; }
+            .share-sidebar-right { right: 0; border-top: 1px solid #2d3142; }
+            .btn-floating { width: 40px; height: 40px; }
+            body { padding-bottom: 120px; }
+        }
     </style>
 </head>
 
 <body id="top-page">
 
+    <!-- MODAL SAMBUTAN OTOMATIS (1X DALAM 24 JAM) -->
+    <div id="welcomeModal" class="welcome-modal-overlay">
+        <div class="welcome-modal-card">
+            <div id="welcomeIcon" class="welcome-icon">🎉</div>
+            <div id="welcomeTitle" class="welcome-title">Selamat Datang Bosku!</div>
+            <div class="welcome-desc">
+                Silakan pakai angka kuat china hari ini dari <b>Tunggal Paito</b>. Jika cocok, tetap utamakan prediksi sendiri. Semoga hoki! 🚀
+            </div>
+            <button class="welcome-btn" onclick="tutupWelcomeModal()">Mulai Jelajahi</button>
+        </div>
+    </div>
+    
     <div class="share-sidebar-left">
         <a href="https://www.facebook.com/share/1BLNQw38oY/" target="_blank" rel="noopener noreferrer" class="btn-floating float-fb"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
         <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="btn-floating float-x"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
@@ -326,6 +421,55 @@
     <!-- AMBIL DATA BERKAS CHINA.JS -->
     <script src="/result/china.js"></script>
 
+    <!-- SCRIPT JS UNTUK MODAL SAMBUTAN OTOMATIS (BATASAN 1X DALAM 24 JAM) -->
+    <script>
+        window.addEventListener('load', function() {
+            const waktuSekarang = new Date().getTime();
+            const batasWaktu24Jam = 24 * 60 * 60 * 1000; // 24 jam dalam milidetik
+            const waktuTerakhirMuncul = localStorage.getItem('waktu_popup_sambutan');
+
+            // Cek apakah belum pernah muncul atau sudah lewat dari 24 jam
+            if (!waktuTerakhirMuncul || (waktuSekarang - waktuTerakhirMuncul > batasWaktu24Jam)) {
+                
+                const jam = new Date().getHours();
+                let sapaan = "Selamat Datang Bosku!";
+                let ikon = "🎉";
+
+                if (jam >= 3 && jam < 11) {
+                    sapaan = "Selamat Pagi Bosku! ☕";
+                    ikon = "🌅";
+                } else if (jam >= 11 && jam < 15) {
+                    sapaan = "Selamat Siang Bosku! ☀️";
+                    ikon = "😎";
+                } else if (jam >= 15 && jam < 18) {
+                    sapaan = "Selamat Sore Bosku! 🌇";
+                    ikon = "☕";
+                } else {
+                    sapaan = "Selamat Malam Bosku! 🌙";
+                    ikon = "✨";
+                }
+
+                document.getElementById('welcomeTitle').innerText = sapaan;
+                document.getElementById('welcomeIcon').innerText = ikon;
+
+                const modal = document.getElementById('welcomeModal');
+                if (modal) {
+                    modal.classList.add('active');
+                }
+
+                // Simpan waktu kemunculan saat ini ke localStorage
+                localStorage.setItem('waktu_popup_sambutan', waktuSekarang);
+            }
+        });
+
+        function tutupWelcomeModal() {
+            const modal = document.getElementById('welcomeModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+    </script>
+    
     <script>
         window.addEventListener('load', function() {
             alert("selamat datang diprediksi china bosku silahkan dipakai angka main dari tunggal paito jika cocok tetap utamakan prediksi sendiri,semoga hoky");
