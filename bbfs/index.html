@@ -569,23 +569,24 @@ hs.src='//s10.histats.com/js15_as.js';
             rowDiv.className = 'result-row';
 
             if (isTheVeryLastRow) {
-                // Baris paling akhir adalah acuan untuk tebak result berikutnya (belum ada result setelahnya di list ini)
+                // Baris paling bawah adalah result terkini (acuan untuk prediksi ke depan)
                 rowDiv.innerHTML = `
                     <span>result ${res} : bbfs ${rowBbfs}</span>
                     <span style="color: var(--text-muted); font-size: 12px; font-style: italic;">(Acuan Tebakan)</span>
                 `;
             } else {
-                // Ambil result BERIKUTNYA dari data asli untuk divalidasi terhadap BBFS baris ini
+                // Ambil result BERIKUTNYA (result di bawahnya) untuk dicocokkan dengan BBFS baris ini
                 let nextRes = last10[index + 1];
-                let next2d = nextRes.slice(-2);
-                let nextKepala = next2d.charAt(0);
-                let nextEkor = next2d.charAt(1);
-
-                // Cek apakah angka result selanjutnya ada di BBFS baris ini (sesuai contoh: minimal angka kepala/ekor atau 2D-nya tercover)
-                let matchK = rowBbfs.includes(nextKepala);
-                let matchE = rowBbfs.includes(nextEkor);
+                let next2d = nextRes.slice(-2); // 2 digit terakhir dari result selanjutnya (misal: "32")
                 
-                // Jika kepala atau ekor dari result selanjutnya masuk dalam bbfs
+                let kepalaNext = next2d.charAt(0);
+                let ekorNext = next2d.charAt(1);
+
+                // Cek apakah angka kepala atau ekor dari result selanjutnya ada di dalam BBFS baris ini
+                let matchK = rowBbfs.includes(kepalaNext);
+                let matchE = rowBbfs.includes(ekorNext);
+                
+                // Jika salah satu atau kedua angka 2D tersebut masuk ke BBFS
                 let isPassed = matchK || matchE; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
