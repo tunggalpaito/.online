@@ -555,7 +555,6 @@ hs.src='//s10.histats.com/js15_as.js';
         }
 
         const last10 = results.slice(-10);
-        // BBFS utama untuk memprediksi result setelahnya
         const currentBBFS = generateBBFS(results); 
         
         document.getElementById('predBbfs').innerText = currentBBFS;
@@ -565,28 +564,28 @@ hs.src='//s10.histats.com/js15_as.js';
             let absoluteIndex = results.indexOf(res);
             let rowBbfs = getRowBBFS(results, absoluteIndex);
             
-            let res2d = res.slice(-2);
-            let k = res2d.charAt(0); // Kepala
-            let e = res2d.charAt(1); // Ekor
-            
-            let matchK = rowBbfs.includes(k);
-            let matchE = rowBbfs.includes(e);
-            
-            // Cek apakah baris ini adalah baris paling bawah (result terakhir untuk prediksi)
             let isTheVeryLastRow = (index === last10.length - 1);
-
             let rowDiv = document.createElement('div');
             rowDiv.className = 'result-row';
 
             if (isTheVeryLastRow) {
-                // BARIS TERAKHIR: Hanya menampilkan result & bbfs-nya SAJA tanpa tanda centang/silang (karena ini buat acuan tebak ke depan)
+                // Baris paling akhir adalah acuan untuk tebak result berikutnya (belum ada result setelahnya di list ini)
                 rowDiv.innerHTML = `
                     <span>result ${res} : bbfs ${rowBbfs}</span>
-                    <span style="color: var(--text-muted); font-size: 12px; font-style: italic;"></span>
+                    <span style="color: var(--text-muted); font-size: 12px; font-style: italic;">(Acuan Tebakan)</span>
                 `;
             } else {
-                // BARIS SEBELUMNYA: Validasi masuk (jika kepala atau ekor masuk ke bbfs, anggap masuk / ✔)
-                // Sesuai aturan: jika masuk 2d atau minimal kepala/ekor masuk
+                // Ambil result BERIKUTNYA dari data asli untuk divalidasi terhadap BBFS baris ini
+                let nextRes = last10[index + 1];
+                let next2d = nextRes.slice(-2);
+                let nextKepala = next2d.charAt(0);
+                let nextEkor = next2d.charAt(1);
+
+                // Cek apakah angka result selanjutnya ada di BBFS baris ini (sesuai contoh: minimal angka kepala/ekor atau 2D-nya tercover)
+                let matchK = rowBbfs.includes(nextKepala);
+                let matchE = rowBbfs.includes(nextEkor);
+                
+                // Jika kepala atau ekor dari result selanjutnya masuk dalam bbfs
                 let isPassed = matchK || matchE; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
