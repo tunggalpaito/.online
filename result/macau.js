@@ -1,5 +1,5 @@
 const LIVE_RESULT_MACAU = {
-    latestResult: "0629"
+    latestResult: "9401"
 };
 
 const DATA_PAITO_MACAU = `
@@ -49,5 +49,5 @@ const DATA_PAITO_MACAU = `
   02 Aug,0711,8208,8886,3674,3231,2777,
   03 Aug,9564,2590,7124,0433,5797,9942,
   04 Aug,4094,9201,1664,0213,8103,6148,
-  05 Aug,9554,0629
+  05 Aug,9554,0629,9401,
 `;
