@@ -11,17 +11,7 @@ permissions:
   id-token: write
 
 jobs:
-  fix-sitemap-job:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ambil Kode Repositori
-        uses: actions/checkout@v4
-
-      - name: Jalankan Sitemap Fixer v24
-        uses: ./
-
-  deploy-job:
-    needs: fix-sitemap-job
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -30,14 +20,18 @@ jobs:
       - name: Ambil Kode Repositori
         uses: actions/checkout@v4
 
+      - name: Jalankan Sitemap Fixer v24
+        uses: ./ # Memanggil action.yml milik Anda
+
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
       - name: Upload Artifact Website
         uses: actions/upload-pages-artifact@v3
         with:
-          
-          path: './dist'
+          # Gunakan '.' jika action lokal Anda langsung memperbarui file di root folder,
+          # atau ganti dengan folder hasil build (misal: './dist') jika ada proses build terpisah.
+          path: '.'
 
       - name: Deploy ke GitHub Pages
         id: deployment
