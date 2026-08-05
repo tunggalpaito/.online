@@ -577,17 +577,17 @@ hs.src='//s10.histats.com/js15_as.js';
             } else {
                 // Ambil result BERIKUTNYA (result di bawahnya) untuk dicocokkan dengan BBFS baris ini
                 let nextRes = last10[index + 1];
-                let next2d = nextRes.slice(-2); // 2 digit terakhir dari result selanjutnya (misal: "32")
+                let next2d = nextRes.slice(-2); // 2 digit terakhir dari result selanjutnya (misal: "03")
                 
                 let kepalaNext = next2d.charAt(0);
                 let ekorNext = next2d.charAt(1);
 
-                // Cek apakah angka kepala atau ekor dari result selanjutnya ada di dalam BBFS baris ini
+                // Cek apakah KEDUANYA (kepala DAN ekor) ada di dalam BBFS baris ini
                 let matchK = rowBbfs.includes(kepalaNext);
                 let matchE = rowBbfs.includes(ekorNext);
                 
-                // Jika salah satu atau kedua angka 2D tersebut masuk ke BBFS
-                let isPassed = matchK || matchE; 
+                // Wajib masuk 2D penuh (kepala DAN ekor harus ada di BBFS)
+                let isPassed = matchK && matchE; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
                 rowDiv.innerHTML = `
