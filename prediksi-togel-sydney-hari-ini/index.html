@@ -199,6 +199,107 @@
         .btn-nav-link { display: inline-block; padding: 12px 10px; background: linear-gradient(145deg, #1c2030, #131622); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; border: 1px solid #2d3142; text-align: center; }
         .btn-nav-link.active { background: linear-gradient(145deg, #ffb703, #fb8500) !important; color: #090b11 !important; border: 1px solid #ffb703 !important; }
 
+        /* CSS STYLING MODAL FUTURISTIK */
+        .futuristic-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .futuristic-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .futuristic-modal-card {
+            background: linear-gradient(145deg, #161a26, #0e111b);
+            border: 1px solid rgba(255, 183, 3, 0.4);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 420px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 0 35px rgba(255, 183, 3, 0.25), inset 0 0 15px rgba(0, 240, 255, 0.1);
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .futuristic-modal-overlay.active .futuristic-modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon-glow {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffb703, #fb8500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 183, 3, 0.6);
+            animation: pulseGlow 1.8s infinite alternate;
+        }
+
+        .modal-icon-glow svg {
+            width: 32px;
+            height: 32px;
+            fill: #090b11;
+        }
+
+        .futuristic-modal-card h3 {
+            color: var(--accent);
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .futuristic-modal-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .futuristic-modal-card p span {
+            color: #4ade80;
+            font-weight: 600;
+        }
+
+        .btn-futuristic-action {
+            background: linear-gradient(135deg, #ffb703, #fb8500);
+            color: #090b11;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 183, 3, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-futuristic-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 183, 3, 0.6);
+        }
+
         @media (max-width: 900px) {
             .share-sidebar-left, .share-sidebar-right { position: fixed; top: auto; bottom: 0; transform: none; flex-direction: row; justify-content: center; width: 50%; background: rgba(9, 11, 17, 0.95); padding: 10px 0; }
             .share-sidebar-left { left: 0; border-top: 1px solid #2d3142; border-right: 1px solid #2d3142; }
@@ -210,6 +311,18 @@
 </head>
 
 <body id="top-page">
+
+    <!-- MODAL ALERT FUTURISTIK DENGAN SAMBUTAN OTOMATIS -->
+    <div id="futuristicAlertModal" class="futuristic-modal-overlay">
+        <div class="futuristic-modal-card">
+            <div class="modal-icon-glow">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </div>
+            <h3 id="modalGreetingTitle">Pusat Informasi Sydney</h3>
+            <p id="modalGreetingText">Memuat pesan...</p>
+            <button class="btn-futuristic-action" onclick="closeFuturisticModal()">Mengerti & Mulai</button>
+        </div>
+    </div>
 
     <div class="share-sidebar-left">
         <a href="https://www.facebook.com/share/1BLNQw38oY/" target="_blank" rel="noopener noreferrer" class="btn-floating float-fb"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
@@ -326,9 +439,51 @@
     <!-- AMBIL DATA BERKAS SDY.JS -->
     <script src="/result/sdy.js"></script>
 
+    <!-- LOGIKA MODAL OTOMATIS BERDASARKAN WAKTU & 1 KALI 24 JAM -->
     <script>
+        function checkAndShowFuturisticAlert() {
+            const lastShownTime = localStorage.getItem('sydney_modal_last_shown');
+            const currentTime = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000; // 24 jam dalam milidetik
+
+            if (!lastShownTime || (currentTime - parseInt(lastShownTime)) > twentyFourHours) {
+                // Tentukan waktu (Pagi/Siang/Sore/Malam)
+                const jamSekarang = new Date().getHours();
+                let salamWaktu = "Selamat Pagi";
+                
+                if (jamSekarang >= 4 && jamSekarang < 11) {
+                    salamWaktu = "Selamat Pagi";
+                } else if (jamSekarang >= 11 && jamSekarang < 15) {
+                    salamWaktu = "Selamat Siang";
+                } else if (jamSekarang >= 15 && jamSekarang < 18) {
+                    salamWaktu = "Selamat Sore";
+                } else {
+                    salamWaktu = "Selamat Malam";
+                }
+
+                // Ubah teks dinamis pada elemen modal
+                document.getElementById('modalGreetingTitle').innerText = `${salamWaktu} Bosku!`;
+                document.getElementById('modalGreetingText').innerHTML = `Selamat datang di Prediksi Sydney! Silakan pakai angka main dari Tunggal Paito. Jika cocok, <span>tetap utamakan prediksi sendiri</span>. Semoga Hoki!`;
+
+                // Tampilkan modal setelah jeda tipis
+                setTimeout(() => {
+                    const modal = document.getElementById('futuristicAlertModal');
+                    if (modal) modal.classList.add('active');
+                }, 500);
+            }
+        }
+
+        function closeFuturisticModal() {
+            const modal = document.getElementById('futuristicAlertModal');
+            if (modal) {
+                modal.classList.remove('active');
+                // Simpan waktu saat ini ke localStorage agar muncul 1 kali dalam 24 jam
+                localStorage.setItem('sydney_modal_last_shown', Date.now().toString());
+            }
+        }
+
         window.addEventListener('load', function() {
-            alert("selamat datang diprediksi sydney bosku silahkan dipakai angka main dari tunggal paito jika cocok tetap utamakan prediksi sendiri,semoga hoky");
+            checkAndShowFuturisticAlert();
         });
     </script>
 
@@ -373,7 +528,6 @@
     });
 
     // RUMUS SYDNEY 6 DIGIT: DARI KEPALA (PULUHAN)
-    // Formula: [Kepala, Kepala+1, Kepala+2, Kepala-1, Kepala-2, Index Kepala]
     function hitung6DigitKuatSDY(resultStr) {
         let kep = parseInt(resultStr.charAt(2));
         let list6Digit = [];
@@ -388,7 +542,6 @@
         return list6Digit;
     }
 
-    // KAMUS DERET HUBUNGAN PAITO
     function dapatkanDeretHubungan(n) {
         const mlMap = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
         const mbMap = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
@@ -406,12 +559,10 @@
         return [naik1, naik2, turun1, turun2, idx, ml, mb, ty];
     }
 
-    // LOGIKA PENYARINGAN AI SYDNEY (ANGKA 2D RESULT TETAP DIHITUNG/TIDAK DIELIMINASI)
     function cari3DigitTerkaitSDY(resultStr, list6Digit) {
         let kep = parseInt(resultStr.charAt(2));
         let ekor = parseInt(resultStr.charAt(3));
 
-        // Angka 2D Tetap dipertahankan
         let sisaLayak = [...list6Digit];
 
         let deretKepala = dapatkanDeretHubungan(kep);
@@ -421,12 +572,10 @@
         let hitungFrekuensi = {};
         sisaLayak.forEach(num => {
             let jumlah = kombinasi2D.filter(d => d === num).length;
-            // Keterikatan tambahan jika angka tersebut adalah Ekor atau Kepala
             if (num === ekor || num === kep) jumlah += 1;
             hitungFrekuensi[num] = jumlah;
         });
 
-        // Urutkan berdasarkan keterikatan frekuensi terbanyak
         let kandidatUrut = [...new Set(sisaLayak)].sort((a, b) => hitungFrekuensi[b] - hitungFrekuensi[a]);
 
         return kandidatUrut.slice(0, 3);
@@ -485,7 +634,6 @@
             `;
         }
 
-        // ANGKA TUNGGAL DARI HASIL PERTAMA (AK1)
         let angkaTunggal = am3Digit[0];
 
         if(document.getElementById('angka-tunggal-box')) {
