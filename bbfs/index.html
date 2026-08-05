@@ -385,6 +385,55 @@
                 <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted);">Memuat /result/${market}.js ...</div>
             </div>
         `;
+        document.getElementById('currentYear').innerText = new Date().getFullYear();
+
+    function goBack() {
+        if (document.referrer && document.referrer !== window.location.href) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    }
+
+    // Fungsi untuk mengambil 8 digit unik dari penggabungan result-result sebelumnya
+    function generateBBFS(historyList, upToIndex) {
+        let subHistory = historyList.slice(0, upToIndex + 1);
+        let poolDigits = [];
+
+        // Ambil digit dari result ke belakang secara berurutan sampai terkumpul minimal 8 digit unik
+        for (let i = subHistory.length - 1; i >= 0; i--) {
+            let res = subHistory[i];
+            for (let digit of res) {
+                if (!poolDigits.includes(digit)) {
+                    poolDigits.push(digit);
+                }
+            }
+        }
+
+        // Jika kurang dari 8, lengkapi dari 0-9
+        for (let i = 0; i <= 9; i++) {
+            let charI = i.toString();
+            if (!poolDigits.includes(charI)) {
+                poolDigits.push(charI);
+            }
+        }
+
+        // Ambil 8 digit pertama lalu urutkan
+        let finalBbfs = poolDigits.slice(0, 8).sort((a, b) => parseInt(a) - parseInt(b));
+        return finalBbfs.join('');
+    }
+
+    function loadMarketData() {
+        const market = document.getElementById('marketSelect').value;
+        const scriptId = 'dynamic-market-script';
+        const container = document.getElementById('resultContainer');
+        
+        container.innerHTML = `
+            <div style="text-align: center; padding: 25px;">
+                <span class="status-loading">☢︎</span>
+                <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted);">Memuat /result/${market}.js ...</div>
+            </div>
+        `;
         document.getElementById('predBbfs').innerText = "--------";
 
         const oldScript = document.getElementById(scriptId);
@@ -469,14 +518,15 @@
         }
 
         const last10 = results.slice(-10);
-        const currentBBFS = generateBBFS(results); 
+        // Prediksi untuk result setelah data terakhir
+        const currentBBFS = generateBBFS(results, results.length - 1); 
         
         document.getElementById('predBbfs').innerText = currentBBFS;
         document.getElementById('predTitle').innerText = `Prediksi BBFS ${marketName} Selanjutnya`;
 
         last10.forEach((res, index) => {
             let absoluteIndex = results.indexOf(res);
-            let rowBbfs = getRowBBFS(results, absoluteIndex);
+            let rowBbfs = generateBBFS(results, absoluteIndex);
             
             let isTheVeryLastRow = (index === last10.length - 1);
             let rowDiv = document.createElement('div');
@@ -488,18 +538,18 @@
                     <span style="color: var(--text-muted); font-size: 12px; font-style: italic;">(Acuan Tebakan)</span>
                 `;
             } else {
-                // KOREKSI KUNCI: Ambil result tepat di bawahnya berdasarkan indeks global riwayat asli (results), bukan array potongan last10
+                // Ambil result selanjutnya di baris bawahnya
                 let nextRes = results[absoluteIndex + 1];
-                let next2d = nextRes.slice(-2); 
+                let next2D = nextRes.slice(-2); // Ambil 2D belakang (contoh: '34' dari '1234')
                 
-                let kepalaNext = next2d.charAt(0);
-                let ekorNext = next2d.charAt(1);
+                let digit1 = next2D.charAt(0);
+                let digit2 = next2D.charAt(1);
 
-                let matchK = rowBbfs.includes(kepalaNext);
-                let matchE = rowBbfs.includes(ekorNext);
+                // Cek apakah kedua digit 2D tersebut ada di dalam BBFS baris ini
+                let match1 = rowBbfs.includes(digit1);
+                let match2 = rowBbfs.includes(digit2);
                 
-                // Wajib masuk 2D penuh (kepala DAN ekor harus ada di BBFS baris ini)
-                let isPassed = matchK && matchE; 
+                let isPassed = match1 && match2; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
                 rowDiv.innerHTML = `
