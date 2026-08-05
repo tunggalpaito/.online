@@ -14,13 +14,13 @@ jobs:
     steps:
       # 1. Ambil kode terbaru dari repository kamu
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 2. Siapkan lingkungan Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: '20' # Menggunakan Node.js yang stabil
+          node-version: '24' # Menggunakan Node.js yang stabil
 
       # 3. Jalankan file main.js buatanmu
       - name: Jalankan Perbaikan Sitemap
