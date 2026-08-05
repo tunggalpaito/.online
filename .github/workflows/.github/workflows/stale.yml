@@ -16,16 +16,16 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           
-          # Berapa hari isu dibiarkan tanpa komentar sebelum dicap "basi"? (Misal: 60 hari)
+          # Berapa hari isu dibiarkan tanpa komentar sebelum dicap "basi"?
           days-before-stale: 60
-          
-          # Pesan yang dikirim robot ke isu tersebut
           stale-issue-message: 'Isu ini otomatis ditandai basi karena sudah 60 hari tidak ada aktivitas. Jika masih penting, silakan beri komentar!'
           
           # Berapa hari setelah dicap basi lalu isu tersebut ditutup permanen?
           days-before-close: 7
           close-issue-message: 'Isu ini ditutup otomatis karena tidak ada respons setelah ditandai basi.'
           
-          # Lakukan hal yang sama untuk Pull Request
+          # Pengaturan untuk Pull Request
           days-before-stale-pr: 30
           stale-pr-message: 'Pull request ini sudah tidak aktif selama 30 hari dan akan segera ditutup.'
+          days-before-close-pr: 7
+          close-pr-message: 'Pull request ini ditutup otomatis karena tidak ada aktivitas setelah ditandai basi.'
