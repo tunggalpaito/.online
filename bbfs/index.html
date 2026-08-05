@@ -32,6 +32,8 @@
         "name": "TUNGGAL PAITO"
       }
     }
+    </script>
+
     <style>
         :root {
             --bg-color: #131314;
@@ -163,7 +165,6 @@
             font-weight: bold;
         }
 
-        /* Animasi Simbol Berputar Keren ☢︎ */
         @keyframes spinNuclear {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -237,67 +238,6 @@
     </div>
 
     <div class="card">
-        <div style="font-weight: 600; margin-bottom: 10px; font-size: 14px; color: var(--accent-color);">
-
-        </div>
-        
-        <footer>
-<div style="text-align:center; margin:20px 0;">
-    <script async="async" data-cfasync="false"
-    src="https://pl30187165.effectivecpmnetwork.com/285abe3dfa3645b0c5001d78494f7ebb/invoke.js"></script>
-
-    <div id="container-285abe3dfa3645b0c5001d78494f7ebb"></div>
-</div><script src="https://pl30187164.effectivecpmnetwork.com/27/ba/bd/27babd93febcd37a091303b95048fdf4.js"></script><script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
-<!-- Histats Counter -->
-<div id="histats_counter" style="
-display:flex;
-justify-content:center;
-align-items:center;
-height:18px;
-overflow:hidden;
-transform:scale(.55);
-transform-origin:center;
-opacity:.85;
-">
-</div>
-
-</footer>
-
-
-<!-- Histats.com START -->
-<script type="text/javascript">
-var _Hasync= _Hasync || [];
-
-_Hasync.push(['Histats.start',
-'1,5037448,4,600,110,30,00001001'
-]);
-
-_Hasync.push(['Histats.fasi','1']);
-
-_Hasync.push(['Histats.track_hits','']);
-
-(function(){
-
-var hs=document.createElement('script');
-hs.type='text/javascript';
-hs.async=true;
-hs.src='//s10.histats.com/js15_as.js';
-
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0])
-.appendChild(hs);
-
-})();
-</script>
-
-<noscript>
-<a href="/" target="_blank">
-<img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0">
-</a>
-</noscript>
-
-<!-- Histats.com END -->
-<script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
-
         <div id="resultContainer" class="result-list">
             Memuat data...
         </div>
@@ -324,22 +264,15 @@ hs.src='//s10.histats.com/js15_as.js';
         }
     }
 
-    // Generator 8 digit BBFS berdasarkan pola historis kepala & ekor
-    // Logika Pintar: Menganalisis kemunculan riil dari data paito masing-masing pasaran
-    // Logika Pintar: Cek mundur riwayat sebelumnya untuk mencari angka yang lemah/tidak muncul setelah kepala & ekor tertentu
     function generateBBFS(historyList) {
         if (!historyList || historyList.length < 2) return "01234567";
         
-        // Ambil result paling akhir sebagai acuan utama
         let lastResult = historyList[historyList.length - 1];
-        let targetKepala = lastResult.charAt(lastResult.length - 2); // Angka Puluhan/Kepala terakhir
-        let targetEkor = lastResult.charAt(lastResult.length - 1);     // Angka Satuan/Ekor terakhir
+        let targetKepala = lastResult.charAt(lastResult.length - 2); 
+        let targetEkor = lastResult.charAt(lastResult.length - 1);     
 
-        // Hitung kemunculan angka berikutnya (result setelahnya) atau lacak mundur
-        // untuk melihat angka berapa yang paling jarang / tidak pernah muncul setelah kepala/ekor tersebut.
         let trackingMap = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
         
-        // Lakukan penelusuran mundur dari data historis
         for (let i = 0; i < historyList.length - 1; i++) {
             let current = historyList[i];
             let next = historyList[i + 1];
@@ -347,7 +280,6 @@ hs.src='//s10.histats.com/js15_as.js';
             let curKepala = current.charAt(current.length - 2);
             let curEkor = current.charAt(current.length - 1);
             
-            // Jika polanya mendekati atau sama dengan kepala/ekor acuan, catat angka apa saja yang sering/tidak muncul di result berikutnya
             if (curKepala === targetKepala || curEkor === targetEkor) {
                 for (let digit of next) {
                     let d = parseInt(digit);
@@ -358,7 +290,6 @@ hs.src='//s10.histats.com/js15_as.js';
             }
         }
 
-        // Jika data histori kurang spesifik untuk pola tersebut, gunakan fallback pencarian angka paling jarang muncul secara keseluruhan di riwayat
         let totalCheck = Object.values(trackingMap).reduce((a, b) => a + b, 0);
         if (totalCheck === 0) {
             historyList.forEach(res => {
@@ -369,35 +300,27 @@ hs.src='//s10.histats.com/js15_as.js';
             });
         }
 
-        // Urutkan dari angka yang kemunculannya paling sedikit (paling tidak ada / lemah)
         let sortedDigits = Object.keys(trackingMap).sort((a, b) => trackingMap[a] - trackingMap[b]);
         
-        // Ambil 2 angka terlemah (yang tidak ada / paling sedikit muncul) untuk dibuang
         let weak1 = sortedDigits[0];
         let weak2 = sortedDigits[1];
 
         let allDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         let bbfsDigits = allDigits.filter(d => d.toString() !== weak1 && d.toString() !== weak2);
 
-        // Pastikan pas 8 digit
         while(bbfsDigits.length < 8) {
             for(let i = 0; i <= 9; i++) {
                 if(!bbfsDigits.includes(i) && bbfsDigits.length < 8) bbfsDigits.push(i);
             }
         }
 
-        // Urutkan kembali agar rapi
         bbfsDigits.sort((a, b) => a - b);
-
         return bbfsDigits.join('');
     }
 
-    // Logika rekap baris sebelumnya agar menggunakan metode penelusuran mundur yang sama pintar
     function getRowBBFS(historyList, currentIndex) {
-        // Jika data kurang dari 2 baris, gunakan fallback aman
         if (!historyList || currentIndex < 1) return "01234567";
         
-        // Ambil irisan data dari awal sampai baris saat ini (simulasi pengecekan mundur sampai titik tersebut)
         let subHistory = historyList.slice(0, currentIndex + 1);
         let currentResult = subHistory[subHistory.length - 1];
         
@@ -406,7 +329,6 @@ hs.src='//s10.histats.com/js15_as.js';
 
         let trackingMap = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
         
-        // Cek mundur ke result sebelum-sebelumnya untuk melihat pola kemunculan angka
         for (let i = 0; i < subHistory.length - 1; i++) {
             let current = subHistory[i];
             let next = subHistory[i + 1];
@@ -434,7 +356,6 @@ hs.src='//s10.histats.com/js15_as.js';
             });
         }
 
-        // Urutkan dari yang paling jarang muncul / tidak ada (lemah)
         let sortedDigits = Object.keys(trackingMap).sort((a, b) => trackingMap[a] - trackingMap[b]);
         
         let weak1 = sortedDigits[0];
@@ -456,10 +377,8 @@ hs.src='//s10.histats.com/js15_as.js';
     function loadMarketData() {
         const market = document.getElementById('marketSelect').value;
         const scriptId = 'dynamic-market-script';
-        
         const container = document.getElementById('resultContainer');
         
-        // Tampilkan animasi putar saat memuat
         container.innerHTML = `
             <div style="text-align: center; padding: 25px;">
                 <span class="status-loading">☢︎</span>
@@ -477,11 +396,8 @@ hs.src='//s10.histats.com/js15_as.js';
         
         script.onload = function() {
             let upperMarket = market.toUpperCase();
-            let rawDataString = "";
-            
             try {
                 let potentialData = "";
-                
                 if (upperMarket === "SGP" && typeof DATA_PAITO_SGP !== 'undefined') potentialData = DATA_PAITO_SGP;
                 else if (upperMarket === "MACAU" && typeof DATA_PAITO_MACAU !== 'undefined') potentialData = DATA_PAITO_MACAU;
                 else if (upperMarket === "CAMBODIA" && typeof DATA_PAITO_CAMBODIA !== 'undefined') potentialData = DATA_PAITO_CAMBODIA;
@@ -499,12 +415,11 @@ hs.src='//s10.histats.com/js15_as.js';
                     if (Array.isArray(potentialData)) {
                         renderResults(potentialData);
                     } else if (typeof potentialData === 'string') {
-                        // Bersihkan string dan filter hanya data angka 4 digit
                         let cleanedArray = potentialData
-                            .replace(/[\n\r]+/g, '') // Hapus baris baru
-                            .split(',')              // Pisahkan dengan koma
+                            .replace(/[\n\r]+/g, '')
+                            .split(',')
                             .map(item => item.trim())
-                            .filter(item => /^\d{4}$/.test(item)); // Hanya ambil string yang murni 4 digit angka (mengabaikan tanggal seperti "31 Jul")
+                            .filter(item => /^\d{4}$/.test(item));
 
                         if (cleanedArray.length > 0) {
                             renderResults(cleanedArray);
@@ -518,7 +433,6 @@ hs.src='//s10.histats.com/js15_as.js';
                     showLoadingSpinner();
                 }
             } catch (e) {
-                console.error("Gagal memproses data:", e);
                 showLoadingSpinner();
             }
         };
@@ -561,7 +475,6 @@ hs.src='//s10.histats.com/js15_as.js';
         document.getElementById('predTitle').innerText = `Prediksi BBFS ${marketName} Selanjutnya`;
 
         last10.forEach((res, index) => {
-            // Hitung BBFS historis untuk baris ini
             let absoluteIndex = results.indexOf(res);
             let rowBbfs = getRowBBFS(results, absoluteIndex);
             
@@ -570,25 +483,22 @@ hs.src='//s10.histats.com/js15_as.js';
             rowDiv.className = 'result-row';
 
             if (isTheVeryLastRow) {
-                // Baris terakhir (paling bawah) tidak punya teman di bawahnya untuk dinilai, 
-                // jadi ini murni jadi acuan prediksi untuk result ke depan.
                 rowDiv.innerHTML = `
                     <span>result ${res} : bbfs ${rowBbfs}</span>
                     <span style="color: var(--text-muted); font-size: 12px; font-style: italic;">(Acuan Tebakan)</span>
                 `;
             } else {
-                // KUNCI UTAMA: Baris saat ini (index) menilai result TEPAT DI BAWAHNYA (index + 1)
-                let nextRes = last10[index + 1];
-                let next2d = nextRes.slice(-2); // 2D dari result di bawahnya (kepala & ekor)
+                // KOREKSI KUNCI: Ambil result tepat di bawahnya berdasarkan indeks global riwayat asli (results), bukan array potongan last10
+                let nextRes = results[absoluteIndex + 1];
+                let next2d = nextRes.slice(-2); 
                 
                 let kepalaNext = next2d.charAt(0);
                 let ekorNext = next2d.charAt(1);
 
-                // Cek apakah KEDUANYA (kepala DAN ekor) dari result di bawahnya ada di dalam BBFS baris ini
                 let matchK = rowBbfs.includes(kepalaNext);
                 let matchE = rowBbfs.includes(ekorNext);
                 
-                // Wajib masuk 2D penuh (kedua angka harus ada di BBFS baris ini)
+                // Wajib masuk 2D penuh (kepala DAN ekor harus ada di BBFS baris ini)
                 let isPassed = matchK && matchE; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
