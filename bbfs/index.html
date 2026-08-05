@@ -561,6 +561,7 @@ hs.src='//s10.histats.com/js15_as.js';
         document.getElementById('predTitle').innerText = `Prediksi BBFS ${marketName} Selanjutnya`;
 
         last10.forEach((res, index) => {
+            // Hitung BBFS historis untuk baris ini
             let absoluteIndex = results.indexOf(res);
             let rowBbfs = getRowBBFS(results, absoluteIndex);
             
@@ -569,24 +570,25 @@ hs.src='//s10.histats.com/js15_as.js';
             rowDiv.className = 'result-row';
 
             if (isTheVeryLastRow) {
-                // Baris paling bawah adalah result terkini (acuan untuk prediksi ke depan)
+                // Baris terakhir (paling bawah) tidak punya teman di bawahnya untuk dinilai, 
+                // jadi ini murni jadi acuan prediksi untuk result ke depan.
                 rowDiv.innerHTML = `
                     <span>result ${res} : bbfs ${rowBbfs}</span>
                     <span style="color: var(--text-muted); font-size: 12px; font-style: italic;">(Acuan Tebakan)</span>
                 `;
             } else {
-                // Ambil result BERIKUTNYA (result di bawahnya) untuk dicocokkan dengan BBFS baris ini
+                // KUNCI UTAMA: Baris saat ini (index) menilai result TEPAT DI BAWAHNYA (index + 1)
                 let nextRes = last10[index + 1];
-                let next2d = nextRes.slice(-2); // 2 digit terakhir dari result selanjutnya (misal: "03")
+                let next2d = nextRes.slice(-2); // 2D dari result di bawahnya (kepala & ekor)
                 
                 let kepalaNext = next2d.charAt(0);
                 let ekorNext = next2d.charAt(1);
 
-                // Cek apakah KEDUANYA (kepala DAN ekor) ada di dalam BBFS baris ini
+                // Cek apakah KEDUANYA (kepala DAN ekor) dari result di bawahnya ada di dalam BBFS baris ini
                 let matchK = rowBbfs.includes(kepalaNext);
                 let matchE = rowBbfs.includes(ekorNext);
                 
-                // Wajib masuk 2D penuh (kepala DAN ekor harus ada di BBFS)
+                // Wajib masuk 2D penuh (kedua angka harus ada di BBFS baris ini)
                 let isPassed = matchK && matchE; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
@@ -599,11 +601,11 @@ hs.src='//s10.histats.com/js15_as.js';
             container.appendChild(rowDiv);
         });
     }
-
+    
     window.onload = function() {
         loadMarketData();
     };
 </script>
 
 </body>
-  </html>
+</html>
