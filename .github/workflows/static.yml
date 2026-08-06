@@ -18,17 +18,13 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js versi 24 terbaru (bebas peringatan deprecated)
+      # 2. Setup Node.js versi 24 terbaru
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
       # 3. Jalankan main.js (Perbaikan HTML, Sitemap, & Robots.txt)
-      - name: Run main.js Smart Fixer
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
       - name: Execute Script
         run: node main.js
 
