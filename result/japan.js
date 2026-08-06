@@ -1,4 +1,3 @@
-// 1. DATA LIVE 4D (BOX ATAS)
 const LIVE_RESULT_JAPAN = {
     latestResult: "2546"
 };
