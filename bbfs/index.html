@@ -264,143 +264,11 @@
         }
     }
 
-    function generateBBFS(historyList) {
-        if (!historyList || historyList.length < 2) return "01234567";
-        
-        let lastResult = historyList[historyList.length - 1];
-        let targetKepala = lastResult.charAt(lastResult.length - 2); 
-        let targetEkor = lastResult.charAt(lastResult.length - 1);     
-
-        let trackingMap = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
-        
-        for (let i = 0; i < historyList.length - 1; i++) {
-            let current = historyList[i];
-            let next = historyList[i + 1];
-            
-            let curKepala = current.charAt(current.length - 2);
-            let curEkor = current.charAt(current.length - 1);
-            
-            if (curKepala === targetKepala || curEkor === targetEkor) {
-                for (let digit of next) {
-                    let d = parseInt(digit);
-                    if (!isNaN(d)) {
-                        trackingMap[d] += 1;
-                    }
-                }
-            }
-        }
-
-        let totalCheck = Object.values(trackingMap).reduce((a, b) => a + b, 0);
-        if (totalCheck === 0) {
-            historyList.forEach(res => {
-                for (let digit of res) {
-                    let d = parseInt(digit);
-                    if (!isNaN(d)) trackingMap[d] += 1;
-                }
-            });
-        }
-
-        let sortedDigits = Object.keys(trackingMap).sort((a, b) => trackingMap[a] - trackingMap[b]);
-        
-        let weak1 = sortedDigits[0];
-        let weak2 = sortedDigits[1];
-
-        let allDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        let bbfsDigits = allDigits.filter(d => d.toString() !== weak1 && d.toString() !== weak2);
-
-        while(bbfsDigits.length < 8) {
-            for(let i = 0; i <= 9; i++) {
-                if(!bbfsDigits.includes(i) && bbfsDigits.length < 8) bbfsDigits.push(i);
-            }
-        }
-
-        bbfsDigits.sort((a, b) => a - b);
-        return bbfsDigits.join('');
-    }
-
-    function getRowBBFS(historyList, currentIndex) {
-        if (!historyList || currentIndex < 1) return "01234567";
-        
-        let subHistory = historyList.slice(0, currentIndex + 1);
-        let currentResult = subHistory[subHistory.length - 1];
-        
-        let targetKepala = currentResult.charAt(currentResult.length - 2);
-        let targetEkor = currentResult.charAt(currentResult.length - 1);
-
-        let trackingMap = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
-        
-        for (let i = 0; i < subHistory.length - 1; i++) {
-            let current = subHistory[i];
-            let next = subHistory[i + 1];
-            
-            let curKepala = current.charAt(current.length - 2);
-            let curEkor = current.charAt(current.length - 1);
-            
-            if (curKepala === targetKepala || curEkor === targetEkor) {
-                for (let digit of next) {
-                    let d = parseInt(digit);
-                    if (!isNaN(d)) {
-                        trackingMap[d] += 1;
-                    }
-                }
-            }
-        }
-
-        let totalCheck = Object.values(trackingMap).reduce((a, b) => a + b, 0);
-        if (totalCheck === 0) {
-            subHistory.forEach(res => {
-                for (let digit of res) {
-                    let d = parseInt(digit);
-                    if (!isNaN(d)) trackingMap[d] += 1;
-                }
-            });
-        }
-
-        let sortedDigits = Object.keys(trackingMap).sort((a, b) => trackingMap[a] - trackingMap[b]);
-        
-        let weak1 = sortedDigits[0];
-        let weak2 = sortedDigits[1];
-
-        let allDigits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-        let bbfsDigits = allDigits.filter(d => d.toString() !== weak1 && d.toString() !== weak2);
-
-        while(bbfsDigits.length < 8) {
-            for(let i = 0; i <= 9; i++) {
-                if(!bbfsDigits.includes(i) && bbfsDigits.length < 8) bbfsDigits.push(i);
-            }
-        }
-
-        bbfsDigits.sort((a, b) => a - b);
-        return bbfsDigits.join('');
-    }
-
-    function loadMarketData() {
-        const market = document.getElementById('marketSelect').value;
-        const scriptId = 'dynamic-market-script';
-        const container = document.getElementById('resultContainer');
-        
-        container.innerHTML = `
-            <div style="text-align: center; padding: 25px;">
-                <span class="status-loading">☢︎</span>
-                <div style="margin-top: 10px; font-size: 13px; color: var(--text-muted);">Memuat /result/${market}.js ...</div>
-            </div>
-        `;
-        document.getElementById('currentYear').innerText = new Date().getFullYear();
-
-    function goBack() {
-        if (document.referrer && document.referrer !== window.location.href) {
-            window.history.back();
-        } else {
-            window.location.href = '/';
-        }
-    }
-
     // Fungsi untuk mengambil 8 digit unik dari penggabungan result-result sebelumnya
     function generateBBFS(historyList, upToIndex) {
         let subHistory = historyList.slice(0, upToIndex + 1);
         let poolDigits = [];
 
-        // Ambil digit dari result ke belakang secara berurutan sampai terkumpul minimal 8 digit unik
         for (let i = subHistory.length - 1; i >= 0; i--) {
             let res = subHistory[i];
             for (let digit of res) {
@@ -410,7 +278,6 @@
             }
         }
 
-        // Jika kurang dari 8, lengkapi dari 0-9
         for (let i = 0; i <= 9; i++) {
             let charI = i.toString();
             if (!poolDigits.includes(charI)) {
@@ -418,7 +285,6 @@
             }
         }
 
-        // Ambil 8 digit pertama lalu urutkan
         let finalBbfs = poolDigits.slice(0, 8).sort((a, b) => parseInt(a) - parseInt(b));
         return finalBbfs.join('');
     }
@@ -518,7 +384,6 @@
         }
 
         const last10 = results.slice(-10);
-        // Prediksi untuk result setelah data terakhir
         const currentBBFS = generateBBFS(results, results.length - 1); 
         
         document.getElementById('predBbfs').innerText = currentBBFS;
@@ -542,14 +407,14 @@
                 let nextRes = results[absoluteIndex + 1];
                 let next2D = nextRes.slice(-2); // Ambil 2D belakang (contoh: '71' dari '1871')
                 
-                let digit1 = next2D.charAt(0);
-                let digit2 = next2D.charAt(1);
+                let digit1 = next2D.charAt(0); // Angka pertama (Kepala)
+                let digit2 = next2D.charAt(1); // Angka kedua (Ekor)
 
-                // Cek apakah kedua digit 2D dari result SELANJUTNYA ada di dalam BBFS baris INI
+                // SYARAT WAJIB ADA 2 ANGKA MASUK:
+                // Kepala DAN Ekor dari result selanjutnya harus ADA di dalam BBFS baris ini
                 let match1 = rowBbfs.includes(digit1);
                 let match2 = rowBbfs.includes(digit2);
                 
-                // Syarat masuk: Kepala DAN Ekor dari result selanjutnya harus ada di BBFS
                 let isPassed = match1 && match2; 
                 let statusHtml = isPassed ? '<span class="status-success">✔</span>' : '<span class="status-fail">✘</span>';
 
