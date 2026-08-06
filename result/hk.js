@@ -2,7 +2,6 @@ const LIVE_RESULT_HK = {
     latestResult: "3634"
 };
 
-
 const DATA_PAITO_HK = `
   6960,4854,9978,3106,4278,7412,4583,
   7802,8143,9498,8943,7591,0983,7754,
