@@ -34,14 +34,15 @@ function processFiles(dir, fileList = []) {
     files.forEach(file => {
         const filePath = path.join(dir, file);
         
-        // Abaikan folder sistem yang tidak perlu
+        // Abaikan folder & file sistem yang tidak perlu masuk sitemap
         if (
             filePath.includes('node_modules') || 
             filePath.includes('.git') || 
             filePath.includes('.github') || 
             filePath.includes('_site') ||
             file === '.DS_Store' ||
-            file === 'Thumbs.db'
+            file === 'Thumbs.db' ||
+            file === '404.html' // Contoh:abaikan halaman 404 agar tidak masuk sitemap
         ) {
             return;
         }
