@@ -1,4 +1,4 @@
-name: Fast Smart Deploy
+name: Fast Deploy
 
 on:
   push:
@@ -14,31 +14,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. Ambil kode terbaru
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js versi 24 terbaru
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      # 3. Jalankan main.js (Perbaikan HTML, Sitemap, & Robots.txt)
-      - name: Execute Script
+      - name: Run Sitemap Generator
         run: node main.js
 
-      # 4. Validasi Error Internal (Memastikan file utama aman sebelum disebar)
-      - name: Validate Files
-        run: |
-          echo "Memeriksa file utama..."
-          if [ ! -f "index.html" ]; then
-            echo "ERROR: index.html tidak ditemukan!"
-            exit 1
-          fi
-          echo "Semua file lengkap dan aman."
-
-      # 5. Konfigurasi dan Upload ke GitHub Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
