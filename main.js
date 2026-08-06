@@ -1,48 +1,41 @@
+
+// Eksekusi utama
+generateSitemapAndRobots();
 const fs = require('fs');
 const path = require('path');
 
-// DOMAIN UTAMA ANDA
 const DOMAIN = 'https://tunggalpaito.online';
 
-// --- ROBOT 1: PERBAIKAN FORMAT HTML (Atas, Tengah, Bawah) ---
+// Fungsi ringan perbaikan HTML
 function fixHtmlStructure(filePath) {
     if (!filePath.endsWith('.html')) return;
-
     let content = fs.readFileSync(filePath, 'utf8');
 
-    // 1. Robot Perbaikan Bagian ATAS (<head>): Memastikan ada charset & viewport standar SEO
     if (!content.includes('<meta name="viewport"')) {
         content = content.replace('<head>', '<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">');
     }
-
-    // 2. Robot Perbaikan Bagian TENGAH (Konten/Body): Menyelaraskan format baris
     content = content.replace(/\r\n/g, '\n');
-
-    // 3. Robot Perbaikan Bagian BAWAH (Sebelum penutup </body>): Memastikan tag penutup aman
+    
     if (!content.includes('</html>') && content.includes('</body>')) {
         content = content + '\n</html>';
     }
-
-    // Simpan kembali file HTML yang sudah diperbaiki
     fs.writeFileSync(filePath, content, 'utf8');
 }
 
-// --- FUNGSI PEMINDAI FILE OTOMATIS ---
+// Pemindai file cepat
 function processFiles(dir, fileList = []) {
     const files = fs.readdirSync(dir);
     
     files.forEach(file => {
         const filePath = path.join(dir, file);
         
-        // Abaikan folder & file sistem yang tidak perlu masuk sitemap
         if (
             filePath.includes('node_modules') || 
             filePath.includes('.git') || 
             filePath.includes('.github') || 
             filePath.includes('_site') ||
             file === '.DS_Store' ||
-            file === 'Thumbs.db' ||
-            file === '404.html' // Contoh:abaikan halaman 404 agar tidak masuk sitemap
+            file === 'Thumbs.db'
         ) {
             return;
         }
@@ -50,25 +43,19 @@ function processFiles(dir, fileList = []) {
         if (fs.statSync(filePath).isDirectory()) {
             processFiles(filePath, fileList);
         } else {
-            // Jalankan Robot Perbaikan HTML
             fixHtmlStructure(filePath);
-
-            // Ambil file .html atau .md untuk sitemap
-            if (file.endsWith('.html') || file.endsWith('.md')) {
+            if (file.endswith('.html') || file.endswith('.md')) {
                 fileList.push(filePath);
             }
         }
     });
-
     return fileList;
 }
 
-// --- ROBOT PEMBUAT SITEMAP & ROBOTS.TXT ---
-function generateSitemapAndRobots() {
+// Pembuat Sitemap kilat
+function generateSitemap() {
     const files = processFiles('.');
-    
-    let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-    sitemapContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     files.forEach(filePath => {
         let cleanPath = filePath
@@ -78,33 +65,18 @@ function generateSitemapAndRobots() {
             .replace(/\.html$/, '')
             .replace(/\.md$/, '');
 
-        if (cleanPath === 'index' || cleanPath === '') {
-            cleanPath = '';
-        }
+        if (cleanPath === 'index' || cleanPath === '') cleanPath = '';
 
         const url = `${DOMAIN}/${cleanPath}`;
-        
-        // Mengambil tanggal asli perubahan file (Last Modified)
-        const stats = fs.statSync(filePath);
-        const lastMod = stats.mtime.toISOString().split('T')[0];
+        const lastMod = fs.statSync(filePath).mtime.toISOString().split('T')[0];
 
-        sitemapContent += `  <url>\n`;
-        sitemapContent += `    <loc>${url}</loc>\n`;
-        sitemapContent += `    <lastmod>${lastMod}</lastmod>\n`;
-        sitemapContent += `  </url>\n`;
+        sitemapContent += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${lastMod}</lastmod>\n  </url>\n`;
     });
 
     sitemapContent += `</urlset>`;
-
-    // Simpan sitemap.xml
     fs.writeFileSync('sitemap.xml', sitemapContent);
-    console.log('Sitemap.xml berhasil diperbarui!');
-
-    // Otomatis buat robots.txt
-    const robotsContent = `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`;
-    fs.writeFileSync('robots.txt', robotsContent);
-    console.log('Robots.txt berhasil diperbarui!');
+    fs.writeFileSync('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`);
+    console.log('Sitemap & Robots diperbarui dengan cepat!');
 }
 
-// Eksekusi utama
-generateSitemapAndRobots();
+generateSitemap();
