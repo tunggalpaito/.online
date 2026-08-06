@@ -14,7 +14,9 @@ function getFiles(dir, fileList = []) {
             filePath.includes('.github') || 
             filePath.includes('data') ||
             filePath.includes('result') || 
-            file.startsWith('.')
+            file.startsWith('.') ||
+            file === 'sitemap.xml' || // PENTING: Supaya sitemap tidak dibaca ulang
+            file === 'robots.txt'     // PENTING: Supaya robots.txt tidak dibaca ulang
         ) return;
 
         if (fs.statSync(filePath).isDirectory()) {
@@ -51,7 +53,7 @@ function updateSitemap() {
     
     fs.writeFileSync('sitemap.xml', sitemap);
     fs.writeFileSync('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`);
-    console.log('Sitemap diperbarui dengan ringan!');
+    console.log('Sitemap berhasil diperbarui dengan aman!');
 }
 
 updateSitemap();
