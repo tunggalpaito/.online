@@ -26,7 +26,7 @@ jobs:
       - name: Setup Node.js Engine
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       # 3. Menjalankan main.js (Robot Internal: Perbaikan HTML Atas-Tengah-Bawah + Sitemap + Robots.txt)
       - name: Run Internal Smart Fixer & Generators
