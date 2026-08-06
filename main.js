@@ -64,6 +64,6 @@ function generateSitemap() {
     // Simpan ke file sitemap.xml
     fs.writeFileSync('sitemap.xml', sitemapContent);
     console.log('Sitemap berhasil dibuat dengan URL bersih!');
-}
+    }
 
-generateSitemap();
+    generateSitemap();
