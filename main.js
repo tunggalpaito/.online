@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+const fs = require('fs');
+const path = require('path');
 
 // DOMAIN UTAMA ANDA
 const DOMAIN = 'https://tunggalpaito.online';
@@ -15,13 +15,11 @@ function fixHtmlStructure(filePath) {
         content = content.replace('<head>', '<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">');
     }
 
-    // 2. Robot Perbaikan Bagian TENGAH (Konten/Body): Memastikan tag utama terbungkus rapi atau memperbaiki spasi/link rusak ringan jika diperlukan
-    // (Contoh: Membersihkan spasi berlebih atau memastikan elemen penting aman)
-    content = content.replace(/\r\n/g, '\n'); // Menyelaraskan format baris sistem operasi
+    // 2. Robot Perbaikan Bagian TENGAH (Konten/Body): Menyelaraskan format baris
+    content = content.replace(/\r\n/g, '\n');
 
-    // 3. Robot Perbaikan Bagian BAWAH (Sebelum penutup </body>): Memastikan struktur penutup aman
+    // 3. Robot Perbaikan Bagian BAWAH (Sebelum penutup </body>): Memastikan tag penutup aman
     if (!content.includes('</html>') && content.includes('</body>')) {
-        // Jika tag </html> tidak sengaja terpotong di bawah, rapikan secara otomatis
         content = content + '\n</html>';
     }
 
@@ -85,7 +83,7 @@ function generateSitemapAndRobots() {
 
         const url = `${DOMAIN}/${cleanPath}`;
         
-        // Mengambil tanggal asli perubahan file (Last Modified) agar akurat di Google
+        // Mengambil tanggal asli perubahan file (Last Modified)
         const stats = fs.statSync(filePath);
         const lastMod = stats.mtime.toISOString().split('T')[0];
 
@@ -99,7 +97,7 @@ function generateSitemapAndRobots() {
 
     // Simpan sitemap.xml
     fs.writeFileSync('sitemap.xml', sitemapContent);
-    console.log('Sitemap.xml berhasil diperbarui dengan tanggal akurat!');
+    console.log('Sitemap.xml berhasil diperbarui!');
 
     // Otomatis buat robots.txt
     const robotsContent = `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`;
