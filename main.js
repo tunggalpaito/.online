@@ -4,22 +4,57 @@ import path from 'path';
 // DOMAIN UTAMA ANDA
 const DOMAIN = 'https://tunggalpaito.online';
 
-// Fungsi untuk mencari file .html atau .md secara otomatis
-function getFiles(dir, fileList = []) {
+// --- ROBOT 1: PERBAIKAN FORMAT HTML (Atas, Tengah, Bawah) ---
+function fixHtmlStructure(filePath) {
+    if (!filePath.endsWith('.html')) return;
+
+    let content = fs.readFileSync(filePath, 'utf8');
+
+    // 1. Robot Perbaikan Bagian ATAS (<head>): Memastikan ada charset & viewport standar SEO
+    if (!content.includes('<meta name="viewport"')) {
+        content = content.replace('<head>', '<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">');
+    }
+
+    // 2. Robot Perbaikan Bagian TENGAH (Konten/Body): Memastikan tag utama terbungkus rapi atau memperbaiki spasi/link rusak ringan jika diperlukan
+    // (Contoh: Membersihkan spasi berlebih atau memastikan elemen penting aman)
+    content = content.replace(/\r\n/g, '\n'); // Menyelaraskan format baris sistem operasi
+
+    // 3. Robot Perbaikan Bagian BAWAH (Sebelum penutup </body>): Memastikan struktur penutup aman
+    if (!content.includes('</html>') && content.includes('</body>')) {
+        // Jika tag </html> tidak sengaja terpotong di bawah, rapikan secara otomatis
+        content = content + '\n</html>';
+    }
+
+    // Simpan kembali file HTML yang sudah diperbaiki
+    fs.writeFileSync(filePath, content, 'utf8');
+}
+
+// --- FUNGSI PEMINDAI FILE OTOMATIS ---
+function processFiles(dir, fileList = []) {
     const files = fs.readdirSync(dir);
     
     files.forEach(file => {
         const filePath = path.join(dir, file);
         
-        // Abaikan folder sistem yang tidak perlu masuk sitemap
-        if (filePath.includes('node_modules') || filePath.includes('.git') || filePath.includes('.github') || filePath.includes('_site')) {
+        // Abaikan folder sistem yang tidak perlu
+        if (
+            filePath.includes('node_modules') || 
+            filePath.includes('.git') || 
+            filePath.includes('.github') || 
+            filePath.includes('_site') ||
+            file === '.DS_Store' ||
+            file === 'Thumbs.db'
+        ) {
             return;
         }
 
         if (fs.statSync(filePath).isDirectory()) {
-            getFiles(filePath, fileList);
+            processFiles(filePath, fileList);
         } else {
-            // Ambil file yang berakhiran .html atau .md saja
+            // Jalankan Robot Perbaikan HTML
+            fixHtmlStructure(filePath);
+
+            // Ambil file .html atau .md untuk sitemap
             if (file.endsWith('.html') || file.endsWith('.md')) {
                 fileList.push(filePath);
             }
@@ -29,29 +64,30 @@ function getFiles(dir, fileList = []) {
     return fileList;
 }
 
-// Proses pembuatan sitemap.xml
-function generateSitemap() {
-    const files = getFiles('.');
+// --- ROBOT PEMBUAT SITEMAP & ROBOTS.TXT ---
+function generateSitemapAndRobots() {
+    const files = processFiles('.');
     
     let sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
     sitemapContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     files.forEach(filePath => {
-        // Bersihkan path file agar URL menjadi bersih tanpa /index.html atau .html
         let cleanPath = filePath
             .replace(/\\/g, '/')
             .replace(/^\.\//, '')
-            .replace(/\/index\.html$/, '') // Menghilangkan /index.html di akhir folder
+            .replace(/\/index\.html$/, '')
             .replace(/\.html$/, '')
             .replace(/\.md$/, '');
 
-        // Jika file adalah index utama di root
         if (cleanPath === 'index' || cleanPath === '') {
             cleanPath = '';
         }
 
         const url = `${DOMAIN}/${cleanPath}`;
-        const lastMod = new Date().toISOString().split('T')[0];
+        
+        // Mengambil tanggal asli perubahan file (Last Modified) agar akurat di Google
+        const stats = fs.statSync(filePath);
+        const lastMod = stats.mtime.toISOString().split('T')[0];
 
         sitemapContent += `  <url>\n`;
         sitemapContent += `    <loc>${url}</loc>\n`;
@@ -61,9 +97,15 @@ function generateSitemap() {
 
     sitemapContent += `</urlset>`;
 
-    // Simpan ke file sitemap.xml
+    // Simpan sitemap.xml
     fs.writeFileSync('sitemap.xml', sitemapContent);
-    console.log('Sitemap berhasil dibuat dengan URL bersih!');
-    }
+    console.log('Sitemap.xml berhasil diperbarui dengan tanggal akurat!');
 
-    generateSitemap();
+    // Otomatis buat robots.txt
+    const robotsContent = `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`;
+    fs.writeFileSync('robots.txt', robotsContent);
+    console.log('Robots.txt berhasil diperbarui!');
+}
+
+// Eksekusi utama
+generateSitemapAndRobots();
