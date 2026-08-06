@@ -1,4 +1,4 @@
-name: Parallel Smart Deploy
+name: Fast Smart Deploy
 
 on:
   push:
@@ -11,58 +11,42 @@ permissions:
   id-token: write
 
 jobs:
-  # --- TIM 1: ROBOT PEMROSES UTAMA (Menjalankan main.js untuk HTML & Sitemap) ---
-  process-files:
+  deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1. Ambil kode terbaru
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # 2. Setup Node.js versi 24 terbaru (bebas peringatan deprecated)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: ''
 
-      - name: Run main.js (HTML Fixer & Sitemap Generator)
+      # 3. Jalankan main.js (Perbaikan HTML, Sitemap, & Robots.txt)
+      - name: Run main.js Smart Fixer
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Execute Script
         run: node main.js
 
-      # Menyimpan hasil kerja Tim 1 agar bisa dipakai oleh Tim Deploy
-      - name: Upload Processed Files
-        uses: actions/upload-artifact@v4
-        with:
-          name: website-files
-          path: '.'
-
-  # --- TIM 2: ROBOT VALIDASI / PENUNTAS ERROR (Berjalan bersamaan mengecek sistem) ---
-  validate-system:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Quick Error Check
+      # 4. Validasi Error Internal (Memastikan file utama aman sebelum disebar)
+      - name: Validate Files
         run: |
-          echo "Robot Validasi Siaga: Memeriksa integritas dasar..."
+          echo "Memeriksa file utama..."
           if [ ! -f "index.html" ]; then
-            echo "PERINGATAN: index.html belum ada di branch utama!"
+            echo "ERROR: index.html tidak ditemukan!"
+            exit 1
           fi
-          echo "Validasi awal selesai tanpa hambatan."
+          echo "Semua file lengkap dan aman."
 
-  # --- TIM 3: ROBOT PENGANTAR (Deploy ke GitHub Pages setelah Tim 1 & 2 selesai) ---
-  deploy-pages:
-    needs: [process-files, validate-system] # Menunggu hasil kerja Tim 1 dan Tim 2
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Processed Files
-        uses: actions/download-artifact@v4
-        with:
-          name: website-files
-
-      - name: Configure Pages Environment
+      # 5. Konfigurasi dan Upload ke GitHub Pages
+      - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Final Upload Artifact
+      - name: Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
