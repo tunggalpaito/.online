@@ -1,47 +1,60 @@
-name: Build and Deploy to GitHub Pages
+name: Ultimate Fast Deploy & Smart Fixer
 
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
 
-permissions:
-  contents: write    # Diubah jadi 'write' agar robot bisa menyimpan sitemap.xml
-  pages: write
-  id-token: write
-
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  smart-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      # 1. Robot Siaga Cepat: Mengambil kode dari repository
+      - name: Checkout Code Fast
         uses: actions/checkout@v4
 
-      # 1. Tambahkan ini: Menyiapkan Node.js agar bisa menjalankan main.js
-      - name: Setup Node.js
+      # 2. Menyiapkan mesin Node.js (bisa disesuaikan ke versi '24' jika diinginkan)
+      - name: Setup Node.js Engine
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
-      # 2. Tambahkan ini: Menjalankan file main.js untuk membuat sitemap.xml
-      - name: Run main.js to generate sitemap
+      # 3. Menjalankan main.js (Robot Internal: Perbaikan HTML Atas-Tengah-Bawah + Sitemap + Robots.txt)
+      - name: Run Internal Smart Fixer & Generators
         run: node main.js
 
-      - name: Setup Pages
+      # 4. Robot Penuntas Error: Memeriksa apakah file utama aman sebelum di-upload
+      - name: Error Handler & Validation Check
+        run: |
+          echo "Menjalankan pemeriksaan akhir..."
+          if [ ! -f "index.html" ]; then
+            echo "ERROR KRITIS: File index.html hilang atau gagal diproses!"
+            exit 1
+          fi
+          if [ ! -f "sitemap.xml" ]; then
+            echo "ERROR: Sitemap gagal dibuat!"
+            exit 1
+          fi
+          echo "Semua sistem aman, bersih dari error, dan siap di-upload!"
+
+      # 5. Robot Pengantar Cepat ke GitHub Pages
+      - name: Configure Pages Environment
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Fast Upload Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
-      - name: Deploy to GitHub Pages
+      - name: Finalize Deployment
         id: deployment
         uses: actions/deploy-pages@v5
