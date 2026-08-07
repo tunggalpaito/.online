@@ -1,6 +1,3 @@
 User-agent: *
 Allow: /
-
-Disallow: /admin.html
-
 Sitemap: https://tunggalpaito.online/sitemap.xml
