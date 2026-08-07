@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi Angka Kuat & Pola 2D Macau Otomatis</title>
+    <title>Prediksi Angka Kuat 2D Macau</title>
     <style>
         :root {
             --bg-color: #050814;
@@ -269,16 +269,14 @@
                 <div class="source-tag"></div>
 
                 <div class="section-heading"></div>
-                <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent-color); margin-bottom: 15px; font-family: monospace;">${patternStr}</div>
 
-                <div class="section-heading">LINE 2D</div>
-                <div class="line-text press-highlight">${pressNumbers.join(' - ')}</div>
+                <div class="line-text press-highlight">BBFS : ${pressNumbers.join('')}</div>
 
                 <div class="section-heading"></div>
-                <div class="line-text" style="color: var(--success-color);">${top2DArr.join('*')}</div>
+                <div class="line-text" style="color: var(--success-color);">2D TOP <br>${top2DArr.join('*')}</div>
 
                 <div class="section-heading"></div>
-                <div class="line-text">${generatedLine2D.join('*')}</div>
+                <div class="line-text">2D PILIHAN <br>${generatedLine2D.join('*')}</div>
             `;
 
             document.getElementById('main-prediction-content').innerHTML = containerHtml;
@@ -287,7 +285,7 @@
         function showErrorState(msg) {
             document.getElementById('main-prediction-content').innerHTML = `
                 <div style="text-align: center; color: var(--danger-color); padding: 25px; font-size: 0.9rem;">
-                    Gagal memuat engine: ${msg}<br>Pastikan file <b>/result/macau.js</b> terbaca sempurna.
+                  
                 </div>
             `;
         }
@@ -318,7 +316,7 @@
                 if (finalArray.length > 0) {
                     processSmartFormulaEngine(finalArray, explicitLatest);
                 } else {
-                    showErrorState("Variabel DATA_PAITO_MACAU tidak ditemukan atau isinya tidak valid.");
+                    showErrorState("Variabel DATA_RESULT_MACAU tidak ditemukan atau isinya tidak valid.");
                 }
             } catch (e) {
                 showErrorState("Terjadi kesalahan saat memparsing struktur data JS.");
