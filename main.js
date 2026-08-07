@@ -15,8 +15,7 @@ function getFiles(dir, fileList = []) {
             filePath.includes('node_modules') || 
             filePath.includes('.git') || 
             filePath.includes('.github') || 
-            filePath.includes('data') ||
-            filePath.includes('result') || 
+            filePath.includes('data') || 
             file.startsWith('.') ||
             file === 'sitemap.xml' || 
             file === 'robots.txt'
