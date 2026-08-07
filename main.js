@@ -3,11 +3,14 @@ const path = require('path');
 
 const DOMAIN = 'https://tunggalpaito.online';
 
-// --- HANYA MENARIK DAFTAR FILE HTML & MD UNTUK SITEMAP ---
+// --- FUNGSI REKURSIF MENARIK DAFTAR FILE HTML & MD ---
 function getFiles(dir, fileList = []) {
-    fs.readdirSync(dir).forEach(file => {
+    const files = fs.readdirSync(dir);
+    
+    files.forEach(file => {
         const filePath = path.join(dir, file);
         
+        // Lewatkan direktori atau file sistem yang tidak perlu dimasukkan ke sitemap
         if (
             filePath.includes('node_modules') || 
             filePath.includes('.git') || 
@@ -15,16 +18,22 @@ function getFiles(dir, fileList = []) {
             filePath.includes('data') ||
             filePath.includes('result') || 
             file.startsWith('.') ||
-            file === 'sitemap.xml' || // PENTING: Supaya sitemap tidak dibaca ulang
-            file === 'robots.txt'     // PENTING: Supaya robots.txt tidak dibaca ulang
+            file === 'sitemap.xml' || 
+            file === 'robots.txt'
         ) return;
 
-        if (fs.statSync(filePath).isDirectory()) {
+        const stat = fs.statSync(filePath);
+
+        if (stat.isDirectory()) {
             getFiles(filePath, fileList);
         } else if (file.endsWith('.html') || file.endsWith('.md')) {
-            fileList.push(filePath);
+            fileList.push({
+                path: filePath,
+                mtime: stat.mtime // Mengambil tanggal modifikasi file asli
+            });
         }
     });
+    
     return fileList;
 }
 
@@ -33,8 +42,8 @@ function updateSitemap() {
     const files = getFiles('.');
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
-    files.forEach(filePath => {
-        let cleanPath = filePath
+    files.forEach(fileObj => {
+        let cleanPath = fileObj.path
             .replace(/\\/g, '/')
             .replace(/^\.\//, '')
             .replace(/\/index\.html$/, '')
@@ -44,7 +53,8 @@ function updateSitemap() {
         if (cleanPath === 'index' || cleanPath === '') cleanPath = '';
 
         const url = `${DOMAIN}/${cleanPath}`;
-        const lastMod = fs.statSync(filePath).mtime.toISOString().split('T')[0];
+        // Format tanggal update otomatis (YYYY-MM-DD)
+        const lastMod = fileObj.mtime.toISOString().split('T')[0];
 
         sitemap += `  <url>\n    <loc>${url}</loc>\n    <lastmod>${lastMod}</lastmod>\n  </url>\n`;
     });
@@ -53,7 +63,7 @@ function updateSitemap() {
     
     fs.writeFileSync('sitemap.xml', sitemap);
     fs.writeFileSync('robots.txt', `User-agent: *\nAllow: /\nSitemap: ${DOMAIN}/sitemap.xml\n`);
-    console.log('Sitemap berhasil diperbarui dengan aman!');
+    console.log('Sitemap dan Robots.txt berhasil diperbarui secara otomatis dengan tanggal terbaru!');
 }
 
 updateSitemap();
