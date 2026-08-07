@@ -1,7 +1,3 @@
-const LIVE_RESULT_SDY = {
-    latestResult: "0158"
-};
-
 const DATA_PAITO_SDY = `
   2983,3508,2744,9043,0538,2903,7091,
   8034,4107,3441,4690,8723,9301,6907,
@@ -25,3 +21,7 @@ const DATA_PAITO_SDY = `
   7037,2448,6199,4816,0158,
   
 `;
+
+const LIVE_RESULT_SDY = {
+    latestResult: "0158"
+};
