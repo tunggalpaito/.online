@@ -343,7 +343,6 @@ hs.src='//s10.histats.com/js15_as.js';
         &copy; <span id="currentYear"></span> TUNGGAL PAITO All Rights Reserved.
     </div>
 </div>
-
 <script>
     document.getElementById('currentYear').innerText = new Date().getFullYear();
 
@@ -416,10 +415,8 @@ hs.src='//s10.histats.com/js15_as.js';
             deadDigits.push(sortedByRare[1]);
         }
 
-        // Saring angka mati dari total 10 digit (menyisakan 8 digit)
         let filteredDigits = allDigits.filter(d => !deadDigits.includes(d));
 
-        // Pengaman otomatis jika ada kelebihan digit (dipangkas secara layak menjadi 8 digit)
         while (filteredDigits.length > 8) {
             filteredDigits.pop();
         }
@@ -571,10 +568,22 @@ hs.src='//s10.histats.com/js15_as.js';
         });
     }
     
+    // --- TAMBAHAN DETEKSI OTOMATIS BERDASARKAN URL ---
     window.onload = function() {
+        const path = window.location.pathname.toLowerCase();
+        const marketSelect = document.getElementById('marketSelect');
+
+        // Cek apakah URL mengandung nama pasaran tertentu
+        for (let i = 0; i < marketSelect.options.length; i++) {
+            let val = marketSelect.options[i].value;
+            if (path.includes(val)) {
+                marketSelect.value = val;
+                break;
+            }
+        }
+
         loadMarketData();
     };
 </script>
-
 </body>
 </html>
