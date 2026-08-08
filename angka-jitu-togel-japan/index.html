@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi Angka Kuat 2D Japan CHN</title>
+    <title>Prediksi Angka Kuat 2D Japan Pools</title>
     <style>
         :root {
             --bg-color: #050814;
@@ -253,12 +253,8 @@
             let sortedPairs = Object.keys(pairScore).sort((a, b) => pairScore[b] - pairScore[a]);
             
             // Saring Top 2D yang selaras dengan hasil kalkulasi otomatis
-            let top2DArr = sortedPairs.filter(p => generatedLine2D.includes(p));
-            if (top2DArr.length < 6) {
-                top2DArr = sortedPairs.slice(0, 8);
-            } else {
-                top2DArr = top2DArr.slice(0, 8);
-            }
+            // Mengambil tepat 1 angka tunggal yang ada di posisi nomor 3 (indeks ke-2)
+let top2DArr = sortedPairs[2] ? [sortedPairs[5]] : [];
 
             let pressNumbers = sortedPairs.slice(0, 3); // Angka Press Utama hasil kalkulasi otomatis
 
@@ -270,13 +266,11 @@
 
                 <div class="section-heading"></div>
 
-                <div class="line-text press-highlight">BBFS : ${pressNumbers.join('')}</div>
+                <div class="line-text press-highlight">BBFS<br> ${pressNumbers.join('')}</div>
 
                 <div class="section-heading"></div>
-                <div class="line-text" style="color: var(--success-color);">2D TOP <br>${top2DArr.join('*')}</div>
-
-                <div class="section-heading"></div>
-                <div class="line-text">2D PILIHAN <br>${generatedLine2D.join('*')}</div>
+<div class="section-heading"></div>
+<div class="line-text" style="color: var(--success-color);">COLOK BEBAS<br>${top2DArr}</div>
             `;
 
             document.getElementById('main-prediction-content').innerHTML = containerHtml;
