@@ -1,13 +1,4 @@
-let DATA_PAITO_TAIWAN = BASE_PAITO_TAIWAN;
-
-let semuaAngkaArray = BASE_PAITO_TAIWAN.trim().split(',').map(s => s.trim()).filter(s => s.length > 0);
-let angkaTerakhir = semuaAngkaArray[semuaAngkaArray.length - 1];
-
-const LIVE_RESULT_TAIWAN = {
-    latestResult: angkaTerakhir 
-};
-
-const BASE_PAITO_TAIWAN = `
+const DATA_PAITO_TAIWAN = `
 1178,3194,1361,3910,9809,7735,9875,
 7637,6430,5591,1072,0564,8981,4254,
 5430,5706,0166,5735,0620,4786,6353,
@@ -18,5 +9,8 @@ const BASE_PAITO_TAIWAN = `
 7645,7884,0400,0537,0386,1087,5512,
 5762,4120,4829,7348,5456,8498,7746,
 5884,4497,7841,4287,0462,6546,2149,
-0176,2470,6960,4587,5838,0000
+0176,2470,6960,4587,5838,
 `;
+const LIVE_RESULT_TAIWAN = {
+    latestResult: "5838"
+};
