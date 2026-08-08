@@ -1,3 +1,7 @@
+const LIVE_RESULT_TAIWAN = {
+    latestResult: "1234" 
+};
+
 const BASE_PAITO_TAIWAN = `
 1178,3194,1361,3910,9809,7735,9875,
 7637,6430,5591,1072,0564,8981,4254,
@@ -18,7 +22,3 @@ let DATA_PAITO_TAIWAN = BASE_PAITO_TAIWAN.trim()
     .filter(s => s.length > 0);
 
 DATA_PAITO_TAIWAN.push(LIVE_RESULT_TAIWAN.latestResult);
-
-const LIVE_RESULT_TAIWAN = {
-    latestResult: "1234" 
-};
