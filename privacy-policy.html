@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kebijakan Privasi - TUNGGAL PAITO</title>
-    <meta name="description" content="Halaman kebijakan privasi resmi situs Tunggal Paito. Pelajari bagaimana kami melindungi privasi pengunjung dan menjaga keamanan data situs kami.">
+    <title>Kebijakan Privasi Resmi - TUNGGAL PAITO</title>
+    <meta name="description" content="Halaman kebijakan privasi resmi situs Tunggal Paito. Pelajari bagaimana kami melindungi data, riwayat statistik paito, dan privasi pengunjung toto pools harian.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tunggalpaito.online">
     
-    <!-- KODE IKLAN -->
+    <!-- KODE IKLAN LAMA 1 (POP-UNDER / DIRECT LINK) -->
     <script src='https://crypotential.com'></script>
     
     <style>
         :root {
-            --bg-dark: #0f111a;
-            --bg-card: #1a1d29;
-            --text-main: #f0f2f5;
-            --text-muted: #a0aec0;
-            --accent: #ffb703;
-            --gradient: linear-gradient(135deg, #1e2235, #121420);
+            --bg-dark: #120826; /* Ungu gelap utama */
+            --bg-card: #1b0f3b; /* Ungu card yang menyatu */
+            --text-main: #e2e8f0; 
+            --text-muted: #94a3b8;
+            --accent: #00ff88; /* Hijau neon terang */
+            --accent-blue: #00d9ff; /* Biru neon sebagai kombinasi */
+            --gradient: linear-gradient(135deg, #23124b, #120826);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
         body {
             background-color: var(--bg-dark);
@@ -32,89 +38,185 @@
 
         header {
             background: var(--gradient);
-            padding: 40px 20px;
+            padding: 25px 20px;
             text-align: center;
             border-bottom: 2px solid var(--accent);
+            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.15);
         }
 
-        header h1 { font-size: 1.5rem; letter-spacing: 1px; text-transform: uppercase; }
-        header h1 span { color: var(--accent); }
+        header h1 {
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        header h1 span { 
+            color: var(--accent); 
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
 
         .privacy-card {
             background-color: var(--bg-card);
-            border: 1px solid #2d3142;
+            border: 1px solid #3b2075;
             border-radius: 16px;
-            padding: 30px;
+            padding: 30px 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
         }
 
         h2 {
-            font-size: 1.1rem;
-            color: var(--accent);
-            margin: 25px 0 10px 0;
+            font-size: 1.15rem;
+            color: var(--accent-blue);
+            margin-top: 25px;
+            margin-bottom: 10px;
             text-transform: uppercase;
             border-left: 3px solid var(--accent);
             padding-left: 10px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
         }
 
-        p { font-size: 0.95rem; margin-bottom: 15px; text-align: justify; color: #d1d5db; }
+        h2:first-of-type {
+            margin-top: 0;
+        }
 
-        ul { margin-left: 20px; margin-bottom: 15px; color: var(--text-muted); }
+        p {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        .system-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 30px;
+        }
 
         .btn-control {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background-color: var(--accent);
-            color: #000;
+            flex: 1;
+            padding: 12px;
+            text-align: center;
             border-radius: 8px;
-            text-decoration: none;
             font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
         }
 
-        footer { text-align: center; padding: 20px 0; color: var(--text-muted); font-size: 0.85rem; }
+        .btn-back { background-color: #23124b; color: #ffffff; border: 1px solid #4c269c; }
+        .btn-back:hover { background-color: #31196b; border-color: var(--accent-blue); }
+        .btn-top { background-color: var(--accent); color: #000000; border: 1px solid var(--accent); }
+        .btn-top:hover { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); transform: translateY(-2px); }
+
+        footer { text-align: center; padding: 20px 0; margin-top: 40px; border-top: 1px solid #3b2075; color: var(--text-muted); font-size: 0.85rem; }
+        footer span { color: var(--accent); }
     </style>
 </head>
-<body>
+<body id="top-page">
 
     <header>
-        <h1>KEBIJAKAN PRIVASI <span>TUNGGAL PAITO</span></h1>
+        <h1 style="margin-top: 45px;">KEBIJAKAN PRIVASI <span>TUNGGAL PAITO</span></h1>
     </header>
 
     <main class="container">
+
+        <!-- KODE IKLAN LAMA 2 (BANNER SPANDUK TENGAH WEB) -->
+        <div style="text-align:center; margin:10px auto 25px auto;">
+            <script async="async" data-cfasync="false" src="https://effectivecpmnetwork.com"></script>
+            <div id="container-285abe3dfa3645b0c5001d78494f7ebb"></div>
+        </div>
+
         <section class="privacy-card">
             <h2>1. Pengumpulan Informasi</h2>
-            <p>Situs <strong>TUNGGAL PAITO</strong> berkomitmen penuh untuk menjaga privasi setiap pengunjung. Kami hanya mencatat informasi standar non-personal yang disediakan secara otomatis oleh browser Anda, seperti alamat IP, jenis perangkat, waktu akses, serta statistik kunjungan harian.</p>
+            <p>Situs <strong>TUNGGAL PAITO</strong> berkomitmen penuh untuk menjaga privasi semua pengunjung setia kami yang mencari referensi bocoran toto harian. Kami hanya mengumpulkan informasi standar non-personal yang disediakan oleh browser Anda melalui sistem pencatatan otomatis (Log Files), seperti alamat IP, jenis perangkat browser, penyedia layanan internet (ISP), serta tanggal dan waktu kunjungan harian Anda.</p>
 
-            <h2>2. Penggunaan Data</h2>
-            <p>Seluruh data analitik yang terekam digunakan secara internal untuk:</p>
+            <h2>2. Penggunaan Informasi</h2>
+            <p>Seluruh data analitik non-personal yang terekam semata-mata kami gunakan untuk keperluan internal situs, meliputi:</p>
             <ul>
-                <li>Menganalisis tren popularitas data pasaran harian.</li>
-                <li>Meningkatkan stabilitas dan kecepatan akses situs agar lebih nyaman digunakan.</li>
-                <li>Memastikan konten yang kami sajikan relevan dengan kebutuhan Anda.</li>
+                <li>Menganalisis tren pasar popularitas pasaran harian (Macau, Cambodia, SDY, China, Japan, SGP, Taiwan, HK).</li>
+                <li>Meningkatkan stabilitas kecepatan akses server saat live draw data statistik berlangsung.</li>
+                <li>Memantau efektivitas kinerja sistem widget periklanan pihak ketiga.</li>
             </ul>
 
-            <h2>3. Kebijakan Cookies & Pihak Ketiga</h2>
-            <p>Website kami menggunakan cookies untuk menyimpan preferensi navigasi Anda agar akses ke data pasaran menjadi lebih cepat. Kami bekerja sama dengan mitra periklanan pihak ketiga yang mungkin menayangkan iklan berdasarkan minat Anda. Situs ini tidak memiliki kendali langsung atas teknologi pelacakan yang digunakan oleh pihak ketiga tersebut.</p>
+            <h2>3. Kebijakan Cookies &amp; Pihak Ketiga</h2>
+            <p>Website kami menggunakan cookies untuk menyimpan preferensi pilihan pasaran favorit harian Anda agar navigasi terasa lebih cepat saat dibuka kembali via HP. Kami juga bermitra dengan jaringan periklanan profesional pihak ketiga (seperti Effective CPM Network dan Crypotential) yang secara otomatis dapat mengirimkan skrip iklan pop-under maupun spanduk komersial langsung ke browser Anda.</p>
+            <p>Harap dicatat bahwa situs TUNGGAL PAITO tidak memiliki kendali atau akses terhadap cookies maupun pelacakan teknologi yang digunakan oleh pihak ketiga penyedia iklan tersebut.</p>
 
-            <h2>4. Perlindungan Data</h2>
-            <p>Keamanan informasi Anda adalah prioritas kami. Situs ini beroperasi tanpa pengumpulan data pribadi yang sensitif dan seluruh akses dijamin menggunakan protokol enkripsi standar industri untuk melindungi kenyamanan Anda dalam menjelajah.</p>
+            <h2>4. Perlindungan Data Privasi</h2>
+            <p>Keamanan informasi Anda adalah prioritas kami. Situs ini beroperasi tanpa pengumpulan data pribadi sensitif serta didukung penuh oleh sistem enkripsi global yang aman untuk menjamin kenyamanan Anda dalam menjelajah.</p>
             
             <h2>5. Persetujuan Pengguna</h2>
-            <p>Dengan mengakses <em>tunggalpaito.online</em>, Anda secara sadar menyatakan setuju terhadap seluruh ketentuan dalam Kebijakan Privasi ini.</p>
-
-            <div style="text-align: center;">
-                <a href="index.html" class="btn-control">⬅ Kembali ke Beranda</a>
-            </div>
+            <p>Dengan menggunakan, mengakses, dan menavigasi seluruh menu pasaran prediksi harian di situs <em>tunggalpaito.online</em>, maka Anda secara sadar menyatakan setuju terhadap seluruh poin Kebijakan Privasi yang telah kami tetapkan secara resmi ini.</p>
         </section>
+        
+        <div class="system-controls">
+            <a href="index.html" class="btn-control btn-back">⬅ Kembali ke Beranda</a>
+        </div>
     </main>
 
+    <!-- HISTATS DIV WITH COUNTER -->
+    <div id="histats_counter" style="text-align:center; margin-top:15px;"></div>
+
     <footer>
-        <p>&copy; 2026 TUNGGAL PAITO. All Rights Reserved.</p>
+        <p><center>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</center></p>
     </footer>
 
-    <!-- Iklan & Statistik Anda tetap diletakkan di bawah sini -->
+    <!-- KODE IKLAN LAMA 3 (POP-UNDER BAWAH / REDIRECT PL) -->
+    <script src="https://effectivecpmnetwork.com"></script>
+
+    <!-- HISTATS CODE START (ASYNC) -->
+    <script type="text/javascript">var _Hasync= _Hasync|| [];
+    _Hasync.push(['Histats.startgif', '1,5037448,4,10036,"div#histatsC {position: absolute;top:0px;left:0px;}body>div#histatsC {position: fixed;}"']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+    (function() {
+    var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+    hs.src = ('//://histats.com');
+    document.getElementsByTagName('head') || document.getElementsByTagName('body')).appendChild(hs);
+    })();</script>
+    <noscript><style type="text/css">div#histatsC {position: absolute;top:0px;left:0px;}body>div#histatsC {position: fixed;}</style>
+    <a href="/" alt="" target="_blank" ><div id="histatsC"><img border="0" src="//://histats.com"></div></a>
+    </noscript>
+    <!-- HISTATS CODE END -->
+
+    <script src="/visitor.js"></script>
+
+<script>
+  document.querySelectorAll('a').forEach(link => {
+    let href = link.getAttribute('href');
+    if (href && href.includes('.html?hari=')) {
+      let pasaran = href.split('.html')[0];
+      let hari = href.split('?hari=')[1];
+      link.setAttribute('href', '/' + pasaran + '/' + hari);
+    }
+  });
+  const urlParams = new URLSearchParams(window.location.search);
+  const hariParam = urlParams.get('hari');
+  if (hariParam) {
+    const namaHalaman = window.location.pathname.split('/').pop().replace('.html', '');
+    window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
+  }
+</script>
+
 </body>
 </html>
