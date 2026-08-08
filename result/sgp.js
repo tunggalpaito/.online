@@ -1,7 +1,3 @@
-const LIVE_RESULT_SGP = {
-    latestResult: "7907"
-};
-
 const DATA_PAITO_SGP = `
   7672,3361,1653,5479,7517,
   5066,0672,9876,2735,0368,
@@ -18,3 +14,6 @@ const DATA_PAITO_SGP = `
   3064,8813,3396,5964,3052,
   9120,0715,7907,
 `;
+const LIVE_RESULT_SGP = {
+    latestResult: "7907"
+};
