@@ -1,4 +1,4 @@
-const DATA_PAITO_TAIWAN = `
+const BASE_PAITO_TAIWAN = `
 1178,3194,1361,3910,9809,7735,9875,
 7637,6430,5591,1072,0564,8981,4254,
 5430,5706,0166,5735,0620,4786,6353,
@@ -11,6 +11,14 @@ const DATA_PAITO_TAIWAN = `
 5884,4497,7841,4287,0462,6546,2149,
 0176,2470,6960,4587,5838,
 `;
+
+let DATA_PAITO_TAIWAN = BASE_PAITO_TAIWAN.trim()
+    .split(',')
+    .map(s => s.trim())
+    .filter(s => s.length > 0);
+
+DATA_PAITO_TAIWAN.push(LIVE_RESULT_TAIWAN.latestResult);
+
 const LIVE_RESULT_TAIWAN = {
-    latestResult: "5838"
+    latestResult: "1234" 
 };
