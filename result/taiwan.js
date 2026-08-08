@@ -1,6 +1,6 @@
 // 1. Masukkan live result terbaru di sini (Cukup ubah 1x di sini!)
 const LIVE_RESULT_TAIWAN = {
-    latestResult: "5838" 
+    latestResult: "1234" 
 };
 
 // 2. Data paito mingguan (biarkan data terakhir berhenti sebelum result terbaru)
