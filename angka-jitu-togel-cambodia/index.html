@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediksi Angka Kuat 2D Cambodia</title>
+    <title>Prediksi Angka Kuat 2D Macau</title>
     <style>
         :root {
             --bg-color: #050814;
@@ -136,7 +136,7 @@
 
     <main class="container">
         <section class="card">
-            <h1>PREDIKSI CAMBODIA HARI INI</h1>
+            <h1>PREDIKSI MACAU HARI INI</h1>
             <div class="subtitle"></div>
             
             <div id="main-prediction-content">
@@ -253,30 +253,24 @@
             let sortedPairs = Object.keys(pairScore).sort((a, b) => pairScore[b] - pairScore[a]);
             
             // Saring Top 2D yang selaras dengan hasil kalkulasi otomatis
-            let top2DArr = sortedPairs.filter(p => generatedLine2D.includes(p));
-            if (top2DArr.length < 6) {
-                top2DArr = sortedPairs.slice(0, 8);
-            } else {
-                top2DArr = top2DArr.slice(0, 8);
-            }
+            // Mengambil tepat 1 angka tunggal yang ada di posisi nomor 3 (indeks ke-2)
+let top2DArr = sortedPairs[2] ? [sortedPairs[6]] : [];
 
             let pressNumbers = sortedPairs.slice(0, 3); // Angka Press Utama hasil kalkulasi otomatis
 
             let containerHtml = `
-                <div class="result-box">RESULT CAMBODIA TERAKHIR
+                <div class="result-box">RESULT MACAU TERAKHIR
                 <br> ${lastResult}
                 </div>
                 <div class="source-tag"></div>
 
                 <div class="section-heading"></div>
 
-                <div class="line-text press-highlight">BBFS : ${pressNumbers.join('')}</div>
+                <div class="line-text press-highlight">BBFS<br> ${pressNumbers.join('')}</div>
 
                 <div class="section-heading"></div>
-                <div class="line-text" style="color: var(--success-color);">2D TOP <br>${top2DArr.join('*')}</div>
-
-                <div class="section-heading"></div>
-                <div class="line-text">2D PILIHAN <br>${generatedLine2D.join('*')}</div>
+<div class="section-heading"></div>
+<div class="line-text" style="color: var(--success-color);">COLOK BEBAS<br>${top2DArr}</div>
             `;
 
             document.getElementById('main-prediction-content').innerHTML = containerHtml;
@@ -292,12 +286,12 @@
 
         // Cache Buster dinamis menggunakan timestamp agar selalu mengambil data dan memproses rumus terbaru secara real-time
         let scriptTag = document.createElement('script');
-        scriptTag.src = '/result/cambodia.js?v=' + new Date().getTime();
+        scriptTag.src = '/result/macau.js?v=' + new Date().getTime();
 
         scriptTag.onload = function() {
             try {
-                let rawPaitoString = typeof DATA_PAITO_CAMBODIA !== 'undefined' ? DATA_PAITO_CAMBODIA : window.DATA_PAITO_CAMBODIA;
-                let liveObj = typeof LIVE_RESULT_CAMBODIA !== 'undefined' ? LIVE_RESULT_CAMBODIA : (window.LIVE_RESULT_CAMBODIA || {});
+                let rawPaitoString = typeof DATA_PAITO_MACAU !== 'undefined' ? DATA_PAITO_MACAU : window.DATA_PAITO_MACAU;
+                let liveObj = typeof LIVE_RESULT_MACAU !== 'undefined' ? LIVE_RESULT_MACAU : (window.LIVE_RESULT_MACAU || {});
                 let explicitLatest = liveObj.latestResult || "";
 
                 let finalArray = [];
@@ -316,7 +310,7 @@
                 if (finalArray.length > 0) {
                     processSmartFormulaEngine(finalArray, explicitLatest);
                 } else {
-                    showErrorState("Variabel DATA_PAITO_CAMBODIA tidak ditemukan atau isinya tidak valid.");
+                    showErrorState("Variabel DATA_RESULT_MACAU tidak ditemukan atau isinya tidak valid.");
                 }
             } catch (e) {
                 showErrorState("Terjadi kesalahan saat memparsing struktur data JS.");
@@ -324,7 +318,7 @@
         };
 
         scriptTag.onerror = function() {
-            showErrorState("File /result/cambodia.js tidak ditemukan di server.");
+            showErrorState("File /result/macau.js tidak ditemukan di server.");
         };
 
         document.head.appendChild(scriptTag);
