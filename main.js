@@ -19,7 +19,8 @@ function getFiles(dir, fileList = []) {
             filePath.includes('admin') || 
             file.startsWith('.') ||
             file === 'sitemap.xml' || 
-            file === 'robots.txt'
+            file === 'robots.txt' ||
+            file === '404.html' ||
         ) return;
 
         const stat = fs.statSync(filePath);
