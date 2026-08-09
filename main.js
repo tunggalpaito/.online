@@ -16,11 +16,11 @@ function getFiles(dir, fileList = []) {
             filePath.includes('.git') || 
             filePath.includes('.github') || 
             filePath.includes('data') || 
-            filePath.includes('admin') || 
+            filePath.includes('.admin') || 
             file.startsWith('.') ||
             file === 'sitemap.xml' || 
-            file === 'robots.txt' ||
-            file === '404.html' ||
+            file === '404.html' || 
+            file === 'robots.txt'
         ) return;
 
         const stat = fs.statSync(filePath);
