@@ -483,12 +483,17 @@
         }
 
         let sumberData = "";
-        if (typeof DATA_PAITO_MACAU !== 'undefined') { sumberData = DATA_PAITO_MACAU; } 
-        else if (typeof DATA_PAITO_CBD !== 'undefined') { sumberData = DATA_PAITO_CBD; } 
-        else if (typeof DATA_PAITO_CB !== 'undefined') { sumberData = DATA_PAITO_CB; }
+        if (typeof DATA_PAITO_MACAU !== 'undefined') {
+            sumberData = DATA_PAITO_MACAU;
+        } else if (typeof DATA_PAITO_CBD !== 'undefined') {
+            sumberData = DATA_PAITO_CBD;
+        } else if (typeof DATA_PAITO_CB !== 'undefined') {
+            sumberData = DATA_PAITO_CB;
+        }
 
         if (sumberData && sumberData.trim() !== '') {
             let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
+            
             if (angkaSahMatch && angkaSahMatch.length > 0) {
                 arrayAngkaMentah = angkaSahMatch.slice(-7);
             }
@@ -497,22 +502,40 @@
                 prosesDanTampilkanTrack(arrayAngkaMentah);
             } else {
                 let containerTrek = document.getElementById('macau-track');
-                if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data minimal 7 result!</div>`;
+                if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah dalam berkas macau.js minimal 7 result!</div>`;
             }
         }
     });
 
-    // --- KUMPULAN FUNGSI RUMUS DASAR ---
-    function getMistikLama(n) { const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6}; return ml[n]; }
-    function getMistikBaru(n) { const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3}; return mb[n]; }
-    function getIndex(n) { const idx = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4}; return idx[n]; }
-    function getTysen(n) { const ty = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6}; return ty[n]; }
+    // RUMUS LOGIKA BARU: MISTIK LAMA, MISTIK BARU, INDEX, TYSEN, NAIK, TURUN
+    function getMistikLama(n) {
+        // 0=1, 2=5, 3=8, 4=7, 6=9
+        const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
+        return ml[n];
+    }
 
-    // --- RUMUS KOMPLIT 5 DIGIT ---
+    function getMistikBaru(n) {
+        // 0=8, 1=7, 2=6, 3=9, 4=5
+        const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
+        return mb[n];
+    }
+
+    function getIndex(n) {
+        const idx = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+        return idx[n];
+    }
+
+    function getTysen(n) {
+        const ty = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6};
+        return ty[n];
+    }
+
+    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
     function hitungRumusKomplit(resultStr) {
         let ekor = parseInt(resultStr.charAt(3));
         let kepala = parseInt(resultStr.charAt(2));
 
+        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
         let ml = getMistikLama(ekor);
         let mb = getMistikBaru(ekor);
         let ind = getIndex(ekor);
@@ -520,67 +543,66 @@
         let naik = (ekor + 1) % 10;
         let turun = (ekor - 1 + 10) % 10;
 
+        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
         let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
         let unik = [...new Set(kumpulanAngka)];
 
-        while(unik.length < 5) {
+        // Pastikan pas 6 digit untuk badge
+        while(unik.length < 6) {
             let rand = Math.floor(Math.random() * 10);
             if(!unik.includes(rand)) unik.push(rand);
         }
+
         return unik.slice(0, 5);
     }
 
-    // --- LOGIKA PELARIAN RESULT ---
-    function cari3DigitTerkait(resultStr, list5Digit) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        
-        let pelarianEkor = [ml, mb, ind, tys, (ekor + 1) % 10, (ekor - 1 + 10) % 10];
-        let kandidatPilihan = list5Digit.filter(num => pelarianEkor.includes(num));
-
-        for (let i = 0; i < list5Digit.length; i++) {
-            if (kandidatPilihan.length >= 3) break;
-            if (!kandidatPilihan.includes(list5Digit[i])) {
-                kandidatPilihan.push(list5Digit[i]);
-            }
-        }
-        return kandidatPilihan.slice(0, 3);
+    function cari3DigitTerkait(resultStr, list6Digit) {
+        // Mengambil 3 digit dari hasil olahan rumus komplit
+        let hasilFilter = [...list6Digit];
+        return hasilFilter.slice(0, 3);
     }
 
-    // --- TAMPILAN TRACK & HASIL ---
     function prosesDanTampilkanTrack(dataResult) {
         const containerTrek = document.getElementById('macau-track');
         if (!containerTrek) return;
 
         containerTrek.innerHTML = '';
+
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
-            let list5Digit = hitungRumusKomplit(resSaatIni);
-            let string5Digit = list5Digit.join('');
+            let list6Digit = hitungRumusKomplit(resSaatIni);
+            let string6Digit = list6Digit.join('');
 
             let htmlStatus = '';
+
             if (i < dataResult.length - 1) {
                 let resBerikutnya = dataResult[i + 1];
                 let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
                 let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
-                let isMasuk = list5Digit.includes(kepBerikutnya) || list5Digit.includes(ekorBerikutnya);
-                htmlStatus = isMasuk ? `<span class="status-check status-win">✔</span>` : `<span class="status-check status-lose">✘</span>`;
+
+                let isMasuk = list6Digit.includes(kepBerikutnya) || list6Digit.includes(ekorBerikutnya);
+
+                if (isMasuk) {
+                    htmlStatus = `<span class="status-check status-win">✔</span>`;
+                } else {
+                    htmlStatus = `<span class="status-check status-lose">✘</span>`;
+                }
+            } else {
+                htmlStatus = `<span class="status-check"></span>`;
             }
+
             containerTrek.innerHTML += `
                 <div class="history-item">
                     <span>Result <strong>${resSaatIni}</strong></span>
-                    <span class="am-badge">AK: ${string5Digit}</span>
+                    <span class="am-badge">AK: ${string6Digit}</span>
                     ${htmlStatus}
                 </div>
             `;
         }
 
         let resTerbaru = dataResult[dataResult.length - 1];
-        let list5DigitTerbaru = hitungRumusKomplit(resTerbaru);
-        let am3Digit = cari3DigitTerkait(resTerbaru, list5DigitTerbaru);
+        let list6DigitTerbaru = hitungRumusKomplit(resTerbaru);
+        let am3Digit = cari3DigitTerkait(resTerbaru, list6DigitTerbaru);
 
         const elemAI = document.getElementById('res-ai');
         if(elemAI) {
@@ -593,14 +615,16 @@
             `;
         }
 
-        // AMBIL POSISI PERTAMA (INDEKS 0) SEBAGAI TUNGGAL
         let angkaTunggal = am3Digit[0];
+
         if(document.getElementById('angka-tunggal-box')) {
             document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
         }
 
         const boxHasil = document.getElementById('box-hasil');
-        if(boxHasil) { boxHasil.style.setProperty('display', 'block', 'important'); }
+        if(boxHasil) {
+            boxHasil.style.setProperty('display', 'block', 'important');
+        }
     }
     </script>
 
