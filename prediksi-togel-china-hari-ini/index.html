@@ -461,7 +461,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         let arrayAngkaMentah = [];
 
-        const tombolPasaran = document.getElementById('pasaran-sdy');
+        const tombolPasaran = document.getElementById('pasaran-china');
         if (tombolPasaran) { tombolPasaran.classList.add('active'); }
 
         const sekarang = new Date();
@@ -472,10 +472,10 @@
         }
 
         let sumberData = "";
-        if (typeof DATA_PAITO_SDY !== 'undefined') {
-            sumberData = DATA_PAITO_SDY;
-        } else if (typeof DATA_PAITO_CBD !== 'undefined') {
-            sumberData = DATA_PAITO_CBD;
+        if (typeof DATA_PAITO_CHINA !== 'undefined') {
+            sumberData = DATA_PAITO_CHINA;
+        } else if (typeof DATA_PAITO_CHINA !== 'undefined') {
+            sumberData = DATA_PAITO_CHINA;
         } else if (typeof DATA_PAITO_CB !== 'undefined') {
             sumberData = DATA_PAITO_CB;
         }
@@ -490,8 +490,8 @@
             if (arrayAngkaMentah.length >= 7) {
                 prosesDanTampilkanTrack(arrayAngkaMentah);
             } else {
-                let containerTrek = document.getElementById('sdy-track');
-                if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah dalam berkas sdy.js minimal 7 result!</div>`;
+                let containerTrek = document.getElementById('china-track');
+                if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah dalam berkas china.js minimal 7 result!</div>`;
             }
         }
     });
@@ -551,7 +551,7 @@
     }
 
     function prosesDanTampilkanTrack(dataResult) {
-        const containerTrek = document.getElementById('sdy-track');
+        const containerTrek = document.getElementById('china-track');
         if (!containerTrek) return;
 
         containerTrek.innerHTML = '';
