@@ -461,7 +461,7 @@
     document.addEventListener("DOMContentLoaded", function() {
         let arrayAngkaMentah = [];
 
-        const tombolPasaran = document.getElementById('pasaran-china');
+        const tombolPasaran = document.getElementById('pasaran-sdy');
         if (tombolPasaran) { tombolPasaran.classList.add('active'); }
 
         const sekarang = new Date();
@@ -472,12 +472,17 @@
         }
 
         let sumberData = "";
-        if (typeof DATA_PAITO_CHINA !== 'undefined') { sumberData = DATA_PAITO_CHINA; } 
-        else if (typeof DATA_PAITO_CHINA !== 'undefined') { sumberData = DATA_PAITO_CBD; } 
-        else if (typeof DATA_PAITO_CB !== 'undefined') { sumberData = DATA_PAITO_CB; }
+        if (typeof DATA_PAITO_SDY !== 'undefined') {
+            sumberData = DATA_PAITO_SDY;
+        } else if (typeof DATA_PAITO_CBD !== 'undefined') {
+            sumberData = DATA_PAITO_CBD;
+        } else if (typeof DATA_PAITO_CB !== 'undefined') {
+            sumberData = DATA_PAITO_CB;
+        }
 
         if (sumberData && sumberData.trim() !== '') {
             let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
+            
             if (angkaSahMatch && angkaSahMatch.length > 0) {
                 arrayAngkaMentah = angkaSahMatch.slice(-7);
             }
@@ -485,25 +490,39 @@
             if (arrayAngkaMentah.length >= 7) {
                 prosesDanTampilkanTrack(arrayAngkaMentah);
             } else {
-                let containerTrek = document.getElementById('china-track');
-                if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data minimal 7 result!</div>`;
+                let containerTrek = document.getElementById('sdy-track');
+                if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah dalam berkas sdy.js minimal 7 result!</div>`;
             }
         }
     });
 
-    // --- KUMPULAN FUNGSI RUMUS DASAR ---
-    function getMistikLama(n) { const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6}; return ml[n]; }
-    function getMistikBaru(n) { const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3}; return mb[n]; }
-    function getIndex(n) { const idx = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4}; return idx[n]; }
-    function getTysen(n) { const ty = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6}; return ty[n]; }
+    // RUMUS LOGIKA DASAR: MISTIK LAMA, MISTIK BARU, INDEX, TYSEN
+    function getMistikLama(n) {
+        const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
+        return ml[n];
+    }
 
-    // --- RUMUS 5 DIGIT MENURUN DARI EKOR (CONTOH: 4 -> 4,3,2,1,0) ---
+    function getMistikBaru(n) {
+        const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
+        return mb[n];
+    }
+
+    function getIndex(n) {
+        const idx = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+        return idx[n];
+    }
+
+    function getTysen(n) {
+        const ty = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6};
+        return ty[n];
+    }
+
+    // RUMUS 5 DIGIT MENURUN DARI EKOR (CONTOH: 4 -> 4,3,2,1,0)
     function hitungRumusKomplit(resultStr) {
         let ekor = parseInt(resultStr.charAt(3));
         let list5Digit = [];
         
         for (let i = 0; i < 5; i++) {
-            // Menurun 1 tingkat setiap langkah, menggunakan modulo 10 agar tetap berputar di angka 0-9
             let angkaTurun = (ekor - i + 10) % 10;
             list5Digit.push(angkaTurun);
         }
@@ -511,7 +530,7 @@
         return list5Digit;
     }
 
-    // --- LOGIKA PELARIAN RESULT ---
+    // LOGIKA PELARIAN UNTUK MENCari 3 DIGIT TERKAIT
     function cari3DigitTerkait(resultStr, list5Digit) {
         let ekor = parseInt(resultStr.charAt(3));
         let ml = getMistikLama(ekor);
@@ -531,25 +550,35 @@
         return kandidatPilihan.slice(0, 3);
     }
 
-    // --- TAMPILAN TRACK & HASIL ---
     function prosesDanTampilkanTrack(dataResult) {
-        const containerTrek = document.getElementById('china-track');
+        const containerTrek = document.getElementById('sdy-track');
         if (!containerTrek) return;
 
         containerTrek.innerHTML = '';
+
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
             let list5Digit = hitungRumusKomplit(resSaatIni);
             let string5Digit = list5Digit.join('');
 
             let htmlStatus = '';
+
             if (i < dataResult.length - 1) {
                 let resBerikutnya = dataResult[i + 1];
                 let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
                 let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
+
                 let isMasuk = list5Digit.includes(kepBerikutnya) || list5Digit.includes(ekorBerikutnya);
-                htmlStatus = isMasuk ? `<span class="status-check status-win">✔</span>` : `<span class="status-check status-lose">✘</span>`;
+
+                if (isMasuk) {
+                    htmlStatus = `<span class="status-check status-win">✔</span>`;
+                } else {
+                    htmlStatus = `<span class="status-check status-lose">✘</span>`;
+                }
+            } else {
+                htmlStatus = `<span class="status-check"></span>`;
             }
+
             containerTrek.innerHTML += `
                 <div class="history-item">
                     <span>Result <strong>${resSaatIni}</strong></span>
@@ -574,16 +603,19 @@
             `;
         }
 
-        // AMBIL POSISI PERTAMA (INDEKS 0) SEBAGAI TUNGGAL
+        // MENGAMBIL POSISI PERTAMA (INDEKS 0) SEBAGAI ANGKA TUNGGAL
         let angkaTunggal = am3Digit[0];
+
         if(document.getElementById('angka-tunggal-box')) {
             document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
         }
 
         const boxHasil = document.getElementById('box-hasil');
-        if(boxHasil) { boxHasil.style.setProperty('display', 'block', 'important'); }
+        if(boxHasil) {
+            boxHasil.style.setProperty('display', 'block', 'important');
+        }
     }
-    </script>
+</script>
     
     <script>
     document.addEventListener("DOMContentLoaded", function() {
