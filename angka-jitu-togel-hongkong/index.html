@@ -256,7 +256,12 @@
             // Mengambil tepat 1 angka tunggal yang ada di posisi nomor 3 (indeks ke-2)
 let top2DArr = sortedPairs[2] ? [sortedPairs[6]] : [];
 
-            let pressNumbers = sortedPairs.slice(0, 3); // Angka Press Utama hasil kalkulasi otomatis
+            let pressNumbers = [
+            sortedPairs[6],
+            sortedPairs[18],
+            sortedPairs[20]
+            ].filter(Boolean);
+ // Angka Press Utama hasil kalkulasi otomatis
 
             let containerHtml = `
                 <div class="result-box">RESULT HONGKONG TERAKHIR
