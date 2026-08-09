@@ -16,6 +16,7 @@ function getFiles(dir, fileList = []) {
             filePath.includes('.git') || 
             filePath.includes('.github') || 
             filePath.includes('data') || 
+            filePath.includes('admin') || 
             filePath.includes('.admin') || 
             file.startsWith('.') ||
             file === 'sitemap.xml' || 
@@ -41,7 +42,7 @@ function getFiles(dir, fileList = []) {
 // --- UPDATE SITEMAP & ROBOTS.TXT ---
 function updateSitemap() {
     const files = getFiles('.');
-    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    let sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
     files.forEach(fileObj => {
         let cleanPath = fileObj.path
