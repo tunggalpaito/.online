@@ -464,7 +464,7 @@
         }
     </script>
 
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         let arrayAngkaMentah = [];
 
@@ -504,95 +504,59 @@
         }
     });
 
-    // RUMUS CAMBODIA 6 DIGIT: 5 DIGIT MAJU DARI EKOR + 1 DIGIT MUNDUR DARI EKOR
-    function hitung6DigitKuat(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let list6Digit = [];
-        
-        for (let i = 0; i < 5; i++) {
-            list6Digit.push((ekor + i) % 10);
-        }
-        list6Digit.push((ekor - 1 + 10) % 10);
-
-        return list6Digit;
+    // RUMUS LOGIKA BARU: MISTIK LAMA, MISTIK BARU, INDEX, TYSEN, NAIK, TURUN
+    function getMistikLama(n) {
+        // 0=1, 2=5, 3=8, 4=7, 6=9
+        const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
+        return ml[n];
     }
 
-    function dapatkanDeretHubungan(n) {
-        const mlMap = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
-        const mbMap = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
-        const tyMap = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6};
+    function getMistikBaru(n) {
+        // 0=8, 1=7, 2=6, 3=9, 4=5
+        const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
+        return mb[n];
+    }
 
-        let naik1 = (n + 1) % 10;
-        let naik2 = (n + 2) % 10;
-        let turun1 = (n - 1 + 10) % 10;
-        let turun2 = (n - 2 + 10) % 10;
-        let idx = (n + 5) % 10;
-        let ml = mlMap[n];
-        let mb = mbMap[n];
-        let ty = tyMap[n];
+    function getIndex(n) {
+        const idx = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+        return idx[n];
+    }
 
-        return [naik1, naik2, turun1, turun2, idx, ml, mb, ty];
+    function getTysen(n) {
+        const ty = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6};
+        return ty[n];
+    }
+
+    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
+    function hitungRumusKomplit(resultStr) {
+        let ekor = parseInt(resultStr.charAt(3));
+        let kepala = parseInt(resultStr.charAt(2));
+
+        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
+        let ml = getMistikLama(ekor);
+        let mb = getMistikBaru(ekor);
+        let ind = getIndex(ekor);
+        let tys = getTysen(ekor);
+        let naik = (ekor + 1) % 10;
+        let turun = (ekor - 1 + 10) % 10;
+
+        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
+        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
+        let unik = [...new Set(kumpulanAngka)];
+
+        // Pastikan pas 6 digit untuk badge
+        while(unik.length < 6) {
+            let rand = Math.floor(Math.random() * 10);
+            if(!unik.includes(rand)) unik.push(rand);
+        }
+
+        return unik.slice(0, 6);
     }
 
     function cari3DigitTerkait(resultStr, list6Digit) {
-        let kep = parseInt(resultStr.charAt(2));
-        let ekor = parseInt(resultStr.charAt(3));
-
-        let sisaLayak = list6Digit.filter(num => num !== kep && num !== ekor);
-        let kandidat = [];
-
-        let deretEkor = dapatkanDeretHubungan(ekor);
-        let hitungFrekuensi = {};
-
-        sisaLayak.forEach(num => {
-            let jumlah = deretEkor.filter(d => d === num).length;
-            hitungFrekuensi[num] = jumlah;
-        });
-
-        let sisaUrut = [...sisaLayak].sort((a, b) => hitungFrekuensi[b] - hitungFrekuensi[a]);
-
-        if (sisaUrut.length > 0) {
-            let ak1 = sisaUrut[0];
-            kandidat.push(ak1);
-
-            let sisaUntukAK2 = sisaLayak.filter(num => num !== ak1);
-            let deretAK1 = dapatkanDeretHubungan(ak1);
-
-            let hitungFrekuensiAK2 = {};
-            sisaUntukAK2.forEach(num => {
-                hitungFrekuensiAK2[num] = deretAK1.filter(d => d === num).length;
-            });
-
-            let sisaUrutAK2 = [...sisaUntukAK2].sort((a, b) => hitungFrekuensiAK2[b] - hitungFrekuensiAK2[a]);
-
-            if (sisaUrutAK2.length > 0) {
-                let ak2 = sisaUrutAK2[0];
-                kandidat.push(ak2);
-
-                let sisaUntukAK3 = sisaUntukAK2.filter(num => num !== ak2);
-                let deretAK2 = dapatkanDeretHubungan(ak2);
-
-                let hitungFrekuensiAK3 = {};
-                sisaUntukAK3.forEach(num => {
-                    hitungFrekuensiAK3[num] = deretAK2.filter(d => d === num).length;
-                });
-
-                let sisaUrutAK3 = [...sisaUntukAK3].sort((a, b) => hitungFrekuensiAK3[b] - hitungFrekuensiAK3[a]);
-
-                if (sisaUrutAK3.length > 0) {
-                    kandidat.push(sisaUrutAK3[0]);
-                }
-            }
-        }
-
-        for (let i = 0; i < sisaLayak.length; i++) {
-            if (kandidat.length >= 3) break;
-            if (!kandidat.includes(sisaLayak[i])) {
-                kandidat.push(sisaLayak[i]);
-            }
-        }
-
-        return kandidat.slice(0, 3);
+        // Mengambil 3 digit dari hasil olahan rumus komplit
+        let hasilFilter = [...list6Digit];
+        return hasilFilter.slice(0, 3);
     }
 
     function prosesDanTampilkanTrack(dataResult) {
@@ -603,7 +567,7 @@
 
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
-            let list6Digit = hitung6DigitKuat(resSaatIni);
+            let list6Digit = hitungRumusKomplit(resSaatIni);
             let string6Digit = list6Digit.join('');
 
             let htmlStatus = '';
@@ -634,7 +598,7 @@
         }
 
         let resTerbaru = dataResult[dataResult.length - 1];
-        let list6DigitTerbaru = hitung6DigitKuat(resTerbaru);
+        let list6DigitTerbaru = hitungRumusKomplit(resTerbaru);
         let am3Digit = cari3DigitTerkait(resTerbaru, list6DigitTerbaru);
 
         const elemAI = document.getElementById('res-ai');
@@ -648,7 +612,7 @@
             `;
         }
 
-        let angkaTunggal = am3Digit[1];
+        let angkaTunggal = am3Digit[0];
 
         if(document.getElementById('angka-tunggal-box')) {
             document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
