@@ -329,23 +329,8 @@
             
             <div id="japan-track" class="history-list"></div>
 
-            <section class="card" id="box-hasil" style="display: none; background-color: #121622; border: 1px solid #2d3142; border-radius: 12px; padding: 15px; margin-bottom: 15px; margin-top: 15px;">
-                <div class="result-label" style="font-size: 1.1rem; color: #ffb703; font-weight: bold; margin-bottom: 10px;">✶ANGKA IKUT HARI INI✶</div>
-                <div id="res-ai" class="ai-container">
-                    <div class="ball-ai">-</div>
-                    <span class="ai-separator">*</span>
-                    <div class="ball-ai">-</div>
-                    <span class="ai-separator">*</span>
-                    <div class="ball-ai">-</div>
-                </div>
-                <div style="font-size: 0.7rem; color: #a0aec0; text-align: center; margin-top: 12px;">
-                    *Sistem otomatis membedah keterikatan Mistik, Taysen, Index, dan Naik-Turun Ratusan/Cop.
-                </div>
-            </section>
-
             <div class="tunggal-box">
-                <div class="tunggal-title"><b>𝐀𝐍𝐆𝐊𝐀 𝐓𝐔𝐍𝐆𝐆𝐀𝐋</b></div>
-                <div id="angka-tunggal-box" class="ball-glow">-</div>
+                
                 <div id="teks-hoki" class="wish-text"></div>
             </div>
 
@@ -486,12 +471,13 @@
             document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
         }
 
-        // AMBIL DATA DARI VAR JAPAN.JS
         let sumberData = "";
         if (typeof DATA_PAITO_JAPAN !== 'undefined') {
             sumberData = DATA_PAITO_JAPAN;
-        } else if (typeof DATA_PAITO_JPN !== 'undefined') {
-            sumberData = DATA_PAITO_JPN;
+        } else if (typeof DATA_PAITO_JAPAN !== 'undefined') {
+            sumberData = DATA_PAITO_CBD;
+        } else if (typeof DATA_PAITO_CB !== 'undefined') {
+            sumberData = DATA_PAITO_CB;
         }
 
         if (sumberData && sumberData.trim() !== '') {
@@ -510,63 +496,59 @@
         }
     });
 
-    // RUMUS JAPAN 6 DIGIT: DARI RATUSAN / COP (Contoh 1234 -> Cop = 2 -> 2,3,4,5,1,0)
-    // Formula: [Cop, Cop+1, Cop+2, Cop+3, Cop-1, Cop-2]
-    function hitung6DigitKuatJapan(resultStr) {
-        let cop = parseInt(resultStr.charAt(1));
-        let list6Digit = [];
-        
-        list6Digit.push(cop);
-        list6Digit.push((cop + 1) % 10);
-        list6Digit.push((cop + 2) % 10);
-        list6Digit.push((cop + 3) % 10);
-        list6Digit.push((cop - 1 + 10) % 10);
-        list6Digit.push((cop - 2 + 10) % 10);
-
-        return list6Digit;
+    // RUMUS LOGIKA BARU: MISTIK LAMA, MISTIK BARU, INDEX, TYSEN, NAIK, TURUN
+    function getMistikLama(n) {
+        // 0=1, 2=5, 3=8, 4=7, 6=9
+        const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
+        return ml[n];
     }
 
-    // KAMUS DERET HUBUNGAN PAITO
-    function dapatkanDeretHubungan(n) {
-        const mlMap = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
-        const mbMap = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
-        const tyMap = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6};
-
-        let naik1 = (n + 1) % 10;
-        let naik2 = (n + 2) % 10;
-        let turun1 = (n - 1 + 10) % 10;
-        let turun2 = (n - 2 + 10) % 10;
-        let idx = (n + 5) % 10;
-        let ml = mlMap[n];
-        let mb = mbMap[n];
-        let ty = tyMap[n];
-
-        return [naik1, naik2, turun1, turun2, idx, ml, mb, ty];
+    function getMistikBaru(n) {
+        // 0=8, 1=7, 2=6, 3=9, 4=5
+        const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
+        return mb[n];
     }
 
-    // LOGIKA PENYARINGAN AI JAPAN BERDASARKAN KETERIKATAN ANGKA 2D
-    function cari3DigitTerkaitJapan(resultStr, list6Digit) {
-        let kep = parseInt(resultStr.charAt(2));
+    function getIndex(n) {
+        const idx = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+        return idx[n];
+    }
+
+    function getTysen(n) {
+        const ty = {0:7, 1:4, 2:9, 3:8, 4:1, 5:2, 6:3, 7:0, 8:5, 9:6};
+        return ty[n];
+    }
+
+    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
+    function hitungRumusKomplit(resultStr) {
         let ekor = parseInt(resultStr.charAt(3));
+        let kepala = parseInt(resultStr.charAt(2));
 
-        let sisaLayak = [...list6Digit];
+        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
+        let ml = getMistikLama(ekor);
+        let mb = getMistikBaru(ekor);
+        let ind = getIndex(ekor);
+        let tys = getTysen(ekor);
+        let naik = (ekor + 1) % 10;
+        let turun = (ekor - 1 + 10) % 10;
 
-        let deretKepala = dapatkanDeretHubungan(kep);
-        let deretEkor = dapatkanDeretHubungan(ekor);
-        let kombinasi2D = deretKepala.concat(deretEkor);
+        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
+        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
+        let unik = [...new Set(kumpulanAngka)];
 
-        let hitungFrekuensi = {};
-        sisaLayak.forEach(num => {
-            let jumlah = kombinasi2D.filter(d => d === num).length;
-            // Jika angka tersebut adalah Kepala atau Ekor result, beri poin tambahan
-            if (num === ekor || num === kep) jumlah += 1;
-            hitungFrekuensi[num] = jumlah;
-        });
+        // Pastikan pas 6 digit untuk badge
+        while(unik.length < 6) {
+            let rand = Math.floor(Math.random() * 10);
+            if(!unik.includes(rand)) unik.push(rand);
+        }
 
-        // Urutkan kandidat berdasarkan frekuensi keterikatan tertinggi
-        let kandidatUrut = [...new Set(sisaLayak)].sort((a, b) => hitungFrekuensi[b] - hitungFrekuensi[a]);
+        return unik.slice(0, 5);
+    }
 
-        return kandidatUrut.slice(0, 3);
+    function cari3DigitTerkait(resultStr, list6Digit) {
+        // Mengambil 3 digit dari hasil olahan rumus komplit
+        let hasilFilter = [...list6Digit];
+        return hasilFilter.slice(0, 3);
     }
 
     function prosesDanTampilkanTrack(dataResult) {
@@ -577,7 +559,7 @@
 
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
-            let list6Digit = hitung6DigitKuatJapan(resSaatIni);
+            let list6Digit = hitungRumusKomplit(resSaatIni);
             let string6Digit = list6Digit.join('');
 
             let htmlStatus = '';
@@ -608,8 +590,8 @@
         }
 
         let resTerbaru = dataResult[dataResult.length - 1];
-        let list6DigitTerbaru = hitung6DigitKuatJapan(resTerbaru);
-        let am3Digit = cari3DigitTerkaitJapan(resTerbaru, list6DigitTerbaru);
+        let list6DigitTerbaru = hitungRumusKomplit(resTerbaru);
+        let am3Digit = cari3DigitTerkait(resTerbaru, list6DigitTerbaru);
 
         const elemAI = document.getElementById('res-ai');
         if(elemAI) {
@@ -622,8 +604,7 @@
             `;
         }
 
-        // Angka Tunggal diambil dari posisi ke-3 (indeks 2) dari kandidat AI
-        let angkaTunggal = am3Digit[2];
+        let angkaTunggal = am3Digit[0];
 
         if(document.getElementById('angka-tunggal-box')) {
             document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
