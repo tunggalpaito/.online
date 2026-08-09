@@ -1,2 +1,2 @@
-# .online
+tunggalpaito.online
 prediksi togel hari ini
