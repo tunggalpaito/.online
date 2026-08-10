@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOCORAN TOGEL CHINA - LIVE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #1a0000; color: #d4af37; font-family: 'Orbitron', sans-serif; text-align: center; margin: 0; padding: 20px; }
+        .info-panel { background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px; border: 1px solid #d4af37; display: inline-block; margin-bottom: 20px; }
+        .roulette-wrapper { position: relative; width: 320px; height: 320px; margin: 20px auto; }
+        .wheel { 
+            width: 100%; height: 100%; border-radius: 50%; border: 12px solid #d4af37; 
+            background: conic-gradient(#b30000 0deg 36deg, #4d0000 36deg 72deg, #b30000 72deg 108deg, #4d0000 108deg 144deg, #b30000 144deg 180deg, #8b0000 180deg 216deg, #b30000 216deg 252deg, #4d0000 252deg 288deg, #b30000 288deg 324deg, #4d0000 324deg 360deg); 
+            position: relative; 
+            transition: transform 5s cubic-bezier(0.15, 0.85, 0.15, 1); 
+        }
+        /* Style teks nominal rupiah tanpa kotak/background (hanya teks bersih) */
+        .money-item { 
+            position: absolute; 
+            width: 75px; 
+            height: 38px; 
+            top: 50%; 
+            left: 50%; 
+            margin: -19px 0 0 -37.5px; 
+            font-size: 13px; 
+            font-weight: bold;
+            color: #fff; 
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 2px 2px 4px #000;
+        }
+        .pointer { position: absolute; top: -30px; left: 50%; margin-left: -15px; width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 30px solid #d4af37; z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+        
+        .btn-container { margin: 30px 0 15px 0; }
+        .btn { background: #d4af37; color: #000; padding: 10px 25px; border: none; cursor: pointer; font-family: 'Orbitron'; font-weight: bold; font-size: 13px; border-radius: 5px; box-shadow: 0 0 10px rgba(212,175,55,0.4); transition: 0.2s; }
+        .btn:hover { background: #fff; }
+        .btn:disabled { background: #555; color: #888; cursor: not-allowed; box-shadow: none; }
+        .btn-reset { background: #800000; color: #ffcccc; margin-left: 10px; border: 1px solid #d4af37; }
+        .btn-reset:hover { background: #b30000; color: #fff; }
+        
+        #result-display { font-size: 45px; margin-top: 15px; color: #fff; letter-spacing: 10px; text-shadow: 0 0 10px #ff0000; }
+        #status-lock { font-size: 12px; color: #00ffcc; margin-top: 8px; }
+        
+        .history-box { max-width: 500px; margin: 25px auto; background: rgba(0,0,0,0.7); border: 1px solid #d4af37; border-radius: 10px; padding: 15px; text-align: left; }
+        .history-box h3 { margin-top: 0; text-align: center; color: #d4af37; font-size: 14px; border-bottom: 1px solid #444; padding-bottom: 8px; }
+        .history-item { font-size: 12px; padding: 6px 0; border-bottom: 1px dashed #333; color: #fff; font-family: monospace; }
+        .history-item:last-child { border-bottom: none; }
+
+        .footer-box { margin-top: 30px; padding: 15px; font-size: 12px; border-top: 1px solid #444; color: #aaa; }
+        .footer-box a { color: #d4af37; text-decoration: none; font-weight: bold; display: inline-block; margin-top: 8px; }
+        .footer-box a:hover { text-decoration: underline; color: #fff; }
+    </style>
+</head>
+<body>
+    <h1>CHINA HOKY</h1>
+    <div class="info-panel">
+        <p>Latest Result : <span id="latest-data" style="color:#fff">Memuat...</span></p>
+        <div id="status-lock">Status: Sinkronisasi Data Publik...</div>
+    </div>
+    <div class="roulette-wrapper">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel"></div>
+    </div>
+    <br>
+    <div class="btn-container">
+        <button class="btn" id="spinBtn" onclick="startSmartSequence()" disabled>MEMUAT DATA...</button>
+    </div>
+    
+    <div id="result-display">------</div>
+
+    <div class="history-box">
+        <h3>REKAP ANGKA BOCORAN YANG DIKELUARKAN</h3>
+        <div id="history-list">Memuat riwayat...</div>
+    </div>
+
+    <div class="footer-box">
+        <div>&copy; <strong>TUNGGAL PAITO</strong>. All Rights Reserved.</div>
+        <a href="https://tunggalpaito.online/prediksi-togel-china-hari-ini">&laquo; Kembali ke Halaman Utama Prediksi China</a>
+    </div>
+
+    <audio id="spinSound" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+
+    <script src="/result/china.js"></script>
+
+    <script>
+        let parsedPaitoArray = [];
+        let currentLiveResult = "";
+        let lockedKey = ""; 
+
+        const moneyLabels = ["۞", "❉", "❆", "❃", "❈", "✻", "✴", "𖤓", "✥", "✮"];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                if (typeof LIVE_RESULT_CHINA !== 'undefined' && LIVE_RESULT_CHINA.latestResult) {
+                    currentLiveResult = LIVE_RESULT_CHINA.latestResult.toString().trim();
+                    document.getElementById('latest-data').innerText = currentLiveResult;
+                    lockedKey = "CHINA_ACCURATE_LOCK_" + currentLiveResult;
+                }
+
+                if (typeof DATA_PAITO_CHINA !== 'undefined') {
+                    parsedPaitoArray = DATA_PAITO_CHINA
+                        .split(',')
+                        .map(item => item.trim())
+                        .filter(item => item.length > 0);
+                }
+
+                if (parsedPaitoArray.length > 0 && currentLiveResult) {
+                    updatePublicHistory(currentLiveResult);
+
+                    let savedResult = localStorage.getItem(lockedKey);
+                    if (savedResult) {
+                        document.getElementById('result-display').innerText = savedResult;
+                        document.getElementById('spinBtn').disabled = true;
+                        document.getElementById('spinBtn').innerText = "HASIL SUDAH TERKUNCI PUBLIK";
+                        document.getElementById('status-lock').innerText = "Status Terkunci";
+                    } else {
+                        document.getElementById('spinBtn').disabled = false;
+                        document.getElementById('spinBtn').innerText = "MULAI PUTAR";
+                        document.getElementById('status-lock').innerText = "Status : Silakan putar untuk mendapatkan angka bocoran hari ini!";
+                    }
+                } else {
+                    document.getElementById('latest-data').innerText = "Data paito / result kosong";
+                }
+            } catch (e) {
+                console.error("Gagal memproses data china.js:", e);
+                document.getElementById('latest-data').innerText = "Error parsing data";
+            }
+        });
+
+        const wheel = document.getElementById('wheel');
+        const spinBtn = document.getElementById('spinBtn');
+        const sound = document.getElementById('spinSound');
+        let accumulatedRotation = 0;
+
+        for(let i = 0; i < 10; i++) {
+            const money = document.createElement('div');
+            money.className = 'money-item';
+            let angle = (i * 36) + 18;
+            money.style.transform = `rotate(${angle}deg) translate(0, -110px) rotate(-${angle}deg)`;
+            money.innerText = moneyLabels[i];
+            wheel.appendChild(money);
+        }
+
+        let globalLastIndex = 0;
+
+        function getAccurateTargetNumber(stepIndex, existingResults) {
+            let targetStringSource = parsedPaitoArray.slice(-24).join('');
+            let hashNum = 0;
+            
+            for (let i = 0; i < currentLiveResult.length; i++) {
+                hashNum += currentLiveResult.charCodeAt(i);
+            }
+            
+            if (stepIndex === 0) {
+                globalLastIndex = hashNum % targetStringSource.length;
+            } else {
+                globalLastIndex = (globalLastIndex + 17) % targetStringSource.length;
+            }
+
+            let chosenDigit = parseInt(targetStringSource[globalLastIndex]);
+            if (isNaN(chosenDigit)) chosenDigit = stepIndex % 10;
+
+            let attempts = 0;
+            while (existingResults.includes(chosenDigit) && attempts < 10) {
+                globalLastIndex = (globalLastIndex + 1) % targetStringSource.length;
+                chosenDigit = parseInt(targetStringSource[globalLastIndex]);
+                if (isNaN(chosenDigit)) chosenDigit = (chosenDigit + 1) % 10;
+                attempts++;
+            }
+
+            return chosenDigit;
+        }
+
+        async function startSmartSequence() {
+            spinBtn.disabled = true;
+            let bbfsResult = [];
+            document.getElementById('result-display').innerText = "------";
+            document.getElementById('status-lock').innerText = "Hasilnya Nanti Lihat Di Tabel Bawah";
+            sound.play();
+
+            for(let step = 0; step < 6; step++) {
+                let targetNum = getAccurateTargetNumber(step, bbfsResult);
+                await spinToTarget(targetNum, bbfsResult);
+            }
+
+            sound.pause();
+            sound.currentTime = 0;
+
+            let finalDigitsString = bbfsResult.join(' ');
+            let formattedForHistory = formatBbfsOutput(bbfsResult);
+            
+            localStorage.setItem(lockedKey, finalDigitsString);
+            saveToHistoryList(currentLiveResult, formattedForHistory);
+
+            document.getElementById('result-display').innerText = finalDigitsString;
+            document.getElementById('spinBtn').disabled = true;
+            document.getElementById('spinBtn').innerText = "HASIL TERKUNCI";
+            document.getElementById('status-lock').innerText = "Status : Terkunci Permanen ( Menunggu Result China )";
+        }
+
+        function formatBbfsOutput(arr) {
+            if (arr.length < 6) return `bbfs ${arr.join('')} bb`;
+            let part1 = arr.slice(0, 3).join('');
+            let part2 = arr.slice(3, 6).join('');
+            return `bbfs ${part1} vs ${part2} bb`;
+        }
+
+        function spinToTarget(targetDigit, bbfsResultArray) {
+            return new Promise(resolve => {
+                let targetAngle = targetDigit * 36;
+                let currentNormalized = accumulatedRotation % 360;
+                
+                let degreeToReach = (360 - (targetAngle - currentNormalized)) % 360;
+                if(degreeToReach <= 0) degreeToReach += 360;
+
+                let totalSpin = 1800 + degreeToReach;
+                accumulatedRotation += totalSpin;
+
+                wheel.style.transform = `rotate(${accumulatedRotation}deg)`;
+
+                setTimeout(() => {
+                    bbfsResultArray.push(targetDigit);
+                    document.getElementById('result-display').innerText = bbfsResultArray.join(' ');
+                    resolve();
+                }, 5000);
+            });
+        }
+
+        function updatePublicHistory(currentRes) {
+            let historyData = JSON.parse(localStorage.getItem('CHINA_PUBLIC_HISTORY_LIST') || '[]');
+            
+            let existingEntry = historyData.find(item => item.result === currentRes);
+            if (!existingEntry) {
+                let lockedVal = localStorage.getItem("CHINA_ACCURATE_LOCK_" + currentRes);
+                if (lockedVal) {
+                    let digitsArr = lockedVal.split(' ').map(Number);
+                    let formattedVal = formatBbfsOutput(digitsArr);
+                    historyData.unshift({ result: currentRes, bbfs: formattedVal });
+                }
+            }
+
+            renderHistoryUI(historyData);
+        }
+
+        function saveToHistoryList(resVal, formattedBbfsVal) {
+            let historyData = JSON.parse(localStorage.getItem('CHINA_PUBLIC_HISTORY_LIST') || '[]');
+            
+            let index = historyData.findIndex(item => item.result === resVal);
+            if (index !== -1) {
+                historyData[index].bbfs = formattedBbfsVal;
+            } else {
+                historyData.unshift({ result: resVal, bbfs: formattedBbfsVal });
+            }
+
+            if (historyData.length > 5) {
+                historyData = historyData.slice(0, 5);
+            }
+
+            localStorage.setItem('CHINA_PUBLIC_HISTORY_LIST', JSON.stringify(historyData));
+            renderHistoryUI(historyData);
+        }
+
+        function renderHistoryUI(historyData) {
+            let container = document.getElementById('history-list');
+            if (historyData.length === 0) {
+                container.innerHTML = "Belum ada putaran publik tercatat.";
+                return;
+            }
+
+            let html = "";
+            historyData.forEach(item => {
+                html += `<div class="history-item">result ${item.result} : ${item.bbfs}</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function resetAllData() {
+            if (confirm("Apakah Anda ingin menghapus semua cache dan riwayat tersimpan?")) {
+                localStorage.clear();
+                alert("Data berhasil direset. Halaman akan dimuat ulang.");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
