@@ -233,14 +233,21 @@
         function updatePublicHistory(currentRes) {
             let historyData = JSON.parse(localStorage.getItem('JAPAN_PUBLIC_HISTORY_LIST') || '[]');
             
-            let existingEntry = historyData.find(item => item.result === currentRes);
-            if (!existingEntry) {
+            // Cek apakah result hari ini sudah ada di dalam rekap
+            let existingIndex = historyData.findIndex(item => item.result === currentRes);
+            
+            if (existingIndex === -1) {
+                // Jika result hari ini BELUM ada, tambahkan ke baris paling atas sebagai slot baru
                 let lockedVal = localStorage.getItem("JAPAN_ACCURATE_LOCK_" + currentRes);
-                if (lockedVal) {
-                    let digitsArr = lockedVal.split(' ').map(Number);
-                    let formattedVal = formatBbfsOutput(digitsArr);
-                    historyData.unshift({ result: currentRes, bbfs: formattedVal });
+                let formattedVal = lockedVal ? formatBbfsOutput(lockedVal.split(' ').map(Number)) : "";
+                
+                historyData.unshift({ result: currentRes, bbfs: formattedVal });
+                
+                // Batasi maksimal 5 baris, data paling lama di bawah otomatis terbuang
+                if (historyData.length > 5) {
+                    historyData = historyData.slice(0, 5);
                 }
+                localStorage.setItem('JAPAN_PUBLIC_HISTORY_LIST', JSON.stringify(historyData));
             }
 
             renderHistoryUI(historyData);
