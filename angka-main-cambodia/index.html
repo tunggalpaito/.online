@@ -41,8 +41,8 @@
             --bg-card: #121622;
             --text-main: #f0f2f5;
             --text-muted: #a0aec0;
-            --accent: #ffb703;
-            --accent-orange: #fb8500;
+            --accent: #0077b6;
+            --accent-orange: #00b4d8;
             --fb-color: #1877f2;
             --x-color: #000000;
             --ig-color: #e1306c;
@@ -56,7 +56,7 @@
         body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; padding-bottom: 70px; position: relative; font-size: 16px; }
 
         header {
-            background: linear-gradient(135deg, #161925, #0f111a);
+            background: linear-gradient(135deg, #023e8a, #03045e);
             padding: 20px;
             text-align: center;
             border-bottom: 2px solid var(--accent);
@@ -72,13 +72,13 @@
             text-transform: uppercase; 
             color: #ffffff;
         }
-        header h1 span { color: var(--accent); }
+        header h1 span { color: var(--accent-orange); }
         
         .container { max-width: 800px; margin: 30px auto; padding: 0 20px; position: relative; }
         
         .result-container { 
-            background: linear-gradient(145deg, #161a26, #0e111b); 
-            border: 1px solid rgba(255, 183, 3, 0.2); 
+            background: linear-gradient(145deg, #101525, #0a0d1a); 
+            border: 1px solid rgba(0, 119, 182, 0.3); 
             border-radius: 16px; 
             padding: 35px 20px; 
             text-align: center; 
@@ -86,7 +86,7 @@
             margin-bottom: 30px; 
         }
 
-        .result-title { font-size: 1.1rem; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
+        .result-title { font-size: 1.1rem; color: var(--accent-orange); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
         .update-time-box { font-size: 0.9rem; color: #4ade80; font-weight: 700; margin-bottom: 25px; letter-spacing: 0.5px; text-transform: uppercase; }
 
         .history-list {
@@ -98,7 +98,7 @@
             background: rgba(0, 0, 0, 0.4);
             padding: 20px;
             border-radius: 14px;
-            border: 1px dashed rgba(255, 183, 3, 0.3);
+            border: 1px dashed rgba(0, 119, 182, 0.3);
         }
         
         .history-item {
@@ -112,7 +112,7 @@
             font-size: 14px;
         }
 
-        .am-badge { color: #ffffff; font-weight: 600; background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 6px; letter-spacing: 1.5px; }
+        .am-badge { color: #ffffff; font-weight: 600; background: rgba(0, 119, 182, 0.2); padding: 2px 8px; border-radius: 6px; letter-spacing: 1.5px; }
         .status-check { font-weight: bold; font-size: 16px; min-width: 25px; text-align: right; display: inline-block; }
         .status-win { color: #2ecc71; text-shadow: 0 0 6px rgba(46, 204, 113, 0.6); }
         .status-lose { color: #e74c3c; text-shadow: 0 0 6px rgba(231, 76, 60, 0.6); }
@@ -159,14 +159,14 @@
 
         .link-flex { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 10px; }
         .system-controls { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
-        .btn-control { flex: 1; padding: 12px 14px; text-align: center; border-radius: 6px; font-weight: bold; font-size: 14px; text-decoration: none; cursor: pointer; background-color: #ffc107; color: #000; border: 1px solid #ff9800; }
+        .btn-control { flex: 1; padding: 12px 14px; text-align: center; border-radius: 6px; font-weight: bold; font-size: 14px; text-decoration: none; cursor: pointer; background-color: #0077b6; color: #fff; border: 1px solid #00b4d8; }
         
         .seo-footer-text { font-size: 0.85rem; color: var(--text-muted); text-align: justify; margin-top: 20px; line-height: 1.6; }
         footer { text-align: center; padding: 20px 0; margin-top: 40px; border-top: 1px solid #2d3142; color: var(--text-muted); font-size: 0.85rem; }
-        footer span { color: var(--accent); }
+        footer span { color: var(--accent-orange); }
         
         .btn-nav-link { display: inline-block; padding: 12px 10px; background: linear-gradient(145deg, #1c2030, #131622); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; border: 1px solid #2d3142; text-align: center; }
-        .btn-nav-link.active { background: linear-gradient(145deg, #ffb703, #fb8500) !important; color: #090b11 !important; border: 1px solid #ffb703 !important; }
+        .btn-nav-link.active { background: linear-gradient(145deg, #023e8a, #0077b6) !important; color: #fff !important; border: 1px solid #0077b6 !important; }
 
         .welcome-modal-overlay {
             position: fixed;
@@ -187,13 +187,13 @@
         }
         .welcome-modal-card {
             background: linear-gradient(145deg, #161a26, #0e111b);
-            border: 2px solid #ffb703;
+            border: 2px solid var(--accent);
             border-radius: 20px;
             width: 90%;
             max-width: 420px;
             padding: 30px 25px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(255, 183, 3, 0.25);
+            box-shadow: 0 20px 50px rgba(0, 119, 182, 0.25);
             transform: translateY(20px);
             transition: transform 0.3s ease;
         }
@@ -201,11 +201,11 @@
             transform: translateY(0);
         }
         .welcome-icon { font-size: 3rem; margin-bottom: 10px; }
-        .welcome-title { font-size: 1.25rem; color: #ffb703; text-transform: uppercase; font-weight: bold; margin-bottom: 12px; }
+        .welcome-title { font-size: 1.25rem; color: var(--accent-orange); text-transform: uppercase; font-weight: bold; margin-bottom: 12px; }
         .welcome-desc { font-size: 0.95rem; color: #f0f2f5; line-height: 1.6; margin-bottom: 25px; }
         .welcome-btn {
-            background: linear-gradient(135deg, #ffb703, #fb8500);
-            color: #090b11; border: none; padding: 12px 30px; font-size: 1rem;
+            background: linear-gradient(135deg, #023e8a, #0077b6);
+            color: #ffffff; border: none; padding: 12px 30px; font-size: 1rem;
             font-weight: bold; border-radius: 30px; cursor: pointer; text-transform: uppercase;
         }
 
@@ -257,7 +257,7 @@
             <div id="cambodia-track" class="history-list"></div>
 
             <div class="tunggal-box">
-                NEXT <a href="https://tunggalpaito.online/angka-main-togel-cambodia" class="btn-nav-link">AK 3 DIGIT</a>
+                NEXT <a href="https://tunggalpaito.online/angka-kuat-togel-cambodia" class="btn-nav-link">AK 3 DIGIT</a>
             </div>
             <footer>
 <div style="text-align:center; margin:20px 0;">
@@ -441,7 +441,6 @@ hs.src='//s10.histats.com/js15_as.js';
             let cleanStr = resultStr.replace(/\D/g, '');
             if (cleanStr.length < 4) cleanStr = '1234';
             
-            // Menggunakan FNV-1a hash untuk mendapatkan seed unik dan stabil dari result string
             let hash = 2166136261;
             for (let i = 0; i < cleanStr.length; i++) {
                 hash ^= cleanStr.charCodeAt(i);
@@ -456,7 +455,6 @@ hs.src='//s10.histats.com/js15_as.js';
 
             let digits = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-            // Mengacak angka dengan Fisher-Yates menggunakan seed hash yang stabil
             for (let i = digits.length - 1; i > 0; i--) {
                 let j = Math.floor(lcgCerdas() * (i + 1));
                 let temp = digits[i];
@@ -464,7 +462,6 @@ hs.src='//s10.histats.com/js15_as.js';
                 digits[j] = temp;
             }
 
-            // Mengambil tepat 6 digit pertama yang dijamin unik tanpa kembar
             return digits.slice(0, 6);
         }
 
@@ -508,8 +505,8 @@ hs.src='//s10.histats.com/js15_as.js';
         }
     </script>
     
-            <footer>
-                <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
-            </footer>
+    <footer>
+        <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
