@@ -516,28 +516,34 @@
     }
 
     // Fungsi Pemangkas Simpel dari Kepala & As Result yang Lalu
-    function pangkasSimpel(ak5Array, resultSebelumnya) {
-        let unikAk5 = [...new Set(ak5Array)];
+    // Fungsi Pemangkas Simpel Berdasarkan Kepala & As Result yang Lalu
+function pangkasSimpel(ak5Array, resultSebelumnya) {
+    let unikAk5 = [...new Set(ak5Array)];
 
-        if (!resultSebelumnya) {
-            return unikAk5.slice(0, 3);
-        }
-
-        let kepalaLalu = parseInt(resultSebelumnya.charAt(2));
-        let asLalu = parseInt(resultSebelumnya.charAt(0));
-
-        let hasilPangkas = unikAk5.filter(angka => angka !== kepalaLalu && angka !== asLalu);
-        let finalClean = [...new Set(hasilPangkas)];
-
-        for (let angka of unikAk5) {
-            if (finalClean.length >= 3) break;
-            if (!finalClean.includes(angka)) {
-                finalClean.push(angka);
-            }
-        }
-
-        return finalClean.slice(0, 3);
+    // Jika tidak ada result sebelumnya (baris pertama), ambil 3 digit pertama dari 5 AK
+    if (!resultSebelumnya) {
+        return unikAk5.slice(0, 3);
     }
+
+    // Ambil Kepala (index ke-2) dan As (index ke-0) dari result yang lalu (sebelumnya)
+    let kepalaLalu = parseInt(resultSebelumnya.charAt(2));
+    let asLalu = parseInt(resultSebelumnya.charAt(0));
+
+    // Pangkas AK 5: Buang angka yang sama persis dengan kepala atau as dari result yang lalu
+    let hasilPangkas = unikAk5.filter(angka => angka !== kepalaLalu && angka !== asLalu);
+    let finalClean = [...new Set(hasilPangkas)];
+
+    // Jika setelah dibuang masih kurang dari 3 digit, ambil sisa angka dari AK 5 awal
+    for (let angka of unikAk5) {
+        if (finalClean.length >= 3) break;
+        if (!finalClean.includes(angka)) {
+            finalClean.push(angka);
+        }
+    }
+
+    // Ambil tepat 3 digit hasil akhir yang bersih
+    return finalClean.slice(0, 3);
+}
 
     function hitungRumusKomplit(resultSkrg, resultSebelumnya) {
         let ekorSkrg = parseInt(resultSkrg.charAt(3));
