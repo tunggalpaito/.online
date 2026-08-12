@@ -58,6 +58,7 @@
             --border-glow: rgba(155, 89, 182, 0.25);
             --success: #00e676;
             --danger: #ff1744;
+            --warning: #ffeb3b;
         }
 
         * {
@@ -85,6 +86,90 @@
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         
+        /* STYLING TOMBOL & KONTEN HIMBAUAN DENGAN ANIMASI */
+        .himbauan-wrapper {
+            margin-bottom: 25px;
+        }
+        
+        @keyframes glowing {
+            0% { box-shadow: 0 0 5px var(--warning); border-color: var(--warning); }
+            50% { box-shadow: 0 0 20px var(--warning), 0 0 30px rgba(255, 235, 59, 0.6); border-color: #fff; }
+            100% { box-shadow: 0 0 5px var(--warning); border-color: var(--warning); }
+        }
+
+        .himbauan-btn {
+            width: 100%;
+            background: #000;
+            color: var(--warning);
+            border: 2px solid var(--warning);
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: glowing 1.5s infinite;
+            transition: transform 0.2s;
+        }
+        .himbauan-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .himbauan-content {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--warning);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .himbauan-content.active {
+            display: block;
+        }
+        .himbauan-content p {
+            margin-bottom: 12px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .himbauan-content ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .himbauan-content li {
+            margin-bottom: 8px;
+        }
+        .himbauan-content li strong {
+            color: var(--text-main);
+        }
+        .himbauan-close-btn {
+            display: block;
+            width: 100%;
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        .himbauan-close-btn:hover {
+            background: #d32f2f;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* JUDUL PANEL */
         .portal-title {
             text-align: center;
@@ -182,6 +267,26 @@
 
     <!-- KONTEN UTAMA -->
     <div class="container">
+        
+        <!-- TOMBOL & KONTEN HIMBAUAN -->
+        <div class="himbauan-wrapper">
+            <button class="himbauan-btn" onclick="toggleHimbauan()">
+                ⚠️ Himbauan Penting Untuk Pemain Online<br>
+                <span style="font-size: 0.8em; opacity: 0.9;">(Tekan Untuk Baca)</span>
+            </button>
+            <div id="himbauanContent" class="himbauan-content">
+                <p>Mengingat maraknya kasus pemblokiran akun secara sepihak, pembatasan akses, hingga saldo tertahan yang sedang sering terjadi di berbagai platform permainan online akhir-akhir ini, kami ingin mengingatkan seluruh pemain agar lebih berhati-hati dan waspada.</p>
+                <ul>
+                    <li><strong>Jangan Menimbun Saldo Terlalu Besar:</strong> Biasakan untuk langsung melakukan penarikan dana (withdraw) secara berkala setiap kali mendapatkan kemenangan atau keuntungan. Jangan membiarkan saldo menumpuk terlalu banyak di dalam akun untuk menghindari risiko kerugian besar jika terjadi kendala pada sistem platform.</li>
+                    <li><strong>Pahami Aturan dan Kebijakan Situs:</strong> Setiap platform memiliki sistem keamanan dan ketentuan (Terms & Conditions) yang ketat. Hindari pola permainan atau tindakan yang berpotensi memicu deteksi sistem keamanan otomatis yang berujung pada penangguhan akun.</li>
+                    <li><strong>Gunakan Data Akun yang Valid & Konsisten:</strong> Pastikan data pendaftaran Anda (terutama nama dan nomor rekening bank/e-wallet) sudah sesuai. Ketidakcocokan data sering kali menjadi kendala utama saat proses verifikasi akun atau pencairan dana.</li>
+                    <li><strong>Selektif dalam Memilih Platform:</strong> Selalu utamakan kehati-hatian dalam menentukan tempat bermain. Pilihlah situs atau bandar darat/online yang memiliki reputasi jelas, transparan, dan terbukti aman dalam memproses transaksi para membernya.</li>
+                    <li><strong>Batasi Risiko Finansial:</strong> Tetapkan manajemen keuangan yang ketat. Anggaplah dana yang digunakan murni untuk hiburan semata dan siap dengan segala kemungkinan risiko yang ada di dalam dunia permainan online.</li>
+                </ul>
+                <button class="himbauan-close-btn" onclick="toggleHimbauan()">Tutup Himbauan</button>
+            </div>
+        </div>
+
         <h2 class="portal-title">Pilih Pasaran Prediksi Hari <span id="namaHari">...</span></h2>
         
         <!-- Wadah Menu Klik Otomatis Pasaran -->
@@ -268,6 +373,12 @@
     </footer>
 
     <script>
+        // Logika untuk Toggle Himbauan
+        function toggleHimbauan() {
+            const content = document.getElementById('himbauanContent');
+            content.classList.toggle('active');
+        }
+
         // Logika otomatisasi pendeteksi hari sistem penonton
         window.onload = function() {
             const listHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
