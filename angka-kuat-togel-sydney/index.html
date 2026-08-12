@@ -319,9 +319,9 @@
             
             <div id="sdy-track" class="history-list"></div>
 
-<div class="tunggal-box">
-            NEXT
-            <a href="https://wa.me/6288970383950?text=Halo%20Admin,%20saya%20ingin%20angka%20tunggal%20dan%20mengetahui%20info%20angka%20selengkapnya." target="_blank" rel="noopener noreferrer" class="btn-nav-link">TUNGGAL</a>
+            <div class="tunggal-box">
+                NEXT
+                <a href="https://wa.me/6288970383950?text=Halo%20Admin,%20saya%20ingin%20angka%20tunggal%20dan%20mengetahui%20info%20angka%20selengkapnya." target="_blank" rel="noopener noreferrer" class="btn-nav-link">TUNGGAL</a>
             </div>
 
             <footer>
@@ -537,17 +537,17 @@
         return unik.slice(0, 5);
     }
 
-    // FUNGSI PEMANGKASAN AK 5 DIGIT MENJADI 3 DIGIT (BERDASARKAN KEPALA & EKOR RESULT KEMARINNYA LAGI)
+    // FUNGSI PEMANGKASAN AK 5 DIGIT MENJADI 3 DIGIT (BERDASARKAN AS & KEPALA RESULT KEMARINNYA LAGI)
     function pangkasAK5ke3(arrDataResult, currentIndex, ak5Digit) {
         let listAK = [...ak5Digit];
 
         if (currentIndex < 2) return listAK.slice(0, 3);
 
         let resultKemarinDulu = arrDataResult[currentIndex - 2];
+        let asKemarinDulu = parseInt(resultKemarinDulu.charAt(0));
         let kepalaKemarinDulu = parseInt(resultKemarinDulu.charAt(2));
-        let ekorKemarinDulu = parseInt(resultKemarinDulu.charAt(3));
 
-        let sisaDigit = listAK.filter(digit => digit !== kepalaKemarinDulu && digit !== ekorKemarinDulu);
+        let sisaDigit = listAK.filter(digit => digit !== asKemarinDulu && digit !== kepalaKemarinDulu);
 
         while (sisaDigit.length < 3 && sisaDigit.length < ak5Digit.length) {
             let tambahan = ak5Digit.find(d => !sisaDigit.includes(d));
