@@ -207,6 +207,7 @@
             body { padding-bottom: 120px; }
         }
 
+        /* CSS STYLING MODAL SAMBUTAN Keren */
         .welcome-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -280,11 +281,20 @@
             transform: scale(1.05);
             box-shadow: 0 6px 20px rgba(255, 183, 3, 0.6);
         }
+
+        @media (max-width: 900px) {
+            .share-sidebar-left, .share-sidebar-right { position: fixed; top: auto; bottom: 0; transform: none; flex-direction: row; justify-content: center; width: 50%; background: rgba(9, 11, 17, 0.95); padding: 10px 0; }
+            .share-sidebar-left { left: 0; border-top: 1px solid #2d3142; border-right: 1px solid #2d3142; }
+            .share-sidebar-right { right: 0; border-top: 1px solid #2d3142; }
+            .btn-floating { width: 40px; height: 40px; }
+            body { padding-bottom: 120px; }
+        }
     </style>
 </head>
 
 <body id="top-page">
 
+    <!-- MODAL SAMBUTAN OTOMATIS (1X DALAM 24 JAM) -->
     <div id="welcomeModal" class="welcome-modal-overlay">
         <div class="welcome-modal-card">
             <div id="welcomeIcon" class="welcome-icon">🎉</div>
@@ -305,7 +315,7 @@
     <div class="share-sidebar-right">
         <a href="mailto:?subject=Rekomendasi%20Prediksi%20Togel%20Sydney%20Jitu&body=Halo%20bosku%2C%20lihat%20trek%20riwayat%20paito%20angka%20colok%20dan%20bocoran%20jitu%20Sydney%20hari%20ini%20di%20sini%3A%20https://tunggalpaito.online" class="btn-floating float-mail"><svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 4.456v-8.914l4.623 4.458zm1.404 1.355l4.226 4.084 4.23-4.084 5.16 4.975h-18.775l5.159-4.975zm1.423-1.371l2.801 2.707 2.802-2.707 4.618-4.454v8.91l-4.618-4.456zm11.927-5.269l-9.377 9.054-9.377-9.054h18.754z"/></svg></a>
         <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" class="btn-floating float-wa"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.93 0c3.165.001 6.14 1.233 8.377 3.469 2.237 2.236 3.467 5.21 3.466 8.375-.004 6.582-5.34 11.931-11.874 11.931-2.006-.001-3.98-.51-5.732-1.482L0 24zm6.59-4.846c1.657.983 3.283 1.489 4.887 1.491 5.43.003 9.85-4.415 9.853-9.845.002-2.63-1.023-5.101-2.887-6.963C16.636 1.975 14.161 1.95 11.93 1.95c-5.429 0-9.85 4.414-9.853 9.844-.001 1.77.475 3.499 1.379 5.048l-.999 3.648 3.732-.979zm11.391-7.051c-.301-.151-1.784-.881-2.057-.981-.273-.101-.473-.151-.672.151-.199.299-.77.981-.944 1.18-.174.199-.349.224-.65.074-.3-.151-1.267-.467-2.414-1.492-.893-.797-1.496-1.782-1.671-2.081-.174-.3-.019-.462.131-.611.135-.134.301-.35.451-.524.15-.174.199-.299.299-.498.1-.199.05-.374-.025-.524-.075-.15-.672-1.62-.922-2.22-.243-.584-.489-.504-.672-.513-.173-.008-.372-.01-.572-.01-.199 0-.523.075-.797.374-.274.299-1.045 1.022-1.045 2.493 0 1.471 1.07 2.89 1.219 3.09 1.121 1.491 2.27 1.471 4.542 2.378 1.401.558 2.27.464 2.89.373.684-.101 1.784-.729 2.033-1.431.25-.701.25-1.3.174-1.431-.076-.131-.274-.206-.575-.357z"/></svg></a>
-        <a href="javascript:void(0);" onclick="alert('Salin alamat link di browser Anda:\nhttps://tunggalpaito.online');" class="btn-floating float-copy"><svg viewBox="0 0 24 24"><path d="M19 2h-14c-1.103 0-2 .897-2 2v14h2v-14h14v-2zm3 4h-14c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-14c0-1.103-.897-2-2-2zm0 16h-14v-14h14v14z"/></svg></a>
+        <a href="javascript:void(0);" onclick="alert('Salin alamat link di browser Anda:\nhttps://tunggalpaito.online');" class="btn-floating float-copy"><svg viewBox="0 0 24 24"><path d="M19 2h-14c-1.103 0-2 .897-2 2v14h2v-14h14v-2zm3 4h-14c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0-2-.897-2-2v-14c0-1.103-.897-2-2-2zm0 16h-14v-14h14v14z"/></svg></a>
     </div>
 
     <header>
@@ -409,15 +419,19 @@
         <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
     </footer>
 
+    <!-- AMBIL DATA BERKAS SDY.JS -->
     <script src="/result/sdy.js"></script>
 
+    <!-- SCRIPT JS UNTUK MODAL SAMBUTAN OTOMATIS (BATASAN 1X DALAM 24 JAM) -->
     <script>
         window.addEventListener('load', function() {
             const waktuSekarang = new Date().getTime();
-            const batasWaktu24Jam = 24 * 60 * 60 * 1000;
+            const batasWaktu24Jam = 24 * 60 * 60 * 1000; // 24 jam dalam milidetik
             const waktuTerakhirMuncul = localStorage.getItem('waktu_popup_sambutan');
 
+            // Cek apakah belum pernah muncul atau sudah lewat dari 24 jam
             if (!waktuTerakhirMuncul || (waktuSekarang - waktuTerakhirMuncul > batasWaktu24Jam)) {
+                
                 const jam = new Date().getHours();
                 let sapaan = "Selamat Datang Bosku!";
                 let ikon = "🎉";
@@ -444,6 +458,7 @@
                     modal.classList.add('active');
                 }
 
+                // Simpan waktu kemunculan saat ini ke localStorage
                 localStorage.setItem('waktu_popup_sambutan', waktuSekarang);
             }
         });
@@ -495,12 +510,15 @@
         }
     });
 
+    // RUMUS LOGIKA BARU: MISTIK LAMA, MISTIK BARU, INDEX, TYSEN, NAIK, TURUN
     function getMistikLama(n) {
+        // 0=1, 2=5, 3=8, 4=7, 6=9
         const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
         return ml[n];
     }
 
     function getMistikBaru(n) {
+        // 0=8, 1=7, 2=6, 3=9, 4=5
         const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
         return mb[n];
     }
@@ -515,51 +533,59 @@
         return ty[n];
     }
 
-    // Fungsi Pemangkas Simpel dari Kepala & As Result yang Lalu
-    // Fungsi Pemangkas Simpel Berdasarkan Kepala & As Result yang Lalu
-function pangkasSimpel(ak5Array, resultSebelumnya) {
-    let unikAk5 = [...new Set(ak5Array)];
+    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
+    function hitungRumusKomplit(resultStr) {
+        let ekor = parseInt(resultStr.charAt(3));
+        let kepala = parseInt(resultStr.charAt(2));
 
-    // Jika tidak ada result sebelumnya (baris pertama), ambil 3 digit pertama dari 5 AK
-    if (!resultSebelumnya) {
-        return unikAk5.slice(0, 3);
-    }
+        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
+        let ml = getMistikLama(ekor);
+        let mb = getMistikBaru(ekor);
+        let ind = getIndex(ekor);
+        let tys = getTysen(ekor);
+        let naik = (ekor + 1) % 10;
+        let turun = (ekor - 1 + 10) % 10;
 
-    // Ambil Kepala (index ke-2) dan As (index ke-0) dari result yang lalu (sebelumnya)
-    let kepalaLalu = parseInt(resultSebelumnya.charAt(2));
-    let asLalu = parseInt(resultSebelumnya.charAt(0));
+        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
+        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
+        let unik = [...new Set(kumpulanAngka)];
 
-    // Pangkas AK 5: Buang angka yang sama persis dengan kepala atau as dari result yang lalu
-    let hasilPangkas = unikAk5.filter(angka => angka !== kepalaLalu && angka !== asLalu);
-    let finalClean = [...new Set(hasilPangkas)];
-
-    // Jika setelah dibuang masih kurang dari 3 digit, ambil sisa angka dari AK 5 awal
-    for (let angka of unikAk5) {
-        if (finalClean.length >= 3) break;
-        if (!finalClean.includes(angka)) {
-            finalClean.push(angka);
+        // Pastikan pas 6 digit untuk badge
+        while(unik.length < 6) {
+            let rand = Math.floor(Math.random() * 10);
+            if(!unik.includes(rand)) unik.push(rand);
         }
+
+        return unik.slice(0, 5);
     }
 
-    // Ambil tepat 3 digit hasil akhir yang bersih
-    return finalClean.slice(0, 3);
-}
+// FUNGSI PEMANGKASAN AK 5 DIGIT MENJADI 3 DIGIT
+    function pangkasAK5ke3(arrDataResult, currentIndex, ak5Digit) {
+        let listAK = [...ak5Digit];
 
-    function hitungRumusKomplit(resultSkrg, resultSebelumnya) {
-        let ekorSkrg = parseInt(resultSkrg.charAt(3));
-        let kepalaSkrg = parseInt(resultSkrg.charAt(2));
-        let asSkrg = parseInt(resultSkrg.charAt(0));
+        // Jika belum ada data kemarinnya lagi (index < 2), ambil aman 3 digit pertama
+        if (currentIndex < 2) return listAK.slice(0, 3);
 
-        let ml = getMistikLama(ekorSkrg);
-        let mb = getMistikBaru(ekorSkrg);
-        let ind = getIndex(ekorSkrg);
-        let tys = getTysen(ekorSkrg);
-        let naik = (ekorSkrg + 1) % 10;
+        // Ambil kepala dan ekor dari result kemarinnya lagi (index - 2)[cite: 4]
+        let resultKemarinDulu = arrDataResult[currentIndex - 2];
+        let kepalaKemarinDulu = parseInt(resultKemarinDulu.charAt(2));
+        let asKemarinDulu = parseInt(resultKemarinDulu.charAt(0));
 
-        let ak5Awal = [ml, mb, ind, tys, naik, kepalaSkrg, asSkrg];
-        let hasilAkhir = pangkasSimpel(ak5Awal, resultSebelumnya);
+        // Pangkas angka yang sama dengan kepala atau ekor result kemarinnya lagi[cite: 4]
+        let sisaDigit = listAK.filter(digit => digit !== kepalaKemarinDulu && digit !== asKemarinDulu);
 
-        return hasilAkhir;
+        // Jika sisa digit kurang dari 3 karena terfilter habis, lengkapi kembali dari angka asli
+        while (sisaDigit.length < 3 && ak3DigitTersedia(ak5Digit, sisaDigit)) {
+            let tambahan = ak5Digit.find(d => !sisaDigit.includes(d));
+            if (tambahan !== undefined) sisaDigit.push(tambahan);
+            else break;
+        }
+
+        return sisaDigit.slice(0, 3); // Hasil akhir 3 digit
+    }
+
+    function ak3DigitTersedia(ak5Digit, sisaDigit) {
+        return sisaDigit.length < 3 && sisaDigit.length < ak5Digit.length;
     }
 
     function prosesDanTampilkanTrack(dataResult) {
@@ -570,9 +596,10 @@ function pangkasSimpel(ak5Array, resultSebelumnya) {
 
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
-            let resSebelumnya = i > 0 ? dataResult[i - 1] : null;
-
-            let list3Digit = hitungRumusKomplit(resSaatIni, resSebelumnya);
+            let list5Digit = hitungRumusKomplit(resSaatIni);
+            
+            // Pangkas 5 digit menjadi 3 digit berdasarkan kepala & ekor result kemarinnya lagi[cite: 4]
+            let list3Digit = pangkasAK5ke3(dataResult, i, list5Digit);
             let string3Digit = list3Digit.join('');
 
             let htmlStatus = '';
@@ -600,6 +627,32 @@ function pangkasSimpel(ak5Array, resultSebelumnya) {
                     ${htmlStatus}
                 </div>
             `;
+        }
+
+        let resTerbaru = dataResult[dataResult.length - 1];
+        let list5DigitTerbaru = hitungRumusKomplit(resTerbaru);
+        let am3Digit = pangkasAK5ke3(dataResult, dataResult.length - 1, list5DigitTerbaru);
+
+        const elemAI = document.getElementById('res-ai');
+        if(elemAI) {
+            elemAI.innerHTML = `
+                <div class="ball-ai">${am3Digit[0]}</div>
+                <span class="ai-separator">*</span>
+                <div class="ball-ai">${am3Digit[1]}</div>
+                <span class="ai-separator">*</span>
+                <div class="ball-ai">${am3Digit[2]}</div>
+            `;
+        }
+
+        let angkaTunggal = am3Digit[0];
+
+        if(document.getElementById('angka-tunggal-box')) {
+            document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
+        }
+
+        const boxHasil = document.getElementById('box-hasil');
+        if(boxHasil) {
+            boxHasil.style.setProperty('display', 'block', 'important');
         }
     }
     </script>
@@ -629,7 +682,7 @@ function pangkasSimpel(ak5Array, resultSebelumnya) {
         }
     });
     </script>
-    <!-- START POPUP IKLAN -->
+<!-- START POPUP IKLAN -->
 <style>
     .popup-overlay {
         display: none; 
