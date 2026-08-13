@@ -328,10 +328,10 @@
             <div id="live-update-time" class="update-time-box">Memuat Waktu Update...</div>
             
             <div id="china-track" class="history-list"></div>
-                
-<div class="tunggal-box">
+
+            <div class="tunggal-box">
             NEXT
-            <a href="https://wa.me/6288970383950?text=Halo%20Admin,%20saya%20ingin%20angka%20tunggal%20dan%20mengetahui%20info%20angka%20selengkapnya." target="_blank" rel="noopener noreferrer" class="btn-nav-link">TUNGGAL</a>
+            <a href="https://tunggalpaito.online/angka-kuat-togel-china" class="btn-nav-link">AK 3 DIGIT</a>
             </div>
             
             <footer>
@@ -531,71 +531,80 @@
         return ty[n];
     }
 
-    // RUMUS 5 DIGIT MENURUN DARI EKOR (CONTOH: 4 -> 4,3,2,1,0)
+    // RUMUS PERPADUAN CERDAS 4D (AS + KOP + KEPALA + EKOR)
     function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let list5Digit = [];
-        
-        for (let i = 0; i < 5; i++) {
-            let angkaTurun = (ekor - i + 10) % 10;
-            list5Digit.push(angkaTurun);
-        }
+        if (!resultStr || resultStr.length < 4) return [0, 1, 2, 3, 4]; // Pengaman jika data tidak valid
 
-        return list5Digit;
-    }
+        let as = parseInt(resultStr.charAt(0));       // Posisi As
+        let kop = parseInt(resultStr.charAt(1));      // Posisi Kop
+        let kepala = parseInt(resultStr.charAt(2));   // Posisi Kepala
+        let ekor = parseInt(resultStr.charAt(3));     // Posisi Ekor
 
-    // LOGIKA PELARIAN UNTUK MENCari 3 DIGIT TERKAIT
-    function cari3DigitTerkait(resultStr, list5Digit) {
-        let ekor = parseInt(resultStr.charAt(3));
+        // 1. Perpaduan Matematis Cerdas
+        let sumAsEkor = (as + ekor) % 10;             // Silang As + Ekor
+        let sumKopKepala = (kop + kepala) % 10;       // Silang Kop + Kepala
+        let totalSemua = (as + kop + kepala + ekor) % 10; // Total 4D
+        let selisihAE = Math.abs(as - ekor);          // Selisih mutlak As & Ekor
+
+        // 2. Transformasi Mistis & Pola Angka
         let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        
-        let pelarianEkor = [ml, mb, ind, tys, (ekor + 1) % 10, (ekor - 1 + 10) % 10];
-        let kandidatPilihan = list5Digit.filter(num => pelarianEkor.includes(num));
+        let mb = getMistikBaru(kepala);
+        let ind = getIndex(sumAsEkor);
+        let tys = getTysen(totalSemua);
 
-        for (let i = 0; i < list5Digit.length; i++) {
-            if (kandidatPilihan.length >= 3) break;
-            if (!kandidatPilihan.includes(list5Digit[i])) {
-                kandidatPilihan.push(list5Digit[i]);
+        // 3. Masukkan ke dalam wadah seleksi unik
+        let rawList = [sumAsEkor, sumKopKepala, totalSemua, selisihAE, ml, mb, ind, tys];
+        let uniqueList = [];
+        
+        for (let num of rawList) {
+            if (!uniqueList.includes(num)) {
+                uniqueList.push(num);
             }
         }
-        return kandidatPilihan.slice(0, 3);
+
+        // 4. Pengaman Perulangan (Anti Infinite Loop) untuk memastikan pas 5 Digit
+        let counter = 0;
+        while (uniqueList.length < 5 && counter < 10) {
+            let candidate = (uniqueList[uniqueList.length - 1] + 1 + counter) % 10;
+            if (!uniqueList.includes(candidate)) {
+                uniqueList.push(candidate);
+            }
+            counter++;
+        }
+
+        return uniqueList.slice(0, 5);
     }
 
-function prosesDanTampilkanTrack(dataResult) {
+    function prosesDanTampilkanTrack(dataResult) {
         const containerTrek = document.getElementById('china-track');
         if (!containerTrek) return;
 
         containerTrek.innerHTML = '';
 
-        // Kumpulkan angka AS (indeks 0) dan Ekor (indeks 3) dari result sebelum-sebelumnya (Kecuali result terakhir)
-        let excludedAsEkor = [];
-        for (let k = 0; k < dataResult.length - 1; k++) {
-            let resItem = dataResult[k];
-            let asItem = parseInt(resItem.charAt(0));
-            let ekorItem = parseInt(resItem.charAt(3));
-            if (!excludedAsEkor.includes(asItem)) excludedAsEkor.push(asItem);
-            if (!excludedAsEkor.includes(ekorItem)) excludedAsEkor.push(ekorItem);
+        // Kumpulkan AS dan Kop dari result sebelumnya (kecuali result terakhir)
+        let excludedSet = new Set();
+        for (let j = 0; j < dataResult.length - 1; j++) {
+            let asPrev = parseInt(dataResult[j].charAt(0));
+            let kopPrev = parseInt(dataResult[j].charAt(1)); // Kop ada di indeks ke-1
+            excludedSet.add(asPrev);
+            excludedSet.add(kopPrev);
         }
 
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
             let list5Digit = hitungRumusKomplit(resSaatIni);
             
-            // Kurangi/filter 5 digit berdasarkan angka AS dan Ekor result sebelumnya
-            let filteredDigits = list5Digit.filter(num => !excludedAsEkor.includes(num));
+            // Kurangi AK 5 digit jika ada angka AS dan Kop sebelumnya
+            let filteredList = list5Digit.filter(d => !excludedSet.has(d));
             
-            // Pastikan persis menjadi 3 digit
-            let list3Digit = [...filteredDigits];
-            for (let d of list5Digit) {
-                if (list3Digit.length < 3 && !list3Digit.includes(d)) {
-                    list3Digit.push(d);
-                }
+            // Ambil 3 digit saja
+            let list3 = filteredList.slice(0, 3);
+            while (list3.length < 3 && list5Digit.length > 0) {
+                let sisa = list5Digit.find(d => !list3.includes(d));
+                if (sisa !== undefined) list3.push(sisa);
+                else break;
             }
-            list3Digit = list3Digit.slice(0, 3);
-            let string3Digit = list3Digit.join('');
+            let string3Digit = list3.join('');
 
             let htmlStatus = '';
 
@@ -604,7 +613,7 @@ function prosesDanTampilkanTrack(dataResult) {
                 let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
                 let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
 
-                let isMasuk = list3Digit.includes(kepBerikutnya) || list3Digit.includes(ekorBerikutnya);
+                let isMasuk = list3.includes(kepBerikutnya) || list3.includes(ekorBerikutnya);
 
                 if (isMasuk) {
                     htmlStatus = `<span class="status-check status-win">✔</span>`;
@@ -626,14 +635,13 @@ function prosesDanTampilkanTrack(dataResult) {
 
         let resTerbaru = dataResult[dataResult.length - 1];
         let list5DigitTerbaru = hitungRumusKomplit(resTerbaru);
-        let filteredTerbaru = list5DigitTerbaru.filter(num => !excludedAsEkor.includes(num));
-        let am3Digit = [...filteredTerbaru];
-        for (let d of list5DigitTerbaru) {
-            if (am3Digit.length < 3 && !am3Digit.includes(d)) {
-                am3Digit.push(d);
-            }
+        let filteredTerbaru = list5DigitTerbaru.filter(d => !excludedSet.has(d));
+        let am3Digit = filteredTerbaru.slice(0, 3);
+        while(am3Digit.length < 3 && list5DigitTerbaru.length > 0) {
+            let sisa = list5DigitTerbaru.find(d => !am3Digit.includes(d));
+            if(sisa !== undefined) am3Digit.push(sisa);
+            else break;
         }
-        am3Digit = am3Digit.slice(0, 3);
 
         const elemAI = document.getElementById('res-ai');
         if(elemAI) {
@@ -646,6 +654,7 @@ function prosesDanTampilkanTrack(dataResult) {
             `;
         }
 
+        // MENGAMBIL POSISI PERTAMA (INDEKS 0) SEBAGAI ANGKA TUNGGAL
         let angkaTunggal = am3Digit[0];
 
         if(document.getElementById('angka-tunggal-box')) {
@@ -684,159 +693,5 @@ function prosesDanTampilkanTrack(dataResult) {
         }
     });
     </script>
-<!-- START POPUP IKLAN -->
-<style>
-    .popup-overlay {
-        display: none; 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
-        z-index: 9999; 
-        justify-content: center; 
-        align-items: center;
-        backdrop-filter: blur(4px);
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    .popup-content {
-        background: #ffffff;
-        color: #334155;
-        padding: 35px;
-        border-radius: 16px;
-        width: 90%; 
-        max-width: 400px;
-        text-align: center;
-        position: relative;
-        
-        border: 4px solid #eab308;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(234, 179, 8, 0.6);
-        animation: borderGlowMove 3s infinite alternate, fadeInScale 0.4s ease-out;
-    }
-
-    @keyframes borderGlowMove {
-        0% { 
-            border-color: #facc15; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 15px rgba(250, 204, 21, 0.5); 
-        }
-        50% { 
-            border-color: #ca8a04; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 25px rgba(202, 138, 4, 0.8); 
-        }
-        100% { 
-            border-color: #fef08a; 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(254, 240, 138, 0.6); 
-        }
-    }
-
-    @keyframes fadeInScale {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
-
-    .popup-close {
-        position: absolute; 
-        top: 15px; 
-        right: 15px;
-        background: #fee2e2;
-        border-radius: 50%;
-        width: 32px; 
-        height: 32px; 
-        border: none;
-        color: #dc2626; 
-        font-size: 1.2rem; 
-        cursor: pointer;
-        display: flex; 
-        justify-content: center; 
-        align-items: center;
-        transition: all 0.2s;
-    }
-
-    .popup-close:hover { 
-        background: #dc2626; 
-        color: #ffffff; 
-        transform: rotate(90deg); 
-    }
-
-    /* Font khusus untuk teks Informasi & Sponsor */
-    .popup-content h3 { 
-        margin: 0 0 15px 0; 
-        font-size: 2rem; 
-        color: #dc2626; 
-        font-weight: 900; 
-        line-height: 1.1;
-        font-family: 'Cinzel', 'Georgia', 'Times New Roman', serif; /* Font bergaya klasik modern/elegan */
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .popup-content h3 br {
-        content: " ";
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .popup-content p { 
-        font-size: 1rem; 
-        color: #64748b; 
-        margin-bottom: 25px; 
-        line-height: 1.5; 
-    }
-
-    .btn-iklan {
-        display: inline-block;
-        background: linear-gradient(270deg, #dc2626, #16a34a, #dc2626);
-        background-size: 400% 400%;
-        animation: gradientAnimation 4s ease infinite;
-        color: white;
-        padding: 14px 32px;
-        border-radius: 8px;
-        text-decoration: none; 
-        font-weight: bold;
-        font-size: 1.05rem;
-        transition: transform 0.2s;
-        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-    }
-
-    @keyframes gradientAnimation {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
-    .btn-iklan:hover { 
-        transform: translateY(-2px) scale(1.02);
-    }
-</style>
-
-<div id="popup-iklan" class="popup-overlay">
-    <div class="popup-content">
-        <button class="popup-close" onclick="tutupPopup()">&times;</button>
-        <h3>Informasi <br>&<br> Sponsor</h3>
-        <p>Temukan berbagai penawaran menarik dan informasi terbaru di sini!</p>
-        <a href="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4" target="_blank" class="btn-iklan" onclick="tutupPopup()">
-            Kunjungi Sponsor
-        </a>
-    </div>
-</div>
-
-<script>
-    window.addEventListener('DOMContentLoaded', function() {
-        if (!sessionStorage.getItem('popupSudahDitutup')) {
-            setTimeout(function() {
-                document.getElementById('popup-iklan').style.display = 'flex';
-            }, 3000);
-        }
-    });
-
-    function tutupPopup() {
-        document.getElementById('popup-iklan').style.display = 'none';
-        sessionStorage.setItem('popupSudahDitutup', 'true');
-    }
-</script>
-<!-- END POPUP IKLAN -->
 </body>
 </html>
