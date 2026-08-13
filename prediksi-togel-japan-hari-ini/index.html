@@ -533,37 +533,112 @@
         return ty[n];
     }
 
-    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
-    function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let kepala = parseInt(resultStr.charAt(2));
+// RUMUS MASTER PATEN 4D (MISTIK, TAYSEN, INDEKS & JUMLAH 2D TERPADU)
+function hitungRumusKomplit(resultStr) {
+    if (!resultStr || typeof resultStr !== 'string' || resultStr.length < 4) {
+        return [0, 1, 2, 3, 4]; // Safety fallback struktur
+    }
 
-        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
+    let as = parseInt(resultStr.charAt(0)) || 0;
+    let kop = parseInt(resultStr.charAt(1)) || 0;
+    let kepala = parseInt(resultStr.charAt(2)) || 0;
+    let ekor = parseInt(resultStr.charAt(3)) || 0;
 
-        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
+    // Tabel Master Mistik, Taysen, & Indeks Standar Akurat
+    const mistikLama = [1, 0, 5, 8, 7, 2, 9, 4, 3, 6]; // 0->1, 1->0, dst.
+    const mistikBaru = [8, 7, 6, 9, 5, 4, 2, 1, 0, 3]; // 0->8, 1->7, dst.
+    const taysenMap  = [5, 4, 9, 6, 1, 0, 3, 8, 7, 2]; // 0->5, 1->4, dst.
+    const indeksMap  = [5, 6, 7, 8, 9, 0, 1, 2, 3, 4]; // 0->5, 1->6, dst.
 
-        // Pastikan pas 6 digit untuk badge
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
+    let resultPool = [];
+
+    // 1. Perhitungan Pola Utama (As + Ekor, Kop + Kepala, & Jumlah 2D)
+    let sumAE = (as + ekor) % 10;
+    let sumKK = (kop + kepala) % 10;
+    let total4D = (as + kop + kepala + ekor) % 10;
+    let jlh2D = (kepala + ekor) % 10;
+
+    // 2. Transformasi Mistik & Taysen dari Posisi Kunci
+    let mlEkor = mistikLama[ekor];
+    let mbKepala = mistikBaru[kepala];
+    let tyJlh2D = taysenMap[jlh2D];
+    let idxTotal = indeksMap[total4D];
+
+    // 3. Selisih Posional Mutlak
+    let selisihAE = Math.abs(as - ekor);
+    let selisihKK = Math.abs(kop - kepala);
+
+    // Kumpulan kandidat prioritas
+    let rawCandidates = [
+        ekor, kepala, sumAE, sumKK, total4D, 
+        jlh2D, mlEkor, mbKepala, tyJlh2D, 
+        idxTotal, selisihAE, selisihKK
+    ];
+
+    // Menyaring nilai unik agar tidak ada angka kembar di hasil akhir
+    for (let num of rawCandidates) {
+        if (!resultPool.includes(num)) {
+            resultPool.push(num);
         }
-
-        return unik.slice(0, 5);
     }
 
-    function cari3DigitTerkait(resultStr, list6Digit) {
-        // Mengambil 3 digit dari hasil olahan rumus komplit
-        let hasilFilter = [...list6Digit];
-        return hasilFilter.slice(0, 3);
+    // Pengaman ketat agar selalu pas menghasilkan 5 digit unik tanpa error
+    let counter = 0;
+    while (resultPool.length < 5 && counter < 10) {
+        let nextNum = (resultPool[resultPool.length - 1] + 2) % 10;
+        if (!resultPool.includes(nextNum)) {
+            resultPool.push(nextNum);
+        }
+        counter++;
     }
+
+    return resultPool.slice(0, 5);
+}
+
+// LOGIKA PENCARIAN 3 DIGIT UTAMA BERDASARKAN KEPALA & EKOR KLASIK
+function cari3DigitTerkait(resultStr, list5Digit) {
+    if (!resultStr || resultStr.length < 4 || !Array.isArray(list5Digit) || list5Digit.length === 0) {
+        return [0, 1, 2]; // Safety fallback struktur
+    }
+
+    let kepala = parseInt(resultStr.charAt(2)) || 0;
+    let ekor = parseInt(resultStr.charAt(3)) || 0;
+    let jlh2D = (kepala + ekor) % 10;
+
+    const mistikLama = [1, 0, 5, 8, 7, 2, 9, 4, 3, 6];
+    let mlEkor = mistikLama[ekor];
+
+    let selected = [];
+
+    // Prioritas kecocokan langsung dengan ekor, kepala, mistik, dan jumlah 2D
+    let priorityKeys = [ekor, kepala, mlEkor, jlh2D];
+
+    for (let key of priorityKeys) {
+        if (list5Digit.includes(key) && !selected.includes(key)) {
+            selected.push(key);
+        }
+    }
+
+    // Melengkapi kandidat hingga 3 digit dari list yang tersedia
+    for (let num of list5Digit) {
+        if (selected.length >= 3) break;
+        if (!selected.includes(num)) {
+            selected.push(num);
+        }
+    }
+
+    // Pengaman mutlak agar selalu mengembalikan tepat 3 digit
+    let safetyLoop = 0;
+    while (selected.length < 3 && safetyLoop < 10) {
+        let fallbackVal = (selected.length + ekor) % 10;
+        if (!selected.includes(fallbackVal)) {
+            selected.push(fallbackVal);
+        }
+        safetyLoop++;
+    }
+
+    return selected.slice(0, 3);
+}
 
     function prosesDanTampilkanTrack(dataResult) {
         const containerTrek = document.getElementById('japan-track');
