@@ -533,31 +533,85 @@
         return ty[n];
     }
 
-    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
-    function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let kepala = parseInt(resultStr.charAt(2));
-
-        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
-
-        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
-
-        // Pastikan pas 6 digit untuk badge
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
-        }
-
-        return unik.slice(0, 5);
+// Fungsi Utama: Versi Ultra-Cerdas dengan Sistem Skor Berbobot & Matriks Non-Linier
+function hitungRumusKomplit(resultStr) {
+    // Pengaman ketat validasi string 4D
+    if (!resultStr || typeof resultStr !== 'string' || resultStr.length < 4) {
+        return [0, 1, 2, 3, 4];
     }
+
+    let as = parseInt(resultStr.charAt(0)) || 0;
+    let kop = parseInt(resultStr.charAt(1)) || 0;
+    let kepala = parseInt(resultStr.charAt(2)) || 0;
+    let ekor = parseInt(resultStr.charAt(3)) || 0;
+
+    // Pemetaan Standar Akurat (Mistik, Taysen, Indeks)
+    const mistikLama = [1, 0, 5, 8, 7, 2, 9, 4, 3, 6];
+    const mistikBaru = [8, 7, 6, 9, 5, 4, 2, 1, 0, 3];
+    const taysenMap  = [5, 4, 9, 6, 1, 0, 3, 8, 7, 2];
+    const indeksMap  = [5, 6, 7, 8, 9, 0, 1, 2, 3, 4];
+
+    // Sistem Akumulasi Skor Berdasarkan Probabilitas Posisional
+    let skorMap = {};
+
+    function addScore(val, weight) {
+        let n = ((val % 10) + 10) % 10;
+        skorMap[n] = (skorMap[n] || 0) + weight;
+    }
+
+    // 1. Bobot Prioritas Posisi Utama (Ekor & Kepala mendapat bobot tertinggi)
+    addScore(ekor, 4);
+    addScore(kepala, 4);
+    addScore(kop, 2);
+    addScore(as, 2);
+
+    // 2. Transformasi Lanjutan Mistik, Taysen, & Indeks
+    let mlEkor = mistikLama[ekor];
+    let mbKepala = mistikBaru[kepala];
+    let tyJlh = taysenMap[(kepala + ekor) % 10];
+    let idxTotal = indeksMap[(as + kop + kepala + ekor) % 10];
+
+    addScore(mlEkor, 3);
+    addScore(mbKepala, 3);
+    addScore(tyJlh, 3);
+    addScore(idxTotal, 3);
+
+    // 3. Matriks Kombinasi Silang Non-Linier & Selisih Absolut
+    let cross1 = (as * kepala + kop * ekor) % 10;
+    let cross2 = Math.abs((as + kop) - (kepala + ekor)) % 10;
+    let harmonicMod = (ekor + kepala + (kepala > 0 ? kepala : 1)) % 10;
+
+    addScore(cross1, 2);
+    addScore(cross2, 2);
+    addScore(harmonicMod, 2);
+
+    // 4. Pergeseran Pola Dinamis (Offset Jarak Tertentu)
+    addScore((ekor + 3) % 10, 1);
+    addScore((kepala + 7) % 10, 1);
+    addScore((ekor - 3 + 10) % 10, 1);
+
+    // Mengurutkan kandidat secara otomatis dari skor tertinggi ke terendah
+    let sortedKeys = Object.keys(skorMap).sort((a, b) => skorMap[b] - skorMap[a]);
+    let kandidatFinal = sortedKeys.map(Number);
+
+    // Algoritma Pelengkap Berbasis Urutan Langkah Bilangan Prima (Deterministik & Konsisten)
+    let primeSteps = [3, 7, 9, 1, 5];
+    let stepIndex = 0;
+    let safety = 0;
+
+    while (kandidatFinal.length < 5 && safety < 10) {
+        let lastVal = kandidatFinal[kandidatFinal.length - 1];
+        let nextNum = (lastVal + primeSteps[stepIndex % primeSteps.length]) % 10;
+        if (!kandidatFinal.includes(nextNum)) {
+            kandidatFinal.push(nextNum);
+        }
+        stepIndex++;
+        safety++;
+    }
+
+    // Mengembalikan tepat 5 digit angka dengan prioritas kecerdasan tertinggi di depan
+    return kandidatFinal.slice(0, 5);
+}
 
     function cari3DigitTerkait(resultStr, list6Digit) {
         // Mengambil 3 digit dari hasil olahan rumus komplit
