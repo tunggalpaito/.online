@@ -533,31 +533,53 @@
         return ty[n];
     }
 
-    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
-    function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let kepala = parseInt(resultStr.charAt(2));
-
-        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
-
-        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
-
-        // Pastikan pas 6 digit untuk badge
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
-        }
-
-        return unik.slice(0, 5);
+    // Fungsi Utama: Versi Lebih Cerdas & Konsisten (Tanpa Angka Acak)
+function hitungRumusKomplit(resultStr) {
+    if (!resultStr || typeof resultStr !== 'string' || resultStr.length < 4) {
+        return [0, 1, 2, 3, 4];
     }
+
+    let as = parseInt(resultStr.charAt(0)) || 0;
+    let kop = parseInt(resultStr.charAt(1)) || 0;
+    let kepala = parseInt(resultStr.charAt(2)) || 0;
+    let ekor = parseInt(resultStr.charAt(3)) || 0;
+
+    // Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
+    let mlEkor = getMistikLama(ekor);
+    let mbEkor = getMistikBaru(ekor);
+    let indEkor = getIndex(ekor);
+    let tysEkor = getTysen(ekor);
+    
+    // Perluasan analisis ke posisi Kepala & Total 4D
+    let mlKepala = getMistikLama(kepala);
+    let indKepala = getIndex(kepala);
+    let naik = (ekor + 1) % 10;
+    let turun = (ekor - 1 + 10) % 10;
+    let total4D = (as + kop + kepala + ekor) % 10;
+    let jlh2D = (kepala + ekor) % 10;
+
+    // Mengumpulkan seluruh variabel analitis posisional
+    let kumpulanAngka = [
+        ekor, kepala, mlEkor, mbEkor, indEkor, 
+        tysEkor, mlKepala, indKepala, naik, turun, total4D, jlh2D
+    ];
+    let unik = [...new Set(kumpulanAngka)];
+
+    // Mengganti Math.random() dengan pola pergeseran langkah deterministik
+    let step = 3;
+    let safetyCounter = 0;
+    while(unik.length < 6 && safetyCounter < 10) {
+        let nextVal = (unik[unik.length - 1] + step) % 10;
+        if(!unik.includes(nextVal)) {
+            unik.push(nextVal);
+        } else {
+            step = (step + 2) % 10; // Geser offset jika angka sudah ada
+        }
+        safetyCounter++;
+    }
+
+    return unik.slice(0, 5);
+}
 
     function cari3DigitTerkait(resultStr, list6Digit) {
         // Mengambil 3 digit dari hasil olahan rumus komplit
