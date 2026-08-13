@@ -416,7 +416,10 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
+    <p>&copy; <span id="year"></span> <span>TUNGGAL PAITO</span> All Rights Reserved. <br>| <a href="https://tunggalpaito.online/privacy-policy" style="color: #ffb703; text-decoration: none;">Kebijakan Privasi</a></p>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
     </footer>
 
     <!-- AMBIL DATA BERKAS HK.JS -->
