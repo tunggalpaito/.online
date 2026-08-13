@@ -352,7 +352,7 @@ hs.src='//s10.histats.com/js15_as.js';
                 <h3>Pasaran Lain Hari Ini</h3>
                 <div class="link-flex">
                     <a href="https://tunggalpaito.online/prediksi-togel-macau-hari-ini" class="btn-nav-link" id="pasaran-macau">Macau</a>
-                    <a href="https://tunggalpaito.online/angka-main-cambodia" class="btn-nav-link" id="pasaran-cambodia">Cambodia</a>
+                    <a href="https://tunggalpaito.online/prediksi-togel-cambodia-hari-ini" class="btn-nav-link" id="pasaran-cambodia">Cambodia</a>
                     <a href="https://tunggalpaito.online/prediksi-togel-sydney-hari-ini" class="btn-nav-link active" id="pasaran-sdy">Sydney</a>
                     <a href="https://tunggalpaito.online/prediksi-togel-china-hari-ini" class="btn-nav-link" id="pasaran-china">China</a>
                     <a href="https://tunggalpaito.online/prediksi-togel-japan-hari-ini" class="btn-nav-link" id="pasaran-japan">Japan</a>
@@ -503,8 +503,11 @@ hs.src='//s10.histats.com/js15_as.js';
         }
     </script>
     
-    <footer>
-        <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
-    </footer>
+<footer>
+    <p>&copy; <span id="year"></span> <span>TUNGGAL PAITO</span> All Rights Reserved. <br>| <a href="https://tunggalpaito.online/privacy-policy" style="color: #ffb703; text-decoration: none;">Kebijakan Privasi</a></p>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+</footer>
 </body>
 </html>
