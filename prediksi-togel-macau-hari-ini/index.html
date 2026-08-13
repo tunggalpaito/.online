@@ -529,31 +529,60 @@
         return ty[n];
     }
 
-    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
-    function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let kepala = parseInt(resultStr.charAt(2));
+function hitungRumusKomplit(resultStr) {
+    if (!resultStr || resultStr.length !== 4) return [];
 
-        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
+    let as = parseInt(resultStr.charAt(0));
+    let kop = parseInt(resultStr.charAt(1));
+    let kepala = parseInt(resultStr.charAt(2));
+    let ekor = parseInt(resultStr.charAt(3));
 
-        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
+    // 1. Basis Transformasi Tradisional Diperkuat[cite: 1]
+    let ml = getMistikLama(ekor);
+    let mb = getMistikBaru(ekor);
+    let ind = getIndex(ekor);
+    let tys = getTysen(ekor);
 
-        // Pastikan pas 6 digit untuk badge
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
+    // 2. Analisis Matriks Silang & Vektor Multi-Posisi (Advanced Logic)
+    let totalSum = as + kop + kepala + ekor;
+    let v1 = (as * kepala + ekor) % 10;
+    let v2 = (kop * ekor + kepala) % 10;
+    let v3 = Math.abs((as + kop) - (kepala + ekor)) % 10;
+    let v4 = (totalSum * 7) % 10; // Konstanta pengali matematis stabil
+    let v5 = getMistikLama(kop);
+    let v6 = getIndex(as);
+
+    // Masukkan ke dalam Set untuk menyaring angka unik secara otomatis
+    let setAngka = new Set([
+        ml, mb, ind, tys,
+        v1, v2, v3, v4, v5, v6,
+        (kepala + ekor) % 10,
+        (as + kop) % 10
+    ]);
+
+    let unik = Array.from(setAngka);
+
+    // 3. Smart Deterministic Filler (Menggantikan Math.random dengan Deret Langkah Prima)
+    let primeSteps = [3, 7, 1, 9, 5];
+    let stepIndex = 0;
+
+    while (unik.length < 5 && stepIndex < 15) {
+        let baseVal = unik[unik.length - 1] !== undefined ? unik[unik.length - 1] : ekor;
+        let nextVal = (baseVal + primeSteps[stepIndex % primeSteps.length] + totalSum) % 10;
+        
+        if (!unik.includes(nextVal)) {
+            unik.push(nextVal);
         }
-
-        return unik.slice(0, 5);
+        stepIndex++;
     }
+
+    // Pastikan kapasitas terpenuhi jika masih kurang
+    for (let i = 0; i <= 9 && unik.length < 5; i++) {
+        if (!unik.includes(i)) unik.push(i);
+    }
+
+    return unik.slice(0, 5);
+}
 
     function cari3DigitTerkait(resultStr, list6Digit) {
         // Mengambil 3 digit dari hasil olahan rumus komplit
