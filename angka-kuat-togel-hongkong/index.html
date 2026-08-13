@@ -331,7 +331,7 @@
 
             <div class="tunggal-box">
             NEXT
-            <a href="https://wa.me/6288970383950?text=Halo%20Admin,%20saya%20ingin%20angka%20tunggal%20dan%20mengetahui%20info%20angka%20selengkapnya." target="_blank" rel="noopener noreferrer" class="btn-nav-link">TUNGGAL</a>
+            <a href="https://tunggalpaito.online/angka-kuat-togel-hongkong" class="btn-nav-link">AK 3 DIGIT</a>
             </div>
             
             <footer>
@@ -415,8 +415,11 @@
         </p>
     </main>
 
-    <footer>
-        <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
+<footer>
+    <p>&copy; <span id="year"></span> <span>TUNGGAL PAITO</span> All Rights Reserved. <br>| <a href="https://tunggalpaito.online/privacy-policy" style="color: #ffb703; text-decoration: none;">Kebijakan Privasi</a></p>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
     </footer>
 
     <!-- AMBIL DATA BERKAS HK.JS -->
@@ -471,6 +474,7 @@
         }
     </script>
 
+  <!-- ... (Bagian atas kode sama seperti sebelumnya) ... -->
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         let arrayAngkaMentah = [];
@@ -487,8 +491,6 @@
 
         let sumberData = "";
         if (typeof DATA_PAITO_HK !== 'undefined') {
-            sumberData = DATA_PAITO_HK;
-        } else if (typeof DATA_PAITO_HK !== 'undefined') {
             sumberData = DATA_PAITO_HK;
         } else if (typeof DATA_PAITO_CB !== 'undefined') {
             sumberData = DATA_PAITO_CB;
@@ -510,15 +512,12 @@
         }
     });
 
-    // RUMUS LOGIKA BARU: MISTIK LAMA, MISTIK BARU, INDEX, TYSEN, NAIK, TURUN
     function getMistikLama(n) {
-        // 0=1, 2=5, 3=8, 4=7, 6=9
         const ml = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
         return ml[n];
     }
 
     function getMistikBaru(n) {
-        // 0=8, 1=7, 2=6, 3=9, 4=5
         const mb = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
         return mb[n];
     }
@@ -533,71 +532,88 @@
         return ty[n];
     }
 
-    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
-    function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let kepala = parseInt(resultStr.charAt(2));
-
-        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
-
-        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
-
-        // Pastikan pas 6 digit untuk badge
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
+function hitungRumusKomplit(resultStr, currentIndex, dataArray) {
+        if (!resultStr || typeof resultStr !== 'string' || resultStr.length < 4) {
+            return [0, 1, 2];
         }
 
-        return unik.slice(0, 5);
+        let as = parseInt(resultStr.charAt(0)) || 0;
+        let kop = parseInt(resultStr.charAt(1)) || 0;
+        let kepala = parseInt(resultStr.charAt(2)) || 0;
+        let ekor = parseInt(resultStr.charAt(3)) || 0;
+
+        // Penerapan Kombinasi Angka Berdasarkan AS (2x / berulang)
+        let mlAs = getMistikLama(as);
+        let mbAs = getMistikBaru(as);
+        let indAs = getIndex(as);
+        let tysAs = getTysen(as);
+        
+        let naik = (as + 1) % 10;
+        let turun = (as - 1 + 10) % 10;
+        let total4D = (as + kop + kepala + ekor) % 10;
+        let jlhAs = (as + as) % 10; // Kombinasi AS 2x
+
+        // Mengumpulkan seluruh variabel analitis berbasis AS
+        let kumpulanAngka = [
+            as, mlAs, mbAs, indAs, 
+            tysAs, naik, turun, total4D, jlhAs
+        ];
+        let unik = [...new Set(kumpulanAngka)];
+
+        let step = 3;
+        let safetyCounter = 0;
+        while(unik.length < 3 && safetyCounter < 10) {
+            let nextVal = (unik[unik.length - 1] + step) % 10;
+            if(!unik.includes(nextVal)) {
+                unik.push(nextVal);
+            } else {
+                step = (step + 2) % 10;
+            }
+            safetyCounter++;
+        }
+
+        // Kurangi/filter angka jika ada yang sama dengan AS dan KOP dari result sebelum-sebelumnya
+        if (dataArray && typeof currentIndex === 'number' && currentIndex > 0) {
+            let excludeNumbers = [];
+            for (let j = 0; j < currentIndex; j++) {
+                let prevRes = dataArray[j];
+                if (prevRes && prevRes.length >= 2) {
+                    excludeNumbers.push(parseInt(prevRes.charAt(0)) || 0); // AS sebelumnya
+                    excludeNumbers.push(parseInt(prevRes.charAt(1)) || 0); // KOP sebelumnya
+                }
+            }
+            unik = unik.filter(num => !excludeNumbers.includes(num));
+        }
+
+        // Pastikan jumlah digit tetap mencukupi 3 digit setelah filtering
+        while(unik.length < 3 && safetyCounter < 20) {
+            let nextVal = (unik[unik.length - 1] + step) % 10;
+            if(!unik.includes(nextVal)) {
+                unik.push(nextVal);
+            } else {
+                step = (step + 1) % 10;
+            }
+            safetyCounter++;
+        }
+
+        return unik.slice(0, 3);
     }
 
-    function cari3DigitTerkait(resultStr, list6Digit) {
-        // Mengambil 3 digit dari hasil olahan rumus komplit
-        let hasilFilter = [...list6Digit];
+    function cari3DigitTerkait(resultStr, listDigit) {
+        let hasilFilter = [...listDigit];
         return hasilFilter.slice(0, 3);
     }
 
     function prosesDanTampilkanTrack(dataResult) {
-        const containerTrek = document.getElementById('hk-track') || document.getElementById('china-track');
+        const containerTrek = document.getElementById('hk-track');
         if (!containerTrek) return;
 
         containerTrek.innerHTML = '';
 
-        // Kumpulkan hasil dari 2x Kepala (Kepala * 2) dari result sebelumnya, KECUALI result yang terakhir
-        let excluded2xKepala = [];
-        for (let k = 0; k < dataResult.length - 1; k++) {
-            let resItem = dataResult[k];
-            let kepalaItem = parseInt(resItem.charAt(2));
-            let duaKaliKepala = (kepalaItem * 2) % 10;
-            if (!excluded2xKepala.includes(duaKaliKepala)) excluded2xKepala.push(duaKaliKepala);
-        }
-
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
-            
-            // 1. Hasilkan dulu angka 5 digit secara utuh dari rumus AK 5 digit
-            let list5Digit = hitungRumusKomplit(resSaatIni);
-            
-            // 2. Pangkas angka 5 digit tersebut jika ada yang sama dengan 2x Kepala sebelumnya (kecuali yang terakhir)
-            let filteredDigits = list5Digit.filter(num => !excluded2xKepala.includes(num));
-            
-            // 3. Pastikan hasil pemangkasan menjadi tepat 3 digit
-            let list3Digit = [...filteredDigits];
-            for (let d of list5Digit) {
-                if (list3Digit.length < 3 && !list3Digit.includes(d)) {
-                    list3Digit.push(d);
-                }
-            }
-            list3Digit = list3Digit.slice(0, 3);
-            let string3Digit = list3Digit.join('');
+            let listDigit = hitungRumusKomplit(resSaatIni);
+            let stringDigit = listDigit.join('');
 
             let htmlStatus = '';
 
@@ -606,7 +622,7 @@
                 let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
                 let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
 
-                let isMasuk = list3Digit.includes(kepBerikutnya) || list3Digit.includes(ekorBerikutnya);
+                let isMasuk = listDigit.includes(kepBerikutnya) || listDigit.includes(ekorBerikutnya);
 
                 if (isMasuk) {
                     htmlStatus = `<span class="status-check status-win">✔</span>`;
@@ -620,22 +636,15 @@
             containerTrek.innerHTML += `
                 <div class="history-item">
                     <span>Result <strong>${resSaatIni}</strong></span>
-                    <span class="am-badge">AK: ${string3Digit}</span>
+                    <span class="am-badge">AK: ${stringDigit}</span>
                     ${htmlStatus}
                 </div>
             `;
         }
 
         let resTerbaru = dataResult[dataResult.length - 1];
-        let list5DigitTerbaru = hitungRumusKomplit(resTerbaru);
-        let filteredTerbaru = list5DigitTerbaru.filter(num => !excluded2xKepala.includes(num));
-        let am3Digit = [...filteredTerbaru];
-        for (let d of list5DigitTerbaru) {
-            if (am3Digit.length < 3 && !am3Digit.includes(d)) {
-                am3Digit.push(d);
-            }
-        }
-        am3Digit = am3Digit.slice(0, 3);
+        let listDigitTerbaru = hitungRumusKomplit(resTerbaru);
+        let am3Digit = cari3DigitTerkait(resTerbaru, listDigitTerbaru);
 
         const elemAI = document.getElementById('res-ai');
         if(elemAI) {
@@ -660,6 +669,7 @@
         }
     }
     </script>
+<!-- ... (Sisa kode HTML lainnya tetap sama) ... -->
     
     <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -686,8 +696,7 @@
         }
     });
     </script>
-
-<!-- START POPUP IKLAN -->
+    <!-- START POPUP IKLAN -->
 <style>
     .popup-overlay {
         display: none; 
