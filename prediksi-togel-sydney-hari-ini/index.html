@@ -533,31 +533,78 @@
         return ty[n];
     }
 
-    // Fungsi Utama Menggabungkan Logika Mistik Lama, Baru, Index, Tysen, Naik, Turun
-    function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
-        let kepala = parseInt(resultStr.charAt(2));
+// Fungsi Rumus Komplit: Dual-Vector Cross-Tarung Matrix (Pure Function & Aman untuk Looping)
+function hitungRumusKomplit(resultStr) {
+    if (!resultStr || resultStr.length !== 4) return [];
 
-        // Contoh Penerapan Kombinasi Angka Berdasarkan Ekor & Kepala
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
+    let as = parseInt(resultStr.charAt(0));
+    let kop = parseInt(resultStr.charAt(1));
+    let kepala = parseInt(resultStr.charAt(2));
+    let ekor = parseInt(resultStr.charAt(3));
 
-        // Mengambil keunikan angka dari hasil formula di atas untuk jadi 6 Digit Angka Ikut
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
-
-        // Pastikan pas 6 digit untuk badge
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
+    let scores = {};
+    function addScore(n, weight) {
+        let val = parseInt(n) % 10;
+        if (!isNaN(val)) {
+            scores[val] = (scores[val] || 0) + weight;
         }
-
-        return unik.slice(0, 5);
     }
+
+    // 1. Kelompok Jalur Depan (AS & KOP) & Jalur Belakang (Kepala & Ekor)
+    let setAs = [as, getMistikLama(as), getIndex(as)];
+    let setKop = [kop, getMistikBaru(kop), getTysen(kop)];
+    let setKepala = [kepala, getMistikLama(kepala), getIndex(kepala)];
+    let setEkor = [ekor, getMistikBaru(ekor), getIndex(ekor), getTysen(ekor)];
+
+    // 2. Simulasi Matriks Tarung Silang (Cross-Tarung Matrix Collision)
+    setAs.forEach(a => {
+        setKop.forEach(k => {
+            setKepala.forEach(kp => {
+                setEkor.forEach(e => {
+                    // Titik tabrakan / persimpangan tarung posisional
+                    let tarung1 = (a * kp + k * e) % 10;
+                    let tarung2 = Math.abs((a + k) - (kp + e)) % 10;
+                    let tarung3 = (a + k + kp + e) % 10;
+                    
+                    addScore(tarung1, 2.5);
+                    addScore(tarung2, 2.0);
+                    addScore(tarung3, 1.5);
+                });
+            });
+        });
+    });
+
+    // 3. Bobot Utama Interaksi Langsung (AS vs Ekor & KOP vs Kepala)
+    let directCross1 = (as * ekor + kop * kepala) % 10;
+    let directCross2 = Math.abs((as * kepala) - (kop * ekor)) % 10;
+    let sumTotal = as + kop + kepala + ekor;
+
+    addScore(directCross1, 6.5);
+    addScore(directCross2, 6.0);
+    addScore(sumTotal % 10, 4.5);
+    addScore(getIndex(directCross1), 5.0);
+    addScore(getTysen(directCross2), 4.5);
+
+    // 4. Tambahan Pola Siklik Turunan Ekor & Kepala
+    addScore((ekor + 1) % 10, 4.0);
+    addScore((ekor - 1 + 10) % 10, 4.0);
+    addScore((kepala + 1) % 10, 3.5);
+    addScore(getMistikLama(ekor), 5.0);
+    addScore(getIndex(ekor), 5.5);
+
+    // 5. Urutkan Berdasarkan Akumulasi Skor Tarung Tertinggi (Deterministic Ranking)
+    let sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+    let finalDigits = sortedKeys.map(Number);
+
+    // 6. Pengaman Fallback Konsisten (Menjamin pas 5 digit)
+    for (let i = 0; i <= 9; i++) {
+        if (!finalDigits.includes(i)) {
+            finalDigits.push(i);
+        }
+    }
+
+    return finalDigits.slice(0, 5);
+}
 
     function cari3DigitTerkait(resultStr, list6Digit) {
         // Mengambil 3 digit dari hasil olahan rumus komplit
