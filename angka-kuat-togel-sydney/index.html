@@ -320,8 +320,8 @@
             <div id="sdy-track" class="history-list"></div>
 
             <div class="tunggal-box">
-                NEXT
-                <a href="https://wa.me/6288970383950?text=Halo%20Admin,%20saya%20ingin%20angka%20tunggal%20dan%20mengetahui%20info%20angka%20selengkapnya." target="_blank" rel="noopener noreferrer" class="btn-nav-link">TUNGGAL</a>
+            NEXT
+            <a href="https://wa.me/6288970383950?text=Halo%20Admin,%20saya%20ingin%20angka%20tunggal%20dan%20mengetahui%20info%20angka%20selengkapnya." target="_blank" rel="noopener noreferrer" class="btn-nav-link">TUNGGAL</a>
             </div>
 
             <footer>
@@ -516,49 +516,64 @@
     }
 
     function hitungRumusKomplit(resultStr) {
-        let ekor = parseInt(resultStr.charAt(3));
+        if (!resultStr || resultStr.length !== 4) return [];
+
         let kepala = parseInt(resultStr.charAt(2));
+        let ekor = parseInt(resultStr.charAt(3));
 
-        let ml = getMistikLama(ekor);
-        let mb = getMistikBaru(ekor);
-        let ind = getIndex(ekor);
-        let tys = getTysen(ekor);
-        let naik = (ekor + 1) % 10;
-        let turun = (ekor - 1 + 10) % 10;
-
-        let kumpulanAngka = [ml, mb, ind, tys, naik, turun, kepala];
-        let unik = [...new Set(kumpulanAngka)];
-
-        while(unik.length < 6) {
-            let rand = Math.floor(Math.random() * 10);
-            if(!unik.includes(rand)) unik.push(rand);
-        }
-
-        return unik.slice(0, 5);
-    }
-
-    // FUNGSI PEMANGKASAN AK 5 DIGIT MENJADI 3 DIGIT (BERDASARKAN AS & KEPALA RESULT KEMARINNYA LAGI)
-    function pangkasAK5ke3(arrDataResult, currentIndex, ak5Digit) {
-        let listAK = [...ak5Digit];
-
-        if (currentIndex < 2) return listAK.slice(0, 3);
-
-        let resultKemarinDulu = arrDataResult[currentIndex - 2];
-        let asKemarinDulu = parseInt(resultKemarinDulu.charAt(0));
-        let kepalaKemarinDulu = parseInt(resultKemarinDulu.charAt(2));
-
-        let sisaDigit = listAK.filter(digit => digit !== asKemarinDulu && digit !== kepalaKemarinDulu);
-
-        while (sisaDigit.length < 3 && sisaDigit.length < ak5Digit.length) {
-            let tambahan = ak5Digit.find(d => !sisaDigit.includes(d));
-            if (tambahan !== undefined) {
-                sisaDigit.push(tambahan);
-            } else {
-                break;
+        let scores = {};
+        function addScore(n, weight) {
+            let val = parseInt(n) % 10;
+            if (!isNaN(val)) {
+                scores[val] = (scores[val] || 0) + weight;
             }
         }
 
-        return sisaDigit.slice(0, 3);
+        // Penyesuaian khusus Kepala dan Ekor saja
+        let kepala2x = (kepala * 2) % 10;
+        let ekor2x = (ekor * 2) % 10;
+
+        let setKepala = [kepala, kepala2x, getMistikLama(kepala), getIndex(kepala)];
+        let setEkor = [ekor, ekor2x, getMistikBaru(ekor), getTysen(ekor)];
+
+        setKepala.forEach(kp => {
+            setEkor.forEach(e => {
+                let tarung1 = (kp * e) % 10;
+                let tarung2 = Math.abs(kp - e) % 10;
+                let tarung3 = (kp + e) % 10;
+                
+                addScore(tarung1, 2.5);
+                addScore(tarung2, 2.0);
+                addScore(tarung3, 1.5);
+            });
+        });
+
+        let directCross1 = (kepala2x * ekor2x) % 10;
+        let directCross2 = Math.abs(kepala2x - ekor2x) % 10;
+        let sumTotal = kepala2x + ekor2x;
+
+        addScore(directCross1, 7.5); 
+        addScore(directCross2, 7.0);
+        addScore(sumTotal % 10, 5.0);
+        addScore(getIndex(directCross1), 5.5);
+        addScore(getTysen(directCross2), 5.0);
+
+        addScore((ekor + 1) % 10, 4.0);
+        addScore((ekor - 1 + 10) % 10, 4.0);
+        addScore((kepala + 1) % 10, 3.5);
+        addScore(getMistikLama(ekor), 5.0);
+        addScore(getIndex(ekor), 5.5);
+
+        let sortedKeys = Object.keys(scores).sort((a, b) => scores[b] - scores[a]);
+        let finalDigits = sortedKeys.map(Number);
+
+        for (let i = 0; i <= 9; i++) {
+            if (!finalDigits.includes(i)) {
+                finalDigits.push(i);
+            }
+        }
+
+        return finalDigits.slice(0, 5);
     }
 
     function prosesDanTampilkanTrack(dataResult) {
@@ -570,9 +585,26 @@
         for (let i = 0; i < dataResult.length; i++) {
             let resSaatIni = dataResult[i];
             let list5Digit = hitungRumusKomplit(resSaatIni);
-            
-            let list3Digit = pangkasAK5ke3(dataResult, i, list5Digit);
-            let string3Digit = list3Digit.join('');
+
+            let excluded = new Set();
+            for (let j = 0; j < dataResult.length - 1; j++) {
+                let r = dataResult[j];
+                excluded.add(parseInt(r.charAt(2))); // Kepala
+                excluded.add(parseInt(r.charAt(3))); // Ekor
+            }
+
+            let filtered = list5Digit.filter(d => !excluded.has(d));
+            let am3Digit = [];
+            for (let d of filtered) {
+                if (am3Digit.length < 3) am3Digit.push(d);
+            }
+            for (let d of list5Digit) {
+                if (am3Digit.length < 3 && !am3Digit.includes(d)) {
+                    am3Digit.push(d);
+                }
+            }
+            am3Digit = am3Digit.slice(0, 3);
+            let string3Digit = am3Digit.join('');
 
             let htmlStatus = '';
 
@@ -581,7 +613,7 @@
                 let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
                 let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
 
-                let isMasuk = list3Digit.includes(kepBerikutnya) || list3Digit.includes(ekorBerikutnya);
+                let isMasuk = am3Digit.includes(kepBerikutnya) || am3Digit.includes(ekorBerikutnya);
 
                 if (isMasuk) {
                     htmlStatus = `<span class="status-check status-win">✔</span>`;
@@ -602,21 +634,38 @@
         }
 
         let resTerbaru = dataResult[dataResult.length - 1];
-        let list5DigitTerbaru = hitungRumusKomplit(resTerbaru);
-        let am3Digit = pangkasAK5ke3(dataResult, dataResult.length - 1, list5DigitTerbaru);
+        let list6DigitTerbaru = hitungRumusKomplit(resTerbaru);
+        
+        let excludedTerbaru = new Set();
+        for (let j = 0; j < dataResult.length - 1; j++) {
+            let r = dataResult[j];
+            excludedTerbaru.add(parseInt(r.charAt(2))); // Kepala
+            excludedTerbaru.add(parseInt(r.charAt(3))); // Ekor
+        }
+        let filteredTerbaru = list6DigitTerbaru.filter(d => !excludedTerbaru.has(d));
+        let am3DigitTerbaru = [];
+        for (let d of filteredTerbaru) {
+            if (am3DigitTerbaru.length < 3) am3DigitTerbaru.push(d);
+        }
+        for (let d of list6DigitTerbaru) {
+            if (am3DigitTerbaru.length < 3 && !am3DigitTerbaru.includes(d)) {
+                am3DigitTerbaru.push(d);
+            }
+        }
+        am3DigitTerbaru = am3DigitTerbaru.slice(0, 3);
 
         const elemAI = document.getElementById('res-ai');
         if(elemAI) {
             elemAI.innerHTML = `
-                <div class="ball-ai">${am3Digit[0]}</div>
+                <div class="ball-ai">${am3DigitTerbaru[0]}</div>
                 <span class="ai-separator">*</span>
-                <div class="ball-ai">${am3Digit[1]}</div>
+                <div class="ball-ai">${am3DigitTerbaru[1]}</div>
                 <span class="ai-separator">*</span>
-                <div class="ball-ai">${am3Digit[2]}</div>
+                <div class="ball-ai">${am3DigitTerbaru[2]}</div>
             `;
         }
 
-        let angkaTunggal = am3Digit[0];
+        let angkaTunggal = am3DigitTerbaru[0];
 
         if(document.getElementById('angka-tunggal-box')) {
             document.getElementById('angka-tunggal-box').innerText = angkaTunggal;
@@ -654,147 +703,5 @@
         }
     });
     </script>
-
-<style>
-    .popup-overlay {
-        display: none; 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.75);
-        z-index: 9999; 
-        justify-content: center; 
-        align-items: center;
-        backdrop-filter: blur(4px);
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-
-    .popup-content {
-        background: #ffffff;
-        color: #334155;
-        padding: 35px;
-        border-radius: 16px;
-        width: 90%; 
-        max-width: 400px;
-        text-align: center;
-        position: relative;
-        border: 4px solid #eab308;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(234, 179, 8, 0.6);
-        animation: borderGlowMove 3s infinite alternate, fadeInScale 0.4s ease-out;
-    }
-
-    @keyframes borderGlowMove {
-        0% { border-color: #facc15; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 15px rgba(250, 204, 21, 0.5); }
-        50% { border-color: #ca8a04; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 25px rgba(202, 138, 4, 0.8); }
-        100% { border-color: #fef08a; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 20px rgba(254, 240, 138, 0.6); }
-    }
-
-    @keyframes fadeInScale {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
-
-    .popup-close {
-        position: absolute; 
-        top: 15px; 
-        right: 15px;
-        background: #fee2e2;
-        border-radius: 50%;
-        width: 32px; 
-        height: 32px; 
-        border: none;
-        color: #dc2626; 
-        font-size: 1.2rem; 
-        cursor: pointer;
-        display: flex; 
-        justify-content: center; 
-        align-items: center;
-        transition: all 0.2s;
-    }
-
-    .popup-close:hover { 
-        background: #dc2626; 
-        color: #ffffff; 
-        transform: rotate(90deg); 
-    }
-
-    .popup-content h3 { 
-        margin: 0 0 15px 0; 
-        font-size: 2rem; 
-        color: #dc2626; 
-        font-weight: 900; 
-        line-height: 1.1;
-        font-family: 'Cinzel', 'Georgia', 'Times New Roman', serif;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .popup-content h3 br {
-        content: " ";
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .popup-content p { 
-        font-size: 1rem; 
-        color: #64748b; 
-        margin-bottom: 25px; 
-        line-height: 1.5; 
-    }
-
-    .btn-iklan {
-        display: inline-block;
-        background: linear-gradient(270deg, #dc2626, #16a34a, #dc2626);
-        background-size: 400% 400%;
-        animation: gradientAnimation 4s ease infinite;
-        color: white;
-        padding: 14px 32px;
-        border-radius: 8px;
-        text-decoration: none; 
-        font-weight: bold;
-        font-size: 1.05rem;
-        transition: transform 0.2s;
-        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
-    }
-
-    @keyframes gradientAnimation {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
-    .btn-iklan:hover { 
-        transform: translateY(-2px) scale(1.02);
-    }
-</style>
-
-<div id="popup-iklan" class="popup-overlay">
-    <div class="popup-content">
-        <button class="popup-close" onclick="tutupPopup()">&times;</button>
-        <h3>Informasi <br>&<br> Sponsor</h3>
-        <p>Temukan berbagai penawaran menarik dan informasi terbaru di sini!</p>
-        <a href="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4" target="_blank" class="btn-iklan" onclick="tutupPopup()">
-            Kunjungi Sponsor
-        </a>
-    </div>
-</div>
-
-<script>
-    window.addEventListener('DOMContentLoaded', function() {
-        if (!sessionStorage.getItem('popupSudahDitutup')) {
-            setTimeout(function() {
-                document.getElementById('popup-iklan').style.display = 'flex';
-            }, 3000);
-        }
-    });
-
-    function tutupPopup() {
-        document.getElementById('popup-iklan').style.display = 'none';
-        sessionStorage.setItem('popupSudahDitutup', 'true');
-    }
-</script>
 </body>
 </html>
