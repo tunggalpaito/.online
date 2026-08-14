@@ -548,28 +548,31 @@
     return unik.slice(0, 5); // Menghasilkan 5 Digit AK Awal
 }
 
-// FUNGSI PEMANGKASAN AK 5 DIGIT MENJADI 3 DIGIT
+// FUNGSI PEMANGKASAN AK 5 DIGIT MENJADI 3 DIGIT (Hanya berdasarkan 2 digit ekor sebelumnya, mengabaikan ekor terakhir)
 function pangkasAK5ke3(arrDataResult, currentIndex, ak5Digit) {
     let listAK = [...ak5Digit];
 
     // Jika belum ada data sebelum-sebelumnya yang cukup (index < 2), ambil aman 3 digit pertama
     if (currentIndex < 2) return listAK.slice(0, 3);
 
-    // Kumpulkan kepala dan ekor dari result sebelum-sebelumnya 
-    // (Dimulai dari index - 2 ke bawah, sehingga mengabaikan index - 1 / terakhir)
     let excludeDigits = [];
-    for (let i = currentIndex - 2; i >= 0; i--) {
+    let countEkor = 0;
+
+    // Mulai dari index - 2 ke bawah (mengabaikan index - 1 / ekor terakhir)
+    // Mengambil hingga 2 digit ekor dari result sebelum-sebelumnya
+    for (let i = currentIndex - 2; i >= 0 && countEkor < 2; i--) {
         let resultSebelum = arrDataResult[i];
         if (resultSebelum && resultSebelum.length >= 4) {
-            let kepalaSebelum = parseInt(resultSebelum.charAt(2));
             let ekorSebelum = parseInt(resultSebelum.charAt(3));
             
-            if (!excludeDigits.includes(kepalaSebelum)) excludeDigits.push(kepalaSebelum);
-            if (!excludeDigits.includes(ekorSebelum)) excludeDigits.push(ekorSebelum);
+            if (!excludeDigits.includes(ekorSebelum)) {
+                excludeDigits.push(ekorSebelum);
+                countEkor++;
+            }
         }
     }
 
-    // Pangkas angka yang sama dengan kepala atau ekor dari result sebelum-sebelumnya
+    // Pangkas angka yang sama dengan ekor dari result sebelum-sebelumnya
     let sisaDigit = listAK.filter(digit => !excludeDigits.includes(digit));
 
     // Jika sisa digit kurang dari 3 karena terfilter habis, lengkapi kembali dari angka asli (ak5Digit)
@@ -581,52 +584,52 @@ function pangkasAK5ke3(arrDataResult, currentIndex, ak5Digit) {
     }
 
     return sisaDigit.slice(0, 3); // Hasil akhir 3 digit
-    }
+}
 
-    function ak3DigitTersedia(ak5Digit, sisaDigit) {
-        return sisaDigit.length < 3 && sisaDigit.length < ak5Digit.length;
-    }
+function ak3DigitTersedia(ak5Digit, sisaDigit) {
+    return sisaDigit.length < 3 && sisaDigit.length < ak5Digit.length;
+}
 
-    function prosesDanTampilkanTrack(dataResult) {
-        const containerTrek = document.getElementById('macau-track');
-        if (!containerTrek) return;
+function prosesDanTampilkanTrack(dataResult) {
+    const containerTrek = document.getElementById('macau-track');
+    if (!containerTrek) return;
 
-        containerTrek.innerHTML = '';
+    containerTrek.innerHTML = '';
 
-        for (let i = 0; i < dataResult.length; i++) {
-            let resSaatIni = dataResult[i];
-            let list5Digit = hitungRumusKomplit(resSaatIni);
-            
-            // Pangkas 5 digit menjadi 3 digit berdasarkan kepala & ekor result kemarinnya lagi[cite: 4]
-            let list3Digit = pangkasAK5ke3(dataResult, i, list5Digit);
-            let string3Digit = list3Digit.join('');
+    for (let i = 0; i < dataResult.length; i++) {
+        let resSaatIni = dataResult[i];
+        let list5Digit = hitungRumusKomplit(resSaatIni);
+        
+        // Pangkas 5 digit menjadi 3 digit berdasarkan 2 digit ekor sebelumnya (mengabaikan ekor terakhir)
+        let list3Digit = pangkasAK5ke3(dataResult, i, list5Digit);
+        let string3Digit = list3Digit.join('');
 
-            let htmlStatus = '';
+        let htmlStatus = '';
 
-            if (i < dataResult.length - 1) {
-                let resBerikutnya = dataResult[i + 1];
-                let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
-                let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
+        if (i < dataResult.length - 1) {
+            let resBerikutnya = dataResult[i + 1];
+            let kepBerikutnya = parseInt(resBerikutnya.charAt(2));
+            let ekorBerikutnya = parseInt(resBerikutnya.charAt(3));
 
-                let isMasuk = list3Digit.includes(kepBerikutnya) || list3Digit.includes(ekorBerikutnya);
+            let isMasuk = list3Digit.includes(kepBerikutnya) || list3Digit.includes(ekorBerikutnya);
 
-                if (isMasuk) {
-                    htmlStatus = `<span class="status-check status-win">✔</span>`;
-                } else {
-                    htmlStatus = `<span class="status-check status-lose">✘</span>`;
-                }
+            if (isMasuk) {
+                htmlStatus = `<span class="status-check status-win">✔</span>`;
             } else {
-                htmlStatus = `<span class="status-check"></span>`;
+                htmlStatus = `<span class="status-check status-lose">✘</span>`;
             }
-
-            containerTrek.innerHTML += `
-                <div class="history-item">
-                    <span>Result <strong>${resSaatIni}</strong></span>
-                    <span class="am-badge">AK: ${string3Digit}</span>
-                    ${htmlStatus}
-                </div>
-            `;
+        } else {
+            htmlStatus = `<span class="status-check"></span>`;
         }
+
+        containerTrek.innerHTML += `
+            <div class="history-item">
+                <span>Result <strong>${resSaatIni}</strong></span>
+                <span class="am-badge">AK: ${string3Digit}</span>
+                ${htmlStatus}
+            </div>
+        `;
+    }
 
         let resTerbaru = dataResult[dataResult.length - 1];
         let list5DigitTerbaru = hitungRumusKomplit(resTerbaru);
