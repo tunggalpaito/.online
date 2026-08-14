@@ -318,55 +318,178 @@ hs.src='//s10.histats.com/js15_as.js';
 
         </section>
 
-        <!-- Bagian Peralatan Pendukung & SEO Navigation -->
-        <div class="peralatan-section">
-            <h3>Angka Bocoran Pasaran Lain</h3>
-            <div class="link-flex">
-                <a href="https://tunggalpaito.online/angka-bocoran-macau" class="btn-nav-link">Macau</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-cambodia" class="btn-nav-link">Cambodia</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-sydney" class="btn-nav-link">Sydney</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-china" class="btn-nav-link">China</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-japan" class="btn-nav-link">Japan</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-singapore" class="btn-nav-link">Singapore</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-taiwan" class="btn-nav-link">Taiwan</a>
-                <a href="https://tunggalpaito.online/angka-bocoran-hongkong" class="btn-nav-link">Hongkong</a>
-            </div>
-        </div> 
+        <style>
+/* Efek Judul Menonjol dengan Kilau Merah Berjalan & Sistem Accordion */
+@keyframes shimmerGlow {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
 
-        <div class="peralatan-section">
-            <h3>Peralatan Pendukung Togel</h3>
-            <div class="link-flex">
-                <a href="https://tunggalpaito.online/live-draw-result-singapore" class="btn-nav-link">Paito Warna</a>
-                <a href="https://tunggalpaito.online/erek-erek-2d" class="btn-nav-link">Buku Mimpi</a>
-                <a href="https://tunggalpaito.online/shio.html" class="btn-nav-link">SHIO</a>
-                <a href="https://tunggalpaito.online/angka-jitu-togel-singapore" class="btn-nav-link">BBFS</a>
-                <a href="https://tunggalpaito.online/almanak.html" class="btn-nav-link">Almanak</a>
-                <a href="https://tunggalpaito.online/portal4d" class="btn-nav-link">Portal 4D</a>
-                <a href="https://tunggalpaito.online/colok-macau-singapore" class="btn-nav-link">Colok Macau</a>
-                <a href="https://tunggalpaito.online/angka-main-singapore" class="btn-nav-link active">Angka Main</a>
-            </div>
+.peralatan-section, .nav-section {
+    margin-bottom: 15px;
+}
+
+.peralatan-section summary, 
+.nav-section summary {
+    list-style: none;
+    cursor: pointer;
+    border-bottom: none !important;
+    text-decoration: none !important;
+    background: linear-gradient(90deg, #ff4d4d 0%, #ff1a1a 25%, #ff9999 50%, #ff1a1a 75%, #ff4d4d 100%);
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shimmerGlow 3s linear infinite;
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 12px rgba(255, 26, 26, 0.25);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    outline: none;
+}
+
+/* Hilangkan ikon bawaan browser */
+.peralatan-section summary::-webkit-details-marker,
+.nav-section summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Tambahkan indikator panah kustom yang berputar halus */
+.peralatan-section summary::after,
+.nav-section summary::after {
+    content: '▼';
+    font-size: 0.8rem;
+    color: #ff4d4d;
+    transition: transform 0.3s ease;
+}
+
+.peralatan-section[open] summary::after,
+.nav-section[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.link-flex {
+    margin-top: 10px;
+}
+</style>
+
+<details class="peralatan-section">
+    <summary>ANGKA MAIN</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/angka-main-macau/" class="btn-nav-link">Macau</a>
+        <a href="https://tunggalpaito.online/angka-main-cambodia/" class="btn-nav-link">Cambodia</a>
+        <a href="https://tunggalpaito.online/angka-main-sydney/" class="btn-nav-link">Sydney</a>
+        <a href="https://tunggalpaito.online/angka-main-china/" class="btn-nav-link">China</a>
+        <a href="https://tunggalpaito.online/angka-main-japan/" class="btn-nav-link">Japan</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/angka-main-singapore/', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+        <a href="https://tunggalpaito.online/angka-main-taiwan/" class="btn-nav-link">Taiwan</a>
+        <a href="https://tunggalpaito.online/angka-main-hk/" class="btn-nav-link">Hongkong</a>
+    </div>
+</details>
+
+<details class="peralatan-section">
+    <summary>ANGKA KUAT</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/prediksi-togel-macau-hari-ini/" class="btn-nav-link">Macau</a>
+        <a href="https://tunggalpaito.online/prediksi-togel-cambodia-hari-ini/" class="btn-nav-link">Cambodia</a>
+        <a href="https://tunggalpaito.online/prediksi-togel-sydney-hari-ini/" class="btn-nav-link">Sydney</a>
+        <a href="https://tunggalpaito.online/prediksi-togel-china-hari-ini/" class="btn-nav-link">China</a>
+        <a href="https://tunggalpaito.online/prediksi-togel-japan-hari-ini/" class="btn-nav-link">Japan</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/prediksi-togel-singapore-hari-ini/', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+        <a href="https://tunggalpaito.online/prediksi-togel-taiwan-hari-ini/" class="btn-nav-link">Taiwan</a>
+        <a href="https://tunggalpaito.online/prediksi-togel-hongkong-hari-ini/" class="btn-nav-link">Hongkong</a>
+    </div>
+</details>
+
+<details class="peralatan-section">
+    <summary>BBFS</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/prediksi-bbfs-macau-hari-ini" class="btn-nav-link">Macau</a>
+        <a href="https://tunggalpaito.online/prediksi-bbfs-cambodia-hari-ini" class="btn-nav-link">Cambodia</a>
+        <a href="https://tunggalpaito.online/prediksi-bbfs-sydney-hari-ini/" class="btn-nav-link">Sydney</a>
+        <a href="https://tunggalpaito.online/prediksi-bbfs-china-hari-ini/" class="btn-nav-link">China</a>
+        <a href="https://tunggalpaito.online/prediksi-bbfs-japan-hari-ini/" class="btn-nav-link">Japan</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/prediksi-bbfs-singapore-hari-ini/', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+        <a href="https://tunggalpaito.online/prediksi-bbfs-taiwan-hari-ini/" class="btn-nav-link">Taiwan</a>
+        <a href="https://tunggalpaito.online/prediksi-bbfs-hongkong-hari-ini/" class="btn-nav-link">Hongkong</a>
+    </div>
+</details>
+
+<details class="peralatan-section">
+    <summary>COLOK BEBAS</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/colok-bebas-togel-macau" class="btn-nav-link">Macau</a>
+        <a href="https://tunggalpaito.online/colok-bebas-togel-cambodia" class="btn-nav-link">Cambodia</a>
+        <a href="https://tunggalpaito.online/colok-bebas-togel-sydney" class="btn-nav-link">Sydney</a>
+        <a href="https://tunggalpaito.online/colok-bebas-togel-china" class="btn-nav-link">China</a>
+        <a href="https://tunggalpaito.online/colok-bebas-togel-japan" class="btn-nav-link">Japan</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/colok-bebas-togel-singapore', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+        <a href="https://tunggalpaito.online/colok-bebas-togel-taiwan" class="btn-nav-link">Taiwan</a>
+        <a href="https://tunggalpaito.online/colok-bebas-togel-hongkong" class="btn-nav-link">Hongkong</a>
+    </div>
+</details>
+
+<details class="peralatan-section">
+    <summary>COLOK MACAU</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/colok-macau-togel-macau" class="btn-nav-link">Macau</a>
+        <a href="https://tunggalpaito.online/colok-macau-togel-cambodia" class="btn-nav-link">Cambodia</a>
+        <a href="https://tunggalpaito.online/colok-macau-togel-sydney" class="btn-nav-link">Sydney</a>
+        <a href="https://tunggalpaito.online/colok-macau-togel-china" class="btn-nav-link">China</a>
+        <a href="https://tunggalpaito.online/colok-macau-togel-japan" class="btn-nav-link">Japan</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/colok-macau-togel-singapore', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+        <a href="https://tunggalpaito.online/colok-macau-togel-taiwan" class="btn-nav-link">Taiwan</a>
+        <a href="https://tunggalpaito.online/colok-macau-togel-hongkong" class="btn-nav-link">Hongkong</a>
+    </div>
+</details>
+
+<details class="peralatan-section">
+    <summary>Paito Warna</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/live-draw-result-macau/" class="btn-nav-link">Macau</a>
+        <a href="https://tunggalpaito.online/live-draw-result-cambodia/" class="btn-nav-link">Cambodia</a>
+        <a href="https://tunggalpaito.online/live-draw-result-sydney/" class="btn-nav-link">Sydney</a>
+        <a href="https://tunggalpaito.online/live-draw-result-china/" class="btn-nav-link">China</a>
+        <a href="https://tunggalpaito.online/live-draw-result-japan/" class="btn-nav-link">Japan</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/live-draw-result-singapore/', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+        <a href="https://tunggalpaito.online/live-draw-result-taiwan/" class="btn-nav-link">Taiwan</a>
+        <a href="https://tunggalpaito.online/live-draw-result-hongkong/" class="btn-nav-link">Hongkong</a>
+    </div>
+</details>
+
+<details class="peralatan-section">
+    <summary>Peralatan Pendukung</summary>
+    <div class="link-flex">
+        <a href="https://tunggalpaito.online/erek-erek-2d" class="btn-nav-link">Buku Mimpi</a>
+        <a href="https://tunggalpaito.online/shio.html" class="btn-nav-link">SHIO</a>
+        <a href="https://tunggalpaito.online/almanak.html" class="btn-nav-link">Almanak</a>
+        <a href="#" onclick="window.open(['https://tunggalpaito.online/portal4d', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Portal 4D</a>
+    </div>
+</details>
+
+<div class="grid-nav-container" style="margin-top: 20px;">
+    <details class="nav-section" style="grid-column: 1 / -1;" open>
+        <summary>Prediksi Lotto Hari Ini</summary>
+        <div class="link-flex">
+            <a href="https://tunggalpaito.online/prediksi-togel-sydney-lotto-hari-ini" class="btn-nav-link" id="pasaran-sdy">Sydney</a>
+
+            <a href="https://tunggalpaito.online/prediksi-togel-hongkong-lotto-hari-ini" class="btn-nav-link" id="pasaran-hk">Hongkong</a>
         </div>
-
-        <div class="grid-nav-container" style="margin-top: 20px;">
-            <section class="nav-section" style="grid-column: 1 / -1;">
-                <h3>Pasaran Lain Hari Ini</h3>
-                <div class="link-flex">
-                    <a href="https://tunggalpaito.online/prediksi-togel-macau-hari-ini" class="btn-nav-link" id="pasaran-macau">Macau</a>
-                    <a href="https://tunggalpaito.online/prediksi-togel-cambodia-hari-ini" class="btn-nav-link" id="pasaran-cambodia">Cambodia</a>
-                    <a href="https://tunggalpaito.online/prediksi-togel-sydney-hari-ini" class="btn-nav-link" id="pasaran-sdy">Sydney</a>
-                    <a href="https://tunggalpaito.online/prediksi-togel-china-hari-ini" class="btn-nav-link" id="pasaran-china">China</a>
-                    <a href="https://tunggalpaito.online/prediksi-togel-japan-hari-ini" class="btn-nav-link" id="pasaran-japan">Japan</a>
-                    <a href="https://tunggalpaito.online/prediksi-togel-singapore-hari-ini" class="btn-nav-link active" id="pasaran-sgp">Singapore</a>
-                    <a href="https://tunggalpaito.online/prediksi-togel-taiwan-hari-ini" class="btn-nav-link" id="pasaran-taiwan">Taiwan</a>
-                    <a href="https://tunggalpaito.online/predksi-togel-hongkong-hari-ini" class="btn-nav-link" id="pasaran-hk">Hongkong</a>
-                </div>
-                <div class="system-controls">
-                    <a href="https://tunggalpaito.online/" class="btn-control btn-back">Menu Utama</a>
-                    <a href="#top-page" class="btn-control btn-top">Kembali ke Atas</a>
-                </div>
-            </section>
+        
+        <div class="system-controls" style="margin-top: 15px;">
+            <a href="https://tunggalpaito.online/" class="btn-control btn-back">Menu Utama</a>
+            <a href="#top-page" class="btn-control btn-top">Kembali ke Atas</a>
         </div>
-
+    </details>
+</div>
         <p class="seo-footer-text">
             Halaman resmi <strong>ANGKA MAIN SINGAPORE</strong> harian menyajikan bocoran angka main singapore terupdate langsung dari rangkuman data pengeluaran singapore harian. Menggunakan sistem algoritma terintegrasi kami meracik angka main 6 digit berisi colok bebas, colok singapore, dan BBFS harian.
         </p>
