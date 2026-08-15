@@ -449,15 +449,17 @@
             if (sumberData && sumberData.trim() !== '') {
                 let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
                 
+                // Ubah dari slice(-7) menjadi slice(-4) agar data yang dimuat hanya 4 terakhir
                 if (angkaSahMatch && angkaSahMatch.length > 0) {
-                    arrayAngkaMentah = angkaSahMatch.slice(-7);
+                    arrayAngkaMentah = angkaSahMatch.slice(-4);
                 }
 
-                if (arrayAngkaMentah.length >= 7) {
+                // Ubah validasi minimal dari 7 menjadi 4 result
+                if (arrayAngkaMentah.length >= 4) {
                     prosesDanTampilkanTrack(arrayAngkaMentah);
                 } else {
                     let containerTrek = document.getElementById('macau-track');
-                    if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 7 result!</div>`;
+                    if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
                 }
             }
         });
