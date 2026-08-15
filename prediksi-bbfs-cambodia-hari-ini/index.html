@@ -427,10 +427,15 @@
         }
     </script>
 
-    <!-- Script Algoritma Cerdas: Proteksi Angka Bagus (Result Utama) Saat Pemangkasan 8 ke 7 Digit -->
+<!-- Script Algoritma Cerdas Versi HOT & SHARP: Proteksi Global Index + Formula Lebih Agresif -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let arrayAngkaMentah = [];
+            let sumberData = "";
+            if (typeof DATA_PAITO_CAMBODIA !== 'undefined') {
+                sumberData = DATA_PAITO_CAMBODIA;
+            } else if (typeof DATA_PAITO_CM !== 'undefined') {
+                sumberData = DATA_PAITO_CM;
+            }
 
             const sekarang = new Date();
             const jam = String(sekarang.getHours()).padStart(2, '0');
@@ -439,22 +444,12 @@
                 document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
             }
 
-            let sumberData = "";
-            if (typeof DATA_PAITO_CAMBODIA !== 'undefined') {
-                sumberData = DATA_PAITO_CAMBODIA;
-            } else if (typeof DATA_PAITO_CM !== 'undefined') {
-                sumberData = DATA_PAITO_CM;
-            }
-
             if (sumberData && sumberData.trim() !== '') {
                 let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
                 
-                if (angkaSahMatch && angkaSahMatch.length > 0) {
-                    arrayAngkaMentah = angkaSahMatch.slice(-4);
-                }
-
-                if (arrayAngkaMentah.length >= 4) {
-                    prosesDanTampilkanTrack(arrayAngkaMentah);
+                if (angkaSahMatch && angkaSahMatch.length >= 4) {
+                    let arrayAngkaMentah = angkaSahMatch.slice(-4);
+                    prosesDanTampilkanTrack(arrayAngkaMentah, angkaSahMatch);
                 } else {
                     let containerTrek = document.getElementById('cambodia-track');
                     if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
@@ -462,43 +457,36 @@
             }
         });
 
-        function hitungRumusCerdas(semuaResult, currentIndex) {
-            let subData = semuaResult.slice(0, currentIndex + 1);
-            
-            let targetIdx = -1;
-            for (let i = currentIndex - 1; i >= 0; i--) {
-                let clean = subData[i].replace(/\D/g, '');
-                if (clean.length === 4) {
-                    targetIdx = i;
-                    break;
+        function hitungRumusCerdasGlobal(masterData, globalIndex) {
+            let targetDigits = [6, 4, 8, 9]; 
+
+            if (globalIndex > 0) {
+                let cleanPrev = masterData[globalIndex - 1].replace(/\D/g, '');
+                if (cleanPrev.length === 4) {
+                    targetDigits = cleanPrev.split('').map(Number);
+                }
+            } else {
+                let cleanCurr = masterData[globalIndex].replace(/\D/g, '');
+                if (cleanCurr.length === 4) {
+                    targetDigits = cleanCurr.split('').map(Number);
                 }
             }
 
-            if (targetIdx === -1) {
-                for (let i = currentIndex; i >= 0; i--) {
-                    let clean = subData[i].replace(/\D/g, '');
-                    if (clean.length === 4) {
-                        targetIdx = i;
-                        break;
-                    }
-                }
+            let as = targetDigits[0];
+            let kop = targetDigits[1];
+            let kepala = targetDigits[2];
+            let ekor = targetDigits[3];
+
+            // Formula Hot & Dynamic Matrix (Lebih tajam & adaptif berdasarkan pola silang)
+            let sumTotal = targetDigits.reduce((a, b) => a + b, 0);
+            let dynamicShift = sumTotal % 5;
+
+            let off1 = (as + kepala + dynamicShift) % 10;
+            let off2 = (kop + ekor + 3) % 10;
+
+            if (off1 === off2) {
+                off2 = (off2 + 1) % 10;
             }
-
-            let digits = [6, 4, 8, 9];
-            if (targetIdx !== -1) {
-                let clean = subData[targetIdx].replace(/\D/g, '');
-                if (clean.length === 4) {
-                    digits = clean.split('').map(Number);
-                }
-            }
-
-            let as = digits[0];
-            let kop = digits[1];
-            let ekor = digits[3];
-
-            // Diubah agar frekuensi lebih luas (hanya 2 angka off, sisa lebih banyak angka bebas)
-            let off1 = as;                     
-            let off2 = (ekor + 7) % 10;    
 
             let offNumbers = [off1, off2];
 
@@ -510,7 +498,7 @@
             }
 
             if (bbfs.length > 7) {
-                let resultDigits = new Set(digits);
+                let resultDigits = new Set(targetDigits);
                 let groupA = bbfs.filter(d => resultDigits.has(d)); 
                 let groupB = bbfs.filter(d => !resultDigits.has(d)); 
                 
@@ -536,7 +524,7 @@
             return bbfs;
         }
 
-        function prosesDanTampilkanTrack(dataResult) {
+        function prosesDanTampilkanTrack(dataResult, masterData) {
             const containerTrek = document.getElementById('cambodia-track');
             if (!containerTrek) return;
 
@@ -544,13 +532,15 @@
 
             for (let i = 0; i < dataResult.length; i++) {
                 let resSaatIni = dataResult[i];
-                let list7Digit = hitungRumusCerdas(dataResult, i);
+                let globalIndex = masterData.length - dataResult.length + i;
+
+                let list7Digit = hitungRumusCerdasGlobal(masterData, globalIndex);
                 let string7Digit = list7Digit.join('');
 
                 let htmlStatus = '';
 
-                if (i < dataResult.length - 1) {
-                    let resBerikutnya = dataResult[i + 1].split('').map(Number);
+                if (globalIndex < masterData.length - 1) {
+                    let resBerikutnya = masterData[globalIndex + 1].split('').map(Number);
                     
                     let as = resBerikutnya[0];
                     let kop = resBerikutnya[1];
