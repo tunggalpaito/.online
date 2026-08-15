@@ -427,10 +427,15 @@
         }
     </script>
 
-    <!-- Script Algoritma Cerdas: Proteksi Angka Bagus (Result Utama) Saat Pemangkasan 8 ke 7 Digit -->
+<!-- Script Algoritma Cerdas: NUCLEAR HOT (Delta Velocity Matrix + Global Index) -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let arrayAngkaMentah = [];
+            let sumberData = "";
+            if (typeof DATA_PAITO_SYDNEY !== 'undefined') {
+                sumberData = DATA_PAITO_SYDNEY;
+            } else if (typeof DATA_PAITO_SDY !== 'undefined') {
+                sumberData = DATA_PAITO_SDY;
+            }
 
             const sekarang = new Date();
             const jam = String(sekarang.getHours()).padStart(2, '0');
@@ -439,22 +444,11 @@
                 document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
             }
 
-            let sumberData = "";
-            if (typeof DATA_PAITO_SYDNEY !== 'undefined') {
-                sumberData = DATA_PAITO_SYDNEY;
-            } else if (typeof DATA_PAITO_SDY !== 'undefined') {
-                sumberData = DATA_PAITO_SDY;
-            }
-
             if (sumberData && sumberData.trim() !== '') {
                 let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
-                
-                if (angkaSahMatch && angkaSahMatch.length > 0) {
-                    arrayAngkaMentah = angkaSahMatch.slice(-4);
-                }
-
-                if (arrayAngkaMentah.length >= 4) {
-                    prosesDanTampilkanTrack(arrayAngkaMentah);
+                if (angkaSahMatch && angkaSahMatch.length >= 4) {
+                    let arrayAngkaMentah = angkaSahMatch.slice(-4);
+                    prosesDanTampilkanTrack(arrayAngkaMentah, angkaSahMatch);
                 } else {
                     let containerTrek = document.getElementById('sydney-track');
                     if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
@@ -462,80 +456,54 @@
             }
         });
 
-        function hitungRumusCerdas(semuaResult, currentIndex) {
-            let subData = semuaResult.slice(0, currentIndex + 1);
-            
-            let targetIdx = -1;
-            for (let i = currentIndex - 1; i >= 0; i--) {
-                let clean = subData[i].replace(/\D/g, '');
-                if (clean.length === 4) {
-                    targetIdx = i;
-                    break;
-                }
+        function hitungRumusCerdasGlobal(masterData, globalIndex) {
+            // NUCLEAR ENGINE: Ambil 3 baris data untuk melihat "Kecepatan Perubahan" (Velocity)
+            let d0 = masterData[globalIndex].replace(/\D/g, '').split('').map(Number);
+            let d1 = globalIndex > 0 ? masterData[globalIndex - 1].replace(/\D/g, '').split('').map(Number) : d0;
+            let d2 = globalIndex > 1 ? masterData[globalIndex - 2].replace(/\D/g, '').split('').map(Number) : d1;
+
+            // MENGHITUNG VELOCITY (Jarak mutlak pergerakan angka dari hari ke hari)
+            let velAs = Math.abs(d0[0] - d1[0]) + Math.abs(d1[0] - d2[0]);
+            let velKop = Math.abs(d0[1] - d1[1]) + Math.abs(d1[1] - d2[1]);
+            let velKep = Math.abs(d0[2] - d1[2]) + Math.abs(d1[2] - d2[2]);
+            let velEkr = Math.abs(d0[3] - d1[3]) + Math.abs(d1[3] - d2[3]);
+
+            // Core Heat (Suhu Inti dari pergerakan result)
+            let coreHeat = velAs + velKop + velKep + velEkr;
+
+            // NON-LINEAR OFF CALCULATION (Menggunakan Kuadrat & Pangkat Tiga)
+            // Ini membuat tebakan Off sangat liar dan bereaksi kuat terhadap perubahan sekecil apa pun
+            let off1 = (Math.pow(d0[3], 2) + velAs + coreHeat) % 10; // Ekor kuadrat + Velocity As
+            let off2 = (Math.pow(d0[0], 3) + velEkr + (coreHeat * 7)) % 10; // As pangkat 3 + Velocity Ekor
+
+            // PRIME SHIFT (Loncatan Prima): Jika off bertabrakan, lempar dengan jarak bilangan prima (7)
+            if (off1 === off2) {
+                off2 = (off2 + 7) % 10; 
             }
-
-            if (targetIdx === -1) {
-                for (let i = currentIndex; i >= 0; i--) {
-                    let clean = subData[i].replace(/\D/g, '');
-                    if (clean.length === 4) {
-                        targetIdx = i;
-                        break;
-                    }
-                }
-            }
-
-            let digits = [6, 4, 8, 9];
-            if (targetIdx !== -1) {
-                let clean = subData[targetIdx].replace(/\D/g, '');
-                if (clean.length === 4) {
-                    digits = clean.split('').map(Number);
-                }
-            }
-
-            let as = digits[0];
-            let kop = digits[1];
-            let ekor = digits[3];
-
-            let off1 = as;                     
-            let off2 = (ekor + 7) % 10;    
 
             let offNumbers = [off1, off2];
 
+            // POOL ACAK TERSTRUKTUR (Scrambling Pool)
             let bbfs = [];
-            for (let i = 0; i <= 9; i++) {
-                if (!offNumbers.includes(i)) {
-                    bbfs.push(i);
-                }
-            }
+            let pool = [0,1,2,3,4,5,6,7,8,9].filter(n => !offNumbers.includes(n));
 
-            if (bbfs.length > 7) {
-                let resultDigits = new Set(digits);
-                let groupA = bbfs.filter(d => resultDigits.has(d)); 
-                let groupB = bbfs.filter(d => !resultDigits.has(d)); 
-                
-                let selected = [...groupA];
-                let sisaButuh = 7 - selected.length;
-                
-                if (sisaButuh > 0 && groupB.length > 0) {
-                    groupB.sort((a, b) => a - b);
-                    selected = selected.concat(groupB.slice(0, sisaButuh));
-                } else if (selected.length > 7) {
-                    selected = selected.slice(0, 7);
-                }
-                bbfs = selected;
-            } else if (bbfs.length < 7) {
-                for (let i = 0; i <= 9 && bbfs.length < 7; i++) {
-                    if (!bbfs.includes(i)) {
-                        bbfs.push(i);
-                    }
-                }
-            }
+            // Mengurutkan sisa angka berdasarkan "Titik Panas" (Bobot Energi)
+            // Angka yang memiliki resonansi dengan Core Heat akan diprioritaskan ditarik ke dalam 7 digit
+            pool.sort((a, b) => {
+                let weightA = (a * 3 + coreHeat) % 10;
+                let weightB = (b * 3 + coreHeat) % 10;
+                return weightB - weightA; // Sortir menurun (Paling Panas ke Dingin)
+            });
 
+            // Potong menjadi tepat 7 digit yang paling agresif
+            bbfs = pool.slice(0, 7);
+
+            // Urutkan kembali dari kecil ke besar agar tampilan rapi di layar
             bbfs.sort((a, b) => a - b);
             return bbfs;
         }
 
-        function prosesDanTampilkanTrack(dataResult) {
+        function prosesDanTampilkanTrack(dataResult, masterData) {
             const containerTrek = document.getElementById('sydney-track');
             if (!containerTrek) return;
 
@@ -543,46 +511,31 @@
 
             for (let i = 0; i < dataResult.length; i++) {
                 let resSaatIni = dataResult[i];
-                let list7Digit = hitungRumusCerdas(dataResult, i);
+                let globalIndex = masterData.length - dataResult.length + i;
+
+                let list7Digit = hitungRumusCerdasGlobal(masterData, globalIndex);
                 let string7Digit = list7Digit.join('');
 
                 let htmlStatus = '';
 
-                if (i < dataResult.length - 1) {
-                    let resBerikutnya = dataResult[i + 1].split('').map(Number);
-                    
-                    let as = resBerikutnya[0];
-                    let kop = resBerikutnya[1];
-                    let kepala = resBerikutnya[2];
-                    let ekor = resBerikutnya[3];
-
-                    let sequence = [ekor, kepala, kop, as];
+                if (globalIndex < masterData.length - 1) {
+                    let resBerikutnya = masterData[globalIndex + 1].split('').map(Number);
+                    let sequence = [resBerikutnya[3], resBerikutnya[2], resBerikutnya[1], resBerikutnya[0]];
                     let matchedCount = 0;
                     let seenDigits = new Set();
 
                     for (let digit of sequence) {
                         if (list7Digit.includes(digit)) {
-                            if (seenDigits.has(digit)) {
-                                break;
-                            }
+                            if (seenDigits.has(digit)) break;
                             seenDigits.add(digit);
                             matchedCount++;
-                        } else {
-                            break;
-                        }
+                        } else break;
                     }
 
-                    if (matchedCount === 4) {
-                        htmlStatus = `<span class="status-check status-win">4D</span>`;
-                    } else if (matchedCount === 3) {
-                        htmlStatus = `<span class="status-check status-win">3D</span>`;
-                    } else if (matchedCount === 2) {
-                        htmlStatus = `<span class="status-check status-win">2D</span>`;
-                    } else {
-                        htmlStatus = `<span class="status-check status-lose">X</span>`;
-                    }
-                } else {
-                    htmlStatus = `<span class="status-check"></span>`;
+                    if (matchedCount >= 4) htmlStatus = `<span class="status-check status-win">4D</span>`;
+                    else if (matchedCount === 3) htmlStatus = `<span class="status-check status-win">3D</span>`;
+                    else if (matchedCount === 2) htmlStatus = `<span class="status-check status-win">2D</span>`;
+                    else htmlStatus = `<span class="status-check status-lose">X</span>`;
                 }
 
                 containerTrek.innerHTML += `
