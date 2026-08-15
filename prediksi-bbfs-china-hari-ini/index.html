@@ -427,11 +427,9 @@
         }
     </script>
 
-    <!-- Script Algoritma Cerdas: Proteksi Angka Bagus (Result Utama) Saat Pemangkasan 8 ke 7 Digit -->
+<!-- Script Algoritma Cerdas: PATOKAN KOP + KEPALA + EKOR (Jumlah 3D / Biji 3D) -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let arrayAngkaMentah = [];
-
             const sekarang = new Date();
             const jam = String(sekarang.getHours()).padStart(2, '0');
             const menit = String(sekarang.getMinutes()).padStart(2, '0');
@@ -447,14 +445,12 @@
             }
 
             if (sumberData && sumberData.trim() !== '') {
+                // MASTER DATA: Mengambil seluruh riwayat untuk Kuncian History Permanen
                 let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
                 
-                if (angkaSahMatch && angkaSahMatch.length > 0) {
-                    arrayAngkaMentah = angkaSahMatch.slice(-4);
-                }
-
-                if (arrayAngkaMentah.length >= 4) {
-                    prosesDanTampilkanTrack(arrayAngkaMentah);
+                if (angkaSahMatch && angkaSahMatch.length >= 4) {
+                    let arrayAngkaTampil = angkaSahMatch.slice(-4);
+                    prosesDanTampilkanTrack(arrayAngkaTampil, angkaSahMatch);
                 } else {
                     let containerTrek = document.getElementById('china-track');
                     if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
@@ -462,45 +458,64 @@
             }
         });
 
-        function hitungRumusCerdas(semuaResult, currentIndex) {
-            let subData = semuaResult.slice(0, currentIndex + 1);
+        // KAMUS TOGEL ASLI 
+        const mistikLama = {0:1, 1:0, 2:5, 5:2, 3:8, 8:3, 4:7, 7:4, 6:9, 9:6};
+        const mistikBaru = {0:8, 8:0, 1:7, 7:1, 2:6, 6:2, 3:9, 9:3, 4:5, 5:4};
+        const angkaIndex = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+
+        function hitungRumusCerdas(masterData, globalIndex) {
+            let d0 = masterData[globalIndex].replace(/\D/g, '').split('').map(Number);
             
-            let targetIdx = -1;
-            for (let i = currentIndex - 1; i >= 0; i--) {
-                let clean = subData[i].replace(/\D/g, '');
-                if (clean.length >= 4) {
-                    targetIdx = i;
-                    break;
+            // Fallback aman
+            if(d0.length < 4) d0 = [6, 4, 8, 9]; 
+
+            let kop = d0[1];
+            let kepala = d0[2];
+            let ekor = d0[3];
+
+            // --- PATOKAN KOP + KEPALA + EKOR (Menghitung "Biji 3D") ---
+            let jumlah3D = kop + kepala + ekor;
+            
+            // LOGIKA REDUKSI BIJI (Menjadikan jumlah berapapun menjadi 1 digit tunggal)
+            // Contoh 1: 9 + 8 + 7 = 24 -> 2 + 4 = 6 (Biji 6)
+            // Contoh 2: 9 + 9 + 9 = 27 -> 2 + 7 = 9 (Biji 9)
+            // Contoh 3: 6 + 4 + 9 = 19 -> 1 + 9 = 10 -> 1 + 0 = 1 (Biji 1)
+            let biji = jumlah3D;
+            while (biji > 9) {
+                let tempStr = String(biji);
+                let tempSum = 0;
+                for (let i = 0; i < tempStr.length; i++) {
+                    tempSum += Number(tempStr[i]);
                 }
+                biji = tempSum;
             }
 
-            if (targetIdx === -1) {
-                for (let i = currentIndex; i >= 0; i--) {
-                    let clean = subData[i].replace(/\D/g, '');
-                    if (clean.length >= 4) {
-                        targetIdx = i;
-                        break;
-                    }
-                }
+            // RUMUS HOT: Mematikan 3 Angka berpatokan dari Biji 3D (Kop+Kepala+Ekor)
+            let off1 = biji;                  // Serangan 1: Matikan Biji 3D itu sendiri
+            let off2 = mistikLama[biji];      // Serangan 2: Matikan Mistik Lama dari Biji 3D
+            let off3 = angkaIndex[biji];      // Serangan 3: Matikan Index dari Biji 3D
+
+            let offNumbers = [off1];
+            
+            // Proteksi Anti-Tabrakan (Menjaga agar BBFS tetap 7 digit murni)
+            if (!offNumbers.includes(off2)) {
+                offNumbers.push(off2);
+            } else {
+                let alt2 = (off2 + 1) % 10;
+                offNumbers.push(alt2); 
             }
 
-            let digits = [6, 4, 8, 9, 1, 3];
-            if (targetIdx !== -1) {
-                let clean = subData[targetIdx].replace(/\D/g, '');
-                if (clean.length >= 4) {
-                    digits = clean.split('').map(Number);
+            if (!offNumbers.includes(off3)) {
+                offNumbers.push(off3);
+            } else {
+                let alt3 = (off3 + 1) % 10;
+                while(offNumbers.includes(alt3)) {
+                    alt3 = (alt3 + 1) % 10;
                 }
+                offNumbers.push(alt3);
             }
 
-            let kepala = digits[2] || 0;
-            let ekor = digits[digits.length - 1] || 0;
-
-            // Patokan utama JUMLAH 2D (Kepala + Ekor) sebagai poros rumus
-            let jml2D = (kepala + ekor) % 10;
-            let off1 = jml2D;
-            let off2 = (jml2D + 5) % 10; // Mistik lama / taysen dari jumlah 2D
-            let offNumbers = [...new Set([off1, off2])];
-
+            // --- MENGHASILKAN TEPAT 7 DIGIT BBFS ---
             let bbfs = [];
             for (let i = 0; i <= 9; i++) {
                 if (!offNumbers.includes(i)) {
@@ -508,65 +523,46 @@
                 }
             }
 
-            if (bbfs.length > 7) {
-                let resultDigits = new Set(digits);
-                let groupA = bbfs.filter(d => resultDigits.has(d));
-                let groupB = bbfs.filter(d => !resultDigits.has(d));
-                
-                let selected = [...groupA];
-                let sisaButuh = 7 - selected.length;
-                
-                if (sisaButuh > 0 && groupB.length > 0) {
-                    groupB.sort((a, b) => a - b);
-                    selected = selected.concat(groupB.slice(0, sisaButuh));
-                } else if (selected.length > 7) {
-                    selected = selected.slice(0, 7);
-                }
-                bbfs = selected;
-            } else if (bbfs.length < 7) {
-                for (let i = 0; i <= 9 && bbfs.length < 7; i++) {
-                    if (!bbfs.includes(i)) {
-                        bbfs.push(i);
-                    }
-                }
-            }
-
             bbfs.sort((a, b) => a - b);
-            return bbfs;
+            return bbfs; // Pasti 7 digit
         }
 
-        function prosesDanTampilkanTrack(dataResult) {
+        function prosesDanTampilkanTrack(dataTampil, masterData) {
             const containerTrek = document.getElementById('china-track');
             if (!containerTrek) return;
 
             containerTrek.innerHTML = '';
 
-            for (let i = 0; i < dataResult.length; i++) {
-                let resSaatIni = dataResult[i];
-                let list7Digit = hitungRumusCerdas(dataResult, i);
+            for (let i = 0; i < dataTampil.length; i++) {
+                let resSaatIni = dataTampil[i];
+                
+                // SISTEM ANTI-BERUBAH: Mengambil posisi index yang terkunci
+                let globalIndex = masterData.length - dataTampil.length + i;
+
+                // Eksekusi Rumus Kop + Kepala + Ekor
+                let list7Digit = hitungRumusCerdas(masterData, globalIndex);
                 let string7Digit = list7Digit.join('');
 
                 let htmlStatus = '';
 
-                if (i < dataResult.length - 1) {
-                    let cleanNext = dataResult[i + 1].replace(/\D/g, '');
+                // Cek Kemenangan (Win/Lose)
+                if (globalIndex < masterData.length - 1) {
+                    let cleanNext = masterData[globalIndex + 1].replace(/\D/g, '');
                     let resBerikutnya = cleanNext.split('').map(Number);
                     
                     if (resBerikutnya.length >= 4) {
-                        let as = resBerikutnya[0];
-                        let kop = resBerikutnya[1];
-                        let kepala = resBerikutnya[2];
-                        let ekor = resBerikutnya[resBerikutnya.length - 1];
+                        let asNext = resBerikutnya[0];
+                        let kopNext = resBerikutnya[1];
+                        let kepNext = resBerikutnya[2];
+                        let ekrNext = resBerikutnya[resBerikutnya.length - 1];
 
-                        let sequence = [ekor, kepala, kop, as];
+                        let sequence = [ekrNext, kepNext, kopNext, asNext];
                         let matchedCount = 0;
                         let seenDigits = new Set();
 
                         for (let digit of sequence) {
                             if (list7Digit.includes(digit)) {
-                                if (seenDigits.has(digit)) {
-                                    break;
-                                }
+                                if (seenDigits.has(digit)) break;
                                 seenDigits.add(digit);
                                 matchedCount++;
                             } else {
@@ -574,15 +570,10 @@
                             }
                         }
 
-                        if (matchedCount === 4) {
-                            htmlStatus = `<span class="status-check status-win">4D</span>`;
-                        } else if (matchedCount === 3) {
-                            htmlStatus = `<span class="status-check status-win">3D</span>`;
-                        } else if (matchedCount === 2) {
-                            htmlStatus = `<span class="status-check status-win">2D</span>`;
-                        } else {
-                            htmlStatus = `<span class="status-check status-lose">X</span>`;
-                        }
+                        if (matchedCount === 4) htmlStatus = `<span class="status-check status-win">4D</span>`;
+                        else if (matchedCount === 3) htmlStatus = `<span class="status-check status-win">3D</span>`;
+                        else if (matchedCount === 2) htmlStatus = `<span class="status-check status-win">2D</span>`;
+                        else htmlStatus = `<span class="status-check status-lose">X</span>`;
                     } else {
                         htmlStatus = `<span class="status-check"></span>`;
                     }
