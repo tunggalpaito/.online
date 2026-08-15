@@ -430,39 +430,39 @@
     <!-- Script Algoritma Cerdas: Patokan Rumus Berbasis Result Ekor & Diperluas Frekuensinya -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let arrayAngkaMentah = [];
+    let sumberData = "";
+    if (typeof DATA_PAITO_HK !== 'undefined') {
+        sumberData = DATA_PAITO_HK;
+    } else if (typeof DATA_PAITO_HONGKONG !== 'undefined') {
+        sumberData = DATA_PAITO_HONGKONG;
+    } else if (typeof DATA_HK !== 'undefined') {
+        sumberData = DATA_HK;
+    } else if (typeof DATA_PAITO_TAIWAN !== 'undefined') {
+        sumberData = DATA_PAITO_TAIWAN;
+    } else if (typeof DATA_PAITO_TW !== 'undefined') {
+        sumberData = DATA_PAITO_TW;
+    }
 
-            const sekarang = new Date();
-            const jam = String(sekarang.getHours()).padStart(2, '0');
-            const menit = String(sekarang.getMinutes()).padStart(2, '0');
-            if(document.getElementById('live-update-time')) {
-                document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
-            }
+    const sekarang = new Date();
+    const jam = String(sekarang.getHours()).padStart(2, '0');
+    const menit = String(sekarang.getMinutes()).padStart(2, '0');
+    if(document.getElementById('live-update-time')) {
+        document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
+    }
 
-            let sumberData = "";
-            if (typeof DATA_PAITO_HK !== 'undefined') {
-                sumberData = DATA_PAITO_HK;
-            } else if (typeof DATA_PAITO_HONGKONG !== 'undefined') {
-                sumberData = DATA_PAITO_HONGKONG;
-            } else if (typeof DATA_HK !== 'undefined') {
-                sumberData = DATA_HK;
-            }
-
-            if (sumberData && sumberData.trim() !== '') {
-                let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
-                
-                if (angkaSahMatch && angkaSahMatch.length > 0) {
-                    arrayAngkaMentah = angkaSahMatch.slice(-4);
-                }
-
-                if (arrayAngkaMentah.length >= 4) {
-                    prosesDanTampilkanTrack(arrayAngkaMentah);
-                } else {
-                    let containerTrek = document.getElementById('japan-track');
-                    if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
-                }
-            }
-        });
+    if (sumberData && sumberData.trim() !== '') {
+        let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
+        
+        if (angkaSahMatch && angkaSahMatch.length >= 4) {
+            // PERBAIKAN: Kirim seluruh array master (angkaSahMatch) agar indeks historis tetap konsisten
+            let targetTampilkan = angkaSahMatch.slice(-4);
+            prosesDanTampilkanTrack(targetTampilkan, angkaSahMatch);
+        } else {
+            let containerTrek = document.getElementById('japan-track');
+            if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
+        }
+    }
+});
 
         function hitungRumusCerdas(semuaResult, currentIndex) {
             let subData = semuaResult.slice(0, currentIndex + 1);
