@@ -429,42 +429,46 @@
 
     <!-- Script Algoritma Cerdas: Patokan Rumus Berbasis Result Ekor & Diperluas Frekuensinya -->
     <script>
+        const cacheHasilRumus = {};
+
         document.addEventListener("DOMContentLoaded", function() {
-    let sumberData = "";
-    if (typeof DATA_PAITO_HK !== 'undefined') {
-        sumberData = DATA_PAITO_HK;
-    } else if (typeof DATA_PAITO_HONGKONG !== 'undefined') {
-        sumberData = DATA_PAITO_HONGKONG;
-    } else if (typeof DATA_HK !== 'undefined') {
-        sumberData = DATA_HK;
-    } else if (typeof DATA_PAITO_TAIWAN !== 'undefined') {
-        sumberData = DATA_PAITO_TAIWAN;
-    } else if (typeof DATA_PAITO_TW !== 'undefined') {
-        sumberData = DATA_PAITO_TW;
-    }
+            let sumberData = "";
+            if (typeof DATA_PAITO_HK !== 'undefined') {
+                sumberData = DATA_PAITO_HK;
+            } else if (typeof DATA_PAITO_HONGKONG !== 'undefined') {
+                sumberData = DATA_PAITO_HONGKONG;
+            } else if (typeof DATA_HK !== 'undefined') {
+                sumberData = DATA_HK;
+            } else if (typeof DATA_PAITO_TAIWAN !== 'undefined') {
+                sumberData = DATA_PAITO_TAIWAN;
+            } else if (typeof DATA_PAITO_TW !== 'undefined') {
+                sumberData = DATA_PAITO_TW;
+            }
 
-    const sekarang = new Date();
-    const jam = String(sekarang.getHours()).padStart(2, '0');
-    const menit = String(sekarang.getMinutes()).padStart(2, '0');
-    if(document.getElementById('live-update-time')) {
-        document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
-    }
+            const sekarang = new Date();
+            const jam = String(sekarang.getHours()).padStart(2, '0');
+            const menit = String(sekarang.getMinutes()).padStart(2, '0');
+            if(document.getElementById('live-update-time')) {
+                document.getElementById('live-update-time').innerHTML = `Jam ${jam}:${menit} WIB`; 
+            }
 
-    if (sumberData && sumberData.trim() !== '') {
-        let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
-        
-        if (angkaSahMatch && angkaSahMatch.length >= 4) {
-            // PERBAIKAN: Kirim seluruh array master (angkaSahMatch) agar indeks historis tetap konsisten
-            let targetTampilkan = angkaSahMatch.slice(-4);
-            prosesDanTampilkanTrack(targetTampilkan, angkaSahMatch);
-        } else {
-            let containerTrek = document.getElementById('japan-track');
-            if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
-        }
-    }
-});
+            if (sumberData && sumberData.trim() !== '') {
+                let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
+                
+                if (angkaSahMatch && angkaSahMatch.length >= 4) {
+                    prosesDanTampilkanTrack(angkaSahMatch);
+                } else {
+                    let containerTrek = document.getElementById('japan-track');
+                    if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
+                }
+            }
+        });
 
         function hitungRumusCerdas(semuaResult, currentIndex) {
+            if (cacheHasilRumus[currentIndex]) {
+                return cacheHasilRumus[currentIndex];
+            }
+
             let subData = semuaResult.slice(0, currentIndex + 1);
             
             let targetIdx = -1;
@@ -494,10 +498,8 @@
                 }
             }
 
-            // PATOKAN MUTLAK: Ambil digit KEPALA dari 4D (Indeks ke-2)
             let kepala = digits[2] || 0;
 
-            // Buat 3 angka kontrol / off numbers berdasarkan pergeseran langsung dari nilai kepala
             let off1 = kepala;
             let off2 = (kepala + 3) % 10;
             let off3 = (kepala + 7) % 10;
@@ -511,7 +513,6 @@
                 }
             }
 
-            // Memastikan panjang BBFS selalu pas 7 digit
             if (bbfs.length > 7) {
                 bbfs = bbfs.slice(0, 7);
             } else if (bbfs.length < 7) {
@@ -523,24 +524,27 @@
             }
 
             bbfs.sort((a, b) => a - b);
+            cacheHasilRumus[currentIndex] = bbfs;
             return bbfs;
         }
 
-        function prosesDanTampilkanTrack(dataResult) {
+        function prosesDanTampilkanTrack(masterData) {
             const containerTrek = document.getElementById('japan-track');
             if (!containerTrek) return;
 
             containerTrek.innerHTML = '';
 
-            for (let i = 0; i < dataResult.length; i++) {
-                let resSaatIni = dataResult[i];
-                let list7Digit = hitungRumusCerdas(dataResult, i);
+            let startIndex = Math.max(0, masterData.length - 4);
+
+            for (let i = startIndex; i < masterData.length; i++) {
+                let resSaatIni = masterData[i];
+                let list7Digit = hitungRumusCerdas(masterData, i);
                 let string7Digit = list7Digit.join('');
 
                 let htmlStatus = '';
 
-                if (i < dataResult.length - 1) {
-                    let cleanNext = dataResult[i + 1].replace(/\D/g, '');
+                if (i < masterData.length - 1) {
+                    let cleanNext = masterData[i + 1].replace(/\D/g, '');
                     let resBerikutnya = cleanNext.split('').map(Number);
                     
                     if (resBerikutnya.length >= 4) {
