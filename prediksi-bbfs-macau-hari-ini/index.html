@@ -427,11 +427,9 @@
         }
     </script>
 
-    <!-- Script Algoritma Cerdas: Proteksi Angka Bagus (Result Utama) Saat Pemangkasan 8 ke 7 Digit -->
+<!-- Script Algoritma Cerdas: Proteksi Angka Bagus (Result Utama) dengan Indeks Global yang Stabil -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            let arrayAngkaMentah = [];
-
             const sekarang = new Date();
             const jam = String(sekarang.getHours()).padStart(2, '0');
             const menit = String(sekarang.getMinutes()).padStart(2, '0');
@@ -449,14 +447,18 @@
             if (sumberData && sumberData.trim() !== '') {
                 let angkaSahMatch = sumberData.match(/\b\d{4}\b/g);
                 
-                // Ubah dari slice(-7) menjadi slice(-4) agar data yang dimuat hanya 4 terakhir
-                if (angkaSahMatch && angkaSahMatch.length > 0) {
-                    arrayAngkaMentah = angkaSahMatch.slice(-4);
-                }
+                if (angkaSahMatch && angkaSahMatch.length >= 4) {
+                    // Ambil 4 result terakhir dari data master, tapi simpan indeks global aslinya
+                    let startIndex = angkaSahMatch.length - 4;
+                    let displayResults = [];
+                    let globalIndices = [];
+                    
+                    for (let i = startIndex; i < angkaSahMatch.length; i++) {
+                        displayResults.push(angkaSahMatch[i]);
+                        globalIndices.push(i); // Indeks permanen di data master
+                    }
 
-                // Ubah validasi minimal dari 7 menjadi 4 result
-                if (arrayAngkaMentah.length >= 4) {
-                    prosesDanTampilkanTrack(arrayAngkaMentah);
+                    prosesDanTampilkanTrack(angkaSahMatch, globalIndices, displayResults);
                 } else {
                     let containerTrek = document.getElementById('macau-track');
                     if(containerTrek) containerTrek.innerHTML = `<div style="color:#e74c3c; font-weight:bold;">Data sah minimal 4 result!</div>`;
@@ -464,6 +466,7 @@
             }
         });
 
+        // RUMUS ASLI ANDA (TETAP UTUH)
         function hitungRumusCerdas(semuaResult, currentIndex) {
             let subData = semuaResult.slice(0, currentIndex + 1);
             
@@ -539,21 +542,32 @@
             return bbfs;
         }
 
-        function prosesDanTampilkanTrack(dataResult) {
+        function prosesDanTampilkanTrack(fullData, globalIndices, displayResults) {
             const containerTrek = document.getElementById('macau-track');
             if (!containerTrek) return;
 
             containerTrek.innerHTML = '';
 
-            for (let i = 0; i < dataResult.length; i++) {
-                let resSaatIni = dataResult[i];
-                let list7Digit = hitungRumusCerdas(dataResult, i);
+            for (let idx = 0; idx < displayResults.length; idx++) {
+                let resSaatIni = displayResults[idx];
+                let gIndex = globalIndices[idx];
+                
+                // Menghitung menggunakan rumus asli Anda berdasarkan posisi global yang tetap
+                let list7Digit = hitungRumusCerdas(fullData, gIndex);
                 let string7Digit = list7Digit.join('');
 
                 let htmlStatus = '';
 
-                if (i < dataResult.length - 1) {
-                    let resBerikutnya = dataResult[i + 1].split('').map(Number);
+                // Cek result berikutnya untuk status Win/Lose
+                let nextResultStr = "";
+                if (idx < displayResults.length - 1) {
+                    nextResultStr = displayResults[idx + 1];
+                } else if (gIndex + 1 < fullData.length) {
+                    nextResultStr = fullData[gIndex + 1];
+                }
+
+                if (nextResultStr !== "") {
+                    let resBerikutnya = nextResultStr.split('').map(Number);
                     
                     let as = resBerikutnya[0];
                     let kop = resBerikutnya[1];
