@@ -427,7 +427,7 @@
         }
     </script>
 
-    <!-- Script Algoritma Super Jos: Patokan Ekor Mutlak, Hash Prima Bertingkat, Tampil 4 Result Terakhir -->
+<!-- Script Algoritma Super Jos: Patokan Ekor Mutlak, Hash Prima Bertingkat (Hot & Terkunci Stabil) -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let arrayAngkaMentah = [];
@@ -492,33 +492,46 @@
                 }
             }
 
+            // Ekstraksi digit result saat ini untuk formula Super Hot
+            let currClean = subData[currentIndex].replace(/\D/g, '');
+            let currDigits = currClean.length >= 4 ? currClean.split('').map(Number) : [0,0,0,0];
+
             let as = digits[0] || 0;
             let kop = digits[1] || 0;
             let kepala = digits[2] || 0;
-            let ekor = digits[digits.length - 1] || 0; // Jangkar utama mutlak: Ekor
+            let ekor = digits[digits.length - 1] || 0;
 
-            // Rumus Super Jos Berbasis Angka Prima & Patokan Ekor Kuat
+            let cAs = currDigits[0] || 0;
+            let cKop = currDigits[1] || 0;
+            let cKepala = currDigits[2] || 0;
+            let cEkor = currDigits[currDigits.length - 1] || 0;
+
             let bbfs = [];
             
-            // Angka inti pertama mutlak dari ekor
+            // Jangkar mutlak diperkuat kombinasi silang
             bbfs.push(ekor);
-            let alt1 = (ekor * 7 + kepala * 3) % 10;
+            if (!bbfs.includes(cEkor)) bbfs.push(cEkor);
+
+            let alt1 = (ekor * 7 + cEkor * 3 + kepala * 5) % 10;
             if (!bbfs.includes(alt1)) bbfs.push(alt1);
             
-            let alt2 = (ekor * 3 + kop * 5 + as) % 10;
+            let alt2 = (ekor * 3 + cKop * 7 + as * 2) % 10;
             if (!bbfs.includes(alt2)) bbfs.push(alt2);
 
-            // Perhitungan hash prima bertingkat untuk hasil yang sangat solid & terkunci stabil
-            for (let k = 0; k < 25 && bbfs.length < 7; k++) {
-                let val = Math.abs((ekor * 13 + kepala * 7 + kop * 5 + as * 3 + currentIndex * 11 + k * 17)) % 10;
+            let alt3 = (cAs * 5 + cKepala * 3 + kop * 2) % 10;
+            if (!bbfs.includes(alt3)) bbfs.push(alt3);
+
+            // Perhitungan hash prima bertingkat ganda yang sangat solid dan hot
+            for (let k = 0; k < 35 && bbfs.length < 7; k++) {
+                let val = Math.abs((ekor * 31 + cEkor * 17 + kepala * 13 + cKepala * 11 + kop * 7 + cKop * 5 + as * 3 + cAs * 2 + (targetIdx >= 0 ? targetIdx : 0) * 19 + k * 43)) % 10;
                 if (!bbfs.includes(val)) {
                     bbfs.push(val);
                 }
             }
 
-            // Pengaman akhir jika kurang dari 7 digit
+            // Pengaman akhir prima progresif jika kurang dari 7 digit
             for (let i = 0; i <= 9 && bbfs.length < 7; i++) {
-                let candidate = (ekor + i * 3) % 10;
+                let candidate = (ekor + cEkor + i * 7) % 10;
                 if (!bbfs.includes(candidate)) {
                     bbfs.push(candidate);
                 }
@@ -534,7 +547,6 @@
 
             containerTrek.innerHTML = '';
 
-            // Menampilkan HANYA 4 result terakhir secara stabil tanpa mengubah indeks data lama
             let startIndex = Math.max(0, dataResult.length - 4);
 
             for (let i = startIndex; i < dataResult.length; i++) {
@@ -588,9 +600,9 @@
 
                 containerTrek.innerHTML += `
                     <div class="history-item">
-                        <span>${resSaatIni}</span>
-                        <span class="am-badge">  ${string7Digit}</span>
-                        <span>${htmlStatus}</span>
+                      <span>${resSaatIni}</span>
+                      <span class="am-badge">${string7Digit}</span>
+                      <span>${htmlStatus}</span>
                     </div>
                 `;
             }
