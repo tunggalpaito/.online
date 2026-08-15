@@ -509,6 +509,10 @@ function prosesDanTampilkanTrack(dataResult) {
     containerTrek.innerHTML = '';
     let seenPairs = new Set();
 
+    // Tentukan batas awal agar yang dirender ke layar hanya 4 baris terakhir saja, 
+    // tapi perhitungan rumus di baliknya tetap berjalan utuh dari 7 data penuh.
+    let startIndexRender = Math.max(0, dataResult.length - 4);
+
     for (let i = 0; i < dataResult.length; i++) {
         let resSaatIni = dataResult[i];
         let cleanRes = resSaatIni.replace(/\D/g, '');
@@ -525,7 +529,6 @@ function prosesDanTampilkanTrack(dataResult) {
         let d2 = list3Digit[1];
         let d3 = list3Digit[2];
         
-        // Pool angka bersih untuk pasangan (di luar angka yang keluar)
         let poolPasangan = [];
         for (let n = 0; n <= 9; n++) {
             if (!arrRes.includes(n)) {
@@ -547,7 +550,6 @@ function prosesDanTampilkanTrack(dataResult) {
         if (k2 === d2) k2 = poolPasangan[(startIdxP + shiftOffsetP + 6) % poolPasangan.length];
         if (k3 === d3) k3 = poolPasangan[(startIdxP + shiftOffsetP + 7) % poolPasangan.length];
 
-        // Format pasangan bersih: Anti angka keluar saling tarung, anti kembar, anti terbalik
         function formatUnikPair(a, b, poolRef) {
             if (a === b) b = poolRef[(b + 1) % poolRef.length];
 
@@ -588,13 +590,10 @@ function prosesDanTampilkanTrack(dataResult) {
         if (i < dataResult.length - 1) {
             let resBerikutnya = dataResult[i + 1].replace(/\D/g, '').split('').map(Number);
             
-            // Perbaikan Validasi Colok Macau: Harus ada 2 digit angka prediksi yang ADA DALAM 1 pasang (pair) 
-            // yang sama-sama termuat di dalam result berikutnya (resBerikutnya).
             let checkPairMatch = (pairStr, resArr) => {
                 let dP1 = parseInt(pairStr[0]);
                 let dP2 = parseInt(pairStr[1]);
                 let countMatch = 0;
-                // Cek kemunculan digit di result (mengakomodasi duplikasi angka di result jika ada)
                 let tempRes = [...resArr];
                 if (tempRes.includes(dP1)) {
                     countMatch++;
@@ -619,17 +618,20 @@ function prosesDanTampilkanTrack(dataResult) {
             htmlStatus = `<span class="status-check"></span>`;
         }
 
-        containerTrek.innerHTML += `
-            <div class="history-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-                <span style="font-weight: bold; letter-spacing: 1px; width: 60px; text-align: left; flex-shrink: 0;">${resSaatIni}</span>
-                <div class="am-badge-wrapper" style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.12); padding: 8px 0; width: 90px; border-radius: 8px; text-align: center; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0;">
-                    <span class="am-badge" style="line-height: 1.6; display: inline-block; font-family: monospace; font-size: 14px; letter-spacing: 3px; font-weight: bold;">${stringColokMacau}</span>
+        // HANYA CETAK KE LAYAR JIKA MASUK DALAM 4 DATA TERAKHIR
+        if (i >= startIndexRender) {
+            containerTrek.innerHTML += `
+                <div class="history-item" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+                    <span style="font-weight: bold; letter-spacing: 1px; width: 60px; text-align: left; flex-shrink: 0;">${resSaatIni}</span>
+                    <div class="am-badge-wrapper" style="background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.12); padding: 8px 0; width: 90px; border-radius: 8px; text-align: center; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                        <span class="am-badge" style="line-height: 1.6; display: inline-block; font-family: monospace; font-size: 14px; letter-spacing: 3px; font-weight: bold;">${stringColokMacau}</span>
+                    </div>
+                    <div style="width: 50px; text-align: right; display: flex; justify-content: flex-end; align-items: center; flex-shrink: 0;">
+                        ${htmlStatus}
+                    </div>
                 </div>
-                <div style="width: 50px; text-align: right; display: flex; justify-content: flex-end; align-items: center; flex-shrink: 0;">
-                    ${htmlStatus}
-                </div>
-            </div>
-        `;
+            `;
+        }
     }
 }
     </script>
