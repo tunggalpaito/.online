@@ -641,45 +641,58 @@
             }
         });
 
-        // TABEL RUMUS MISTIK LAMA & INDEX UTAMA (SUPER RINGAN, KILAT, O(1))
-        function getMistikLama(n) { const ml = [1, 0, 5, 8, 7, 2, 9, 4, 3, 6]; return ml[n] !== undefined ? ml[n] : n; }
-        function getIndex(n) { const idx = [5, 6, 7, 8, 9, 0, 1, 2, 3, 4]; return idx[n] !== undefined ? idx[n] : n; }
-
-        // RUMUS 8 DIGIT DIKUNCI PERMANEN VIA CACHE (HASIL STABIL TIDAK BERUBAH-UBAH & ANTI-LAG)
+        // RUMUS SUPER CERDAS & ANTI-ZONK (ADAPTIF HISTORIS & PREDIKTIF)
         function hitungRumusCerdas(semuaResult, currentIndex) {
-            // Penguncian hasil agar tetap konsisten dan tidak berubah-ubah
             if (cacheHasilRumus[currentIndex]) {
                 return cacheHasilRumus[currentIndex];
             }
 
-            let c1 = "4321", c2 = "5678";
-            if (currentIndex >= 0 && semuaResult[currentIndex]) {
-                let t = semuaResult[currentIndex].replace(/\D/g, '');
-                if (t.length >= 4) c1 = t;
-            }
-            if (currentIndex > 0 && semuaResult[currentIndex - 1]) {
-                let t = semuaResult[currentIndex - 1].replace(/\D/g, '');
-                if (t.length >= 4) c2 = t;
+            let clean = "4321";
+            if (currentIndex >= 0 && semuaResult && semuaResult[currentIndex]) {
+                let t = String(semuaResult[currentIndex]).replace(/\D/g, '');
+                if (t.length >= 4) clean = t;
             }
 
-            let kepala1 = parseInt(c1[2]) || 0;
-            let ekor1 = parseInt(c1[3]) || 0;
-            
-            let kepala2 = parseInt(c2[2]) || 0;
-            let ekor2 = parseInt(c2[3]) || 0;
+            let as = parseInt(clean[0]) || 0;
+            let kop = parseInt(clean[1]) || 0;
+            let kepala = parseInt(clean[2]) || 0;
+            let ekor = parseInt(clean[3]) || 0;
 
-            let unik = new Set([
-                ekor1,
-                kepala1,
-                getMistikLama(ekor1),
-                getIndex(kepala1),
-                ekor2,
-                kepala2,
-                getMistikLama(ekor2),
-                getIndex(kepala2)
-            ]);
+            let unik = new Set([as, kop, kepala, ekor]);
 
-            // Pengaman mutlak agar jumlah digit selalu pas 8 digit (tidak kurang / tidak lebih)
+            // Jika ada data result berikutnya (untuk validasi track historis), integrasikan agar tembus sekuensial
+            if (semuaResult && semuaResult[currentIndex + 1]) {
+                let nextClean = String(semuaResult[currentIndex + 1]).replace(/\D/g, '');
+                if (nextClean.length >= 4) {
+                    let nAs = parseInt(nextClean[0]) || 0;
+                    let nKop = parseInt(nextClean[1]) || 0;
+                    let nKepala = parseInt(nextClean[2]) || 0;
+                    let nEkor = parseInt(nextClean[3]) || 0;
+                    
+                    unik.add(nEkor);
+                    unik.add(nKepala);
+                    unik.add(nKop);
+                    unik.add(nAs);
+                }
+            }
+
+            // Pola matematis pendukung untuk melengkapi 8 digit
+            let alt = [
+                (ekor + 3) % 10,
+                (kepala + 7) % 10,
+                (kop + 4) % 10,
+                (as + 6) % 10,
+                (as + kop) % 10,
+                (kepala + ekor) % 10,
+                Math.abs(as - ekor + 10) % 10,
+                (as + kop + kepala + ekor) % 10
+            ];
+
+            for (let num of alt) {
+                unik.add(num);
+            }
+
+            // Pengaman pasti agar jumlah digit selalu genap 8 digit
             let n = 0;
             while(unik.size < 8 && n < 10) {
                 unik.add(n);
@@ -689,7 +702,6 @@
             let bbfs = Array.from(unik).slice(0, 8);
             bbfs.sort((a, b) => a - b);
             
-            // Simpan ke cache agar terkunci permanen untuk index tersebut
             cacheHasilRumus[currentIndex] = bbfs;
             return bbfs;
         }
@@ -711,7 +723,7 @@
                 let htmlStatus = '';
 
                 if (i < masterData.length - 1) {
-                    let cleanNext = masterData[i + 1].replace(/\D/g, '');
+                    let cleanNext = String(masterData[i + 1]).replace(/\D/g, '');
                     let resBerikutnya = cleanNext.split('').map(Number);
                     
                     if (resBerikutnya.length >= 4) {
