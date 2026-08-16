@@ -459,79 +459,50 @@
             }
         });
 
-        function hitungRumusCerdas(semuaResult, currentIndex) {
-            let subData = semuaResult.slice(0, currentIndex + 1);
+        function hitungRumusCerdasPerIndeks(semuaResult, currentIndex) {
+            let resSaatIni = semuaResult[currentIndex];
             
-            let targetIdx = -1;
-            for (let i = currentIndex - 1; i >= 0; i--) {
-                let clean = subData[i].replace(/\D/g, '');
-                if (clean.length === 4) {
-                    targetIdx = i;
-                    break;
-                }
+            // KUNCI BERBASIS NILAI RESULT (Bukan Indeks)
+            // Menggunakan nilai result sebagai kunci utama agar posisinya di mana pun tidak akan berubah
+            let storageKey = `hot_lock_result_${resSaatIni}`;
+            let savedKey = localStorage.getItem(storageKey);
+
+            // Jika result ini sudah pernah dikunci sebelumnya, ambil data kuncinya secara permanen
+            if (savedKey) {
+                return savedKey.split(',').map(Number);
             }
 
-            if (targetIdx === -1) {
-                for (let i = currentIndex; i >= 0; i--) {
-                    let clean = subData[i].replace(/\D/g, '');
-                    if (clean.length === 4) {
-                        targetIdx = i;
-                        break;
+            // Jika ini adalah result baru yang belum pernah ada, hitung hot numbers-nya
+            let subData = semuaResult.slice(0, currentIndex + 1);
+            let frequencyMap = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
+            let sampleCount = Math.min(subData.length, 5); 
+            let recentResults = subData.slice(subData.length - sampleCount);
+
+            recentResults.forEach(res => {
+                let clean = res.replace(/\D/g, '');
+                for (let char of clean) {
+                    let d = parseInt(char);
+                    if (!isNaN(d)) {
+                        frequencyMap[d]++;
                     }
                 }
-            }
+            });
 
-            let digits = [6, 4, 8, 9];
-            if (targetIdx !== -1) {
-                let clean = subData[targetIdx].replace(/\D/g, '');
-                if (clean.length === 4) {
-                    digits = clean.split('').map(Number);
+            // Urutkan berdasarkan frekuensi terbanyak (Hot)
+            let sortedDigits = Object.keys(frequencyMap).map(Number).sort((a, b) => {
+                if (frequencyMap[b] !== frequencyMap[a]) {
+                    return frequencyMap[b] - frequencyMap[a]; 
                 }
-            }
+                return b - a; 
+            });
 
-            let as = digits[0];
-            let kop = digits[1];
-            let ekor = digits[3];
+            let hotColok = sortedDigits.slice(0, 2);
+            hotColok.sort((a, b) => a - b);
 
-            let off1 = as;                     
-            let off2 = (kop - 1 + 10) % 10;    
-            let off3 = (ekor + 1) % 10;        
+            // KUNCI dan simpan permanen berdasarkan nilai result tersebut
+            localStorage.setItem(storageKey, hotColok.join(','));
 
-            let offNumbers = [off1, off2, off3];
-
-            let colok = [];
-            for (let i = 0; i <= 9; i++) {
-                if (!offNumbers.includes(i)) {
-                    colok.push(i);
-                }
-            }
-
-            // Pemangkasan cerdas untuk 2 digit
-            if (colok.length > 2) {
-                let resultDigits = new Set(digits);
-                let groupA = colok.filter(d => resultDigits.has(d)); 
-                let groupB = colok.filter(d => !resultDigits.has(d)); 
-                
-                let selected = [...groupA];
-                let sisaButuh = 2 - selected.length;
-                
-                if (sisaButuh > 0 && groupB.length > 0) {
-                    groupB.sort((a, b) => a - b);
-                    selected = selected.concat(groupB.slice(0, sisaButuh));
-                } else if (selected.length > 2) {
-                    selected = selected.slice(0, 2);
-                }
-                colok = selected;
-            } else if (colok.length < 2) {
-                for (let i = 0; i <= 9 && colok.length < 2; i++) {
-                    if (!colok.includes(i)) {
-                        colok.push(i);
-                    }
-                }
-            }
-
-            colok.sort((a, b) => a - b);
-            return colok;
+            return hotColok;
         }
 
         function prosesDanTampilkanTrack(dataResult) {
@@ -542,7 +513,9 @@
 
             for (let i = 0; i < dataResult.length; i++) {
                 let resSaatIni = dataResult[i];
-                let list2Digit = hitungRumusCerdas(dataResult, i);
+                
+                // Ambil rumus hot yang dikunci berdasarkan nilai result
+                let list2Digit = hitungRumusCerdasPerIndeks(dataResult, i);
                 let string2Digit = list2Digit.join('');
 
                 let htmlStatus = '';
@@ -570,7 +543,9 @@
                 containerTrek.innerHTML += `
                     <div class="history-item">
                         <span>${resSaatIni}</span>
-                        <span class="am-badge">${string2Digit}</span>
+                        <span class="am-badge" style="border: 1px solid #ff4444; background: rgba(255,68,68,0.1);">
+                            ${string2Digit} <strong style="color: #ff4444;"></strong>
+                        </span>
                         <span>${htmlStatus}</span>
                     </div>
                 `;
