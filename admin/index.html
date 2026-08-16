@@ -3,46 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel Premium</title>
+    <title>Admin Panel AMOLED Premium</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: linear-gradient(135deg, #0f172a, #1e293b); color: #f8fafc; padding: 20px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; }
         
-        .admin-container { background: #1e293b; width: 100%; max-width: 500px; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid #334155; margin-bottom: 20px; }
+        /* Tema AMOLED: Hitam Pekat Total */
+        body { background: #000000; color: #e2e8f0; padding: 20px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; min-height: 100vh; }
+        
+        .admin-container { background: #080808; width: 100%; max-width: 500px; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #1a1a1a; margin-bottom: 20px; }
         
         /* Widget Tracker Di Paling Atas */
-        .top-tracker { display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px; background: rgba(30, 41, 59, 0.5); padding: 5px; border-radius: 8px; border: 1px dashed #334155; }
+        .top-tracker { display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 15px; background: rgba(15, 15, 15, 0.8); padding: 5px; border-radius: 8px; border: 1px dashed #262626; }
         
         /* Header & Navigasi Atas */
-        .header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #334155; }
-        h2 { color: #38bdf8; font-size: 22px; font-weight: 800; letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; }
+        .header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #1a1a1a; }
+        h2 { color: #38bdf8; font-size: 22px; font-weight: 800; letter-spacing: 1px; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 10px rgba(56,189,248,0.3); }
         
         /* Bar Tombol Utama Sejajar */
         .main-nav { display: flex; gap: 12px; justify-content: center; width: 100%; }
         
-        .btn-utama { flex: 1; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; font-size: 13px; color: #fff; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        .btn-menu-awal { background: #00b894; }
-        .btn-menu-awal:hover { background: #009473; transform: translateY(-2px); }
-        .btn-stat { background: #6366f1; }
-        .btn-stat:hover { background: #4f46e5; transform: translateY(-2px); }
+        .btn-utama { flex: 1; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; padding: 12px 15px; border-radius: 8px; font-weight: bold; font-size: 13px; color: #fff; transition: 0.2s; text-transform: uppercase; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+        .btn-menu-awal { background: #00b894; border: 1px solid #00e6ac; }
+        .btn-menu-awal:hover { background: #009473; transform: translateY(-2px); box-shadow: 0 0 12px rgba(0,184,148,0.5); }
+        .btn-stat { background: #6366f1; border: 1px solid #818cf8; }
+        .btn-stat:hover { background: #4f46e5; transform: translateY(-2px); box-shadow: 0 0 12px rgba(99,102,241,0.5); }
 
         /* Judul Kategori & List Menu */
-        .section-title { font-size: 12px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 1.5px; text-align: left; margin: 25px 0 12px 5px; display: flex; align-items: center; }
-        .section-title::after { content: ""; flex: 1; height: 1px; background: #334155; margin-left: 10px; }
+        .section-title { font-size: 12px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; text-align: left; margin: 25px 0 12px 5px; display: flex; align-items: center; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: #1a1a1a; margin-left: 10px; }
 
         /* Struktur List Vertikal Ke Bawah */
         .list-menu { display: flex; flex-direction: column; gap: 6px; }
         
-        .btn-sub { display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 11px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #fff; text-align: center; transition: all 0.2s ease; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.05); width: 100%; }
-        .btn-sub:hover { transform: translateY(-1px); filter: brightness(1.2); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .btn-sub { display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 11px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #f1f5f9; text-align: center; transition: all 0.2s ease; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.08); width: 100%; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1); }
+        .btn-sub:hover { transform: translateY(-1px); filter: brightness(1.2); box-shadow: 0 4px 12px rgba(0,0,0,0.6); }
         
-        /* Tema Warna Per Kategori */
-        .c-result { background: #0284c7; }
-        .c-prediksi { background: #b45309; }
-        .c-top2d { background: #6d28d9; }
-        .c-live { background: #be123c; }
+        /* Tema Warna Per Kategori (Dioptimalkan untuk kontras tinggi di layar AMOLED) */
+        .c-result { background: #0369a1; border-color: #0284c7; }
+        .c-prediksi { background: #9a3412; border-color: #c2410c; }
+        .c-top2d { background: #5b21b6; border-color: #7c3aed; }
+        .c-live { background: #9f1239; border-color: #e11d48; }
+        .c-ping { background: #1e293b; border-color: #334155; color: #38bdf8; }
         
-        footer { text-align: center; font-size: 12px; color: #64748b; margin-top: 10px; margin-bottom: 20px; }
+        footer { text-align: center; font-size: 12px; color: #475569; margin-top: 10px; margin-bottom: 20px; }
         footer span { color: #38bdf8; font-weight: bold; }
     </style>
 </head>
@@ -180,9 +183,7 @@ hs.src='//s10.histats.com/js15_as.js';
 <img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0">
 </a>
 </noscript>
-
 <!-- Histats.com END -->
-
 
 <script>
   document.querySelectorAll('a').forEach(link => {
@@ -200,5 +201,4 @@ hs.src='//s10.histats.com/js15_as.js';
     window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
   }
 </script>
-
 </html>
