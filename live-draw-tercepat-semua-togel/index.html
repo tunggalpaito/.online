@@ -393,27 +393,28 @@
             renderApp();
             setInterval(renderApp, 10000);
 
-            // Mengambil semua data dan dibalik (.reverse()) agar data terbaru dari file JS ada di posisi indeks 0
-            const sdy = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "").reverse();
+            // Parsing data dan dibalik agar data terbaru berada di baris paling atas tabel
+            const sdy  = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "").reverse();
             const sdyl = parseData(typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "").reverse();
-            const sgp = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "").reverse();
-            const hk = parseData(typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "").reverse();
-            const hkl = parseData(typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "").reverse();
+            const sgp  = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "").reverse();
+            const hk   = parseData(typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "").reverse();
+            const hkl  = parseData(typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "").reverse();
 
             const tbody = document.querySelector("#monthlyTable tbody");
             tbody.innerHTML = "";
 
-            // Menghasilkan daftar tanggal otomatis secara berurutan mundur ke bawah (Hari ini sebagai baris teratas)
+            // Menghasilkan daftar tanggal otomatis secara berurutan mundur ke bawah
             const rowCount = 15;
             for(let i = 0; i < rowCount; i++) {
                 let d = new Date();
-                d.setDate(d.getDate() - i); // Mundur hari ke bawah secara otomatis
+                d.setDate(d.getDate() - i);
                 
                 let day = String(d.getDate()).padStart(2, '0');
                 let month = String(d.getMonth() + 1).padStart(2, '0');
                 let year = d.getFullYear();
                 let formattedDate = `${day}-${month}-${year}`;
 
+                // PERBAIKAN UTAMA: Menggunakan variabel sdyl dan hkl secara tepat
                 tbody.innerHTML += `
                     <tr>
                         <td class="date-col">${formattedDate}</td>
