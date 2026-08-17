@@ -155,7 +155,7 @@
                 <table class="paito-table">
                     <thead>
                         <tr>
-                            <th style="width: 45px;">Minggu</th>
+                            <th style="width: 45px;">Hari</th>
                             <th>Sen</th>
                             <th>Sel</th>
                             <th>Rab</th>
@@ -295,38 +295,40 @@
     if (paitoTbody && teksMentah.trim() !== "") {
         paitoTbody.innerHTML = '';
         
-        // Ambil semua angka murni dari file JS berdasarkan koma
+        // Ambil semua angka murni dari file JS
         let dataAngkaMurni = teksMentah.split(',')
             .map(x => x.replace(/\s+/g, '').trim()) 
             .filter(x => x !== "" && x.length >= 4); 
 
+        let indeksData = 0;
         let totalBaris = Math.ceil(dataAngkaMurni.length / 7);
+        let barisAktifKe = 1;
 
-        for (let i = 0; i < totalBaris; i++) {
-            let barisData = [];
-            for (let j = 0; j < 7; j++) {
-                let index = (i * 7) + j;
-                if (index < dataAngkaMurni.length) {
-                    barisData.push(dataAngkaMurni[index]);
-                } else {
-                    barisData.push("KOSONG");
-                }
+        while (indeksData < dataAngkaMurni.length) {
+            let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
+            let jumlahTerisi = barisAngka.length;
+            
+            let classTambahan = 'class="mgg-row"';
+            
+            // Jika ini baris terakhir dan jumlah data kurang dari 7, berikan kelas animasi kelap-kelip
+            if (barisAktifKe === totalBaris && jumlahTerisi < 7) {
+                classTambahan = 'class="mgg-row minggu-berjalan"';
             }
 
-            let jumlahTerisi = barisData.filter(x => x !== "KOSONG").length;
-            let angkaIndikator = String(i + 1);
-            let classTambahan = 'class="mgg-row"';
-
-            if (i === totalBaris - 1 && jumlahTerisi < 7) {
-                classTambahan = 'class="mgg-row minggu-berjalan"';
+            // Karena Sydney buka setiap hari (tanpa libur), urutan data di array 
+            // dimulai tepat dari hari Senin pada baris pertama. 
+            // Untuk baris yang belum penuh (misal baru terisi sampai hari tertentu), 
+            // sisa kolom hari berikutnya diisi "KOSONG" (ditampilkan xxxx).
+            while (barisAngka.length < 7) {
+                barisAngka.push("KOSONG");
             }
             
             let barisHTML = `<tr>`;
-            // Kolom nomor urut minggu di sebelah kiri
-            barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
+            // Kolom indikator di kiri menampilkan jumlah kotak yang terisi (1-7)
+            barisHTML += `<td ${classTambahan}>${jumlahTerisi}</td>`;
             
-            // Cetak 7 kolom hari (Senin s.d. Minggu) secara berurutan persis array data JS
-            barisData.forEach((draw) => {
+            // Cetak 7 kolom hari mulai dari Senin secara berurutan persis sesuai array
+            barisAngka.forEach((draw) => {
                 let teksDraw = String(draw).trim();
                 
                 if (teksDraw === "-" || teksDraw === "" || teksDraw === "KOSONG") {
@@ -349,6 +351,9 @@
             
             barisHTML += `</tr>`;
             paitoTbody.innerHTML += barisHTML;
+            
+            indeksData += 7; 
+            barisAktifKe++;
         }
     } else if (paitoTbody) {
         paitoTbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted); padding:10px;">Data Berkas Kosong.</td></tr>';
