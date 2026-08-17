@@ -328,41 +328,33 @@ if (paitoTbody && teksMentah.trim() !== "") {
     .map(x => x.replace(/\s+/g, '').trim())
     .filter(x => x !== "" && x.length >= 4);
 
-    // Urutan kolom header tabel: [Indikator, Sen, Sel, Rab, Kam, Jum, Sab, Mgg]
-    // Berarti indeks 0=Senin, 1=Selasa, 2=Rabu, 3=Kamis, 4=Jumat, 5=Sabtu, 6=Minggu.
-    // JavaScript getDay(): 0 = Minggu, 1 = Senin, 2 = Selasa, 3 = Rabu, 4 = Kamis, 5 = Jumat, 6 = Sabtu.
-    // Mapping hari JS (0-6) ke indeks kolom tabel (0-6):
-    // Minggu (0) -> Indeks 6 (Mgg)
-    // Senin (1) -> Indeks 0 (Sen)
-    // Selasa (2) -> Indeks 1 (Sel)
-    // Rabu (3) -> Indeks 2 (Rab)
-    // Kamis (4) -> Indeks 3 (Kam)
-    // Jumat (5) -> Indeks 4 (Jum)
-    // Sabtu (6) -> Indeks 5 (Sab)
-    const mapHariKeKolom = [6, 0, 1, 2, 3, 4, 5];
-    const hariIniJS = new Date().getDay();
-    const targetKolomIndex = mapHariKeKolom[hariIniJS];
+    // KARENA DATA BARU ADA SAMPAI HARI MINGGU INI (MINGGU ADALAH ELEMEN TERAKHIR / HARI KE-7 DALAM URUTAN SEN-MGG)
+    // Kita pastikan baris terakhir langsung mencakup hingga data Minggu (panjang data saat ini masuk ke kolom Minggu).
+    // Urutan kolom header: Indikator, Sen(0), Sel(1), Rab(2), Kam(3), Jum(4), Sab(5), Mgg(6).
+    
+    let totalData = dataAngkaMurni.length;
+    let sisaMod = totalData % 7;
+    
+    // Jika sisa data tidak 0, baris terakhir mencerminkan minggu berjalan yang baru sampai hari Minggu (atau hari tertentu).
+    // Agar baris minggu ini langsung pas mengisi sampai kolom Minggu (meski datanya baru sampai hari Minggu), 
+    // kita bisa sesuaikan pembagian atau biarkan chunking per 7 berjalan secara alami dari awal minggu (Senin).
+    // Mari kita kelompokkan data secara presisi per 7 hari kalender per baris.
+    
+    let chunkList = [];
+    for (let i = 0; i < dataAngkaMurni.length; i += 7) {
+        chunkList.push(dataAngkaMurni.slice(i, i + 7));
+    }
 
-    let indeksData = 0;
-    while (indeksData < dataAngkaMurni.length || indeksData === 0) {
-        let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
+    chunkList.forEach((barisAngka, index) => {
         let jumlahTerisi = barisAngka.length;
+        let apakahBarisTerakhir = (index === chunkList.length - 1);
         
         let angkaIndikator = "7";
-        let classTambahan = "";
-        
-        // Baris aktif (yang paling baru/terakhir dipotong) diberi tanda/animasi jika belum genap 7 hari, 
-        // ATAU jika jumlah data terakhir pas jatuh pada hari berjalan.
-        // Mari kita sesuaikan logika baris berjalan agar mendeteksi baris terakhir yang sedang berjalan.
-        let apakahBarisBerjalan = (indeksData + 7 >= dataAngkaMurni.length);
+        let classTambahan = 'class="mgg-row"';
 
-        if (apakahBarisBerjalan) {
-            // Hitung kolom berdasarkan jumlah data yang sudah ada di baris terakhir ini
-            // Jika jumlahTerisi <= targetKolomIndex + 1, berarti hari ini berada di baris ini
+        if (apakahBarisTerakhir && jumlahTerisi < 7) {
             angkaIndikator = String(jumlahTerisi);
             classTambahan = 'class="mgg-row minggu-berjalan"';
-        } else {
-            classTambahan = 'class="mgg-row"';
         }
 
         while (barisAngka.length < 7) {
@@ -395,9 +387,8 @@ if (paitoTbody && teksMentah.trim() !== "") {
         
         barisHTML += `</tr>`;
         paitoTbody.innerHTML += barisHTML;
-        
-        indeksData += 7;
-    }
+    });
+
 } else if (paitoTbody) {
     paitoTbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted); padding:10px;">Data Berkas Kosong.</td></tr>';
 }
