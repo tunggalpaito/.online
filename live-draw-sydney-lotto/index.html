@@ -155,7 +155,7 @@
                 <table class="paito-table">
                     <thead>
                         <tr>
-                            <th style="width: 45px;">Hari</th>
+                            <th style="width: 45px;">Minggu</th>
                             <th>Sen</th>
                             <th>Sel</th>
                             <th>Rab</th>
@@ -186,7 +186,7 @@
                     <a href="https://tunggalpaito.online/live-draw-result-taiwan/index.html" class="btn-nav-link">Taiwan</a>
                     <a href="https://tunggalpaito.online/live-draw-result-hongkong/index.html" class="btn-nav-link">HK</a>
                     <a href="https://tunggalpaito.online/live-draw-sydney-lotto/index.html" class="btn-nav-link">SDY LOTTO</a>
-                      <a href="https://tunggalpaito.online/live-draw-hongkong-lotto/index.html" class="btn-nav-link">HK LOTTO</a>
+                    <a href="https://tunggalpaito.online/live-draw-hongkong-lotto/index.html" class="btn-nav-link">HK LOTTO</a>
                 </div>
                 <div class="system-controls">
                     <a href="index.html" class="btn-control">Menu Utama</a>
@@ -201,259 +201,227 @@
     </main>
 
     <footer>
+        <p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
+        <div id="histats_counter" style="display:flex; justify-content:center; align-items:center; height:18px; overflow:hidden; transform:scale(.55); transform-origin:center; opacity:.85;"></div>
+    </footer>
 
-<p>&copy; 2026 <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
+    <!-- Histats.com START -->
+    <script type="text/javascript">
+    var _Hasync= _Hasync || [];
+    _Hasync.push(['Histats.start', '1,5037448,4,600,110,30,00001001']);
+    _Hasync.push(['Histats.fasi','1']);
+    _Hasync.push(['Histats.track_hits','']);
+    (function(){
+    var hs=document.createElement('script');
+    hs.type='text/javascript';
+    hs.async=true;
+    hs.src='//s10.histats.com/js15_as.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+    })();
+    </script>
+    <noscript>
+    <a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0"></a>
+    </noscript>
 
-<!-- Histats Counter -->
-<div id="histats_counter" style="
-display:flex;
-justify-content:center;
-align-items:center;
-height:18px;
-overflow:hidden;
-transform:scale(.55);
-transform-origin:center;
-opacity:.85;
-">
-</div>
+    <style>
+    @keyframes kelapKelip {
+        0% { opacity: 1; font-weight: bold; color: #ff0000; }
+        50% { opacity: 0.2; font-weight: normal; color: var(--text-main, #333); }
+        100% { opacity: 1; font-weight: bold; color: #ff0000; }
+    }
+    .minggu-berjalan {
+        animation: kelapKelip 1.5s infinite;
+        background-color: rgba(255, 0, 0, 0.05);
+    }
+    </style>
 
-</footer>
+    <script src="/result/sdylotto.js"></script>
+    <script>
+    let warnaKuasAktif = "transparent";
 
-
-<!-- Histats.com START -->
-<script type="text/javascript">
-var _Hasync= _Hasync || [];
-
-_Hasync.push(['Histats.start',
-'1,5037448,4,600,110,30,00001001'
-]);
-
-_Hasync.push(['Histats.fasi','1']);
-
-_Hasync.push(['Histats.track_hits','']);
-
-(function(){
-
-var hs=document.createElement('script');
-hs.type='text/javascript';
-hs.async=true;
-hs.src='//s10.histats.com/js15_as.js';
-
-(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0])
-.appendChild(hs);
-
-})();
-</script>
-
-<noscript>
-<a href="/" target="_blank">
-<img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0">
-</a>
-</noscript>
-
-<!-- Tambahkan CSS ini di dalam tag <head> atau di atas script untuk efek kelap-kelip -->
-<style>
-@keyframes kelapKelip {
-    0% { opacity: 1; font-weight: bold; color: #ff0000; }
-    50% { opacity: 0.2; font-weight: normal; color: var(--text-main, #333); }
-    100% { opacity: 1; font-weight: bold; color: #ff0000; }
-}
-.minggu-berjalan {
-    animation: kelapKelip 1.5s infinite;
-    background-color: rgba(255, 0, 0, 0.05); /* Memberi sedikit highlight pada baris aktif */
-}
-</style>
-
-<script src="/result/sdylotto.js"></script>
-<script>
-let warnaKuasAktif = "transparent";
-
-if (typeof LIVE_RESULT_SDYLOTTO !== 'undefined') {
-    const angkaSah = LIVE_RESULT_SDYLOTTO.latestResult;
-    const boxAngka = document.getElementById('angka-terbaru-box');
-    const boxStatusWaktu = document.getElementById('waktu-terbaru-box');
-    
-    boxAngka.innerText = "xxxx"; 
-    boxStatusWaktu.innerText = "Sinkronisasi data live...";
-
-    let indeksDigit = 0;
-    let wadahAngka = ["x", "x", "x", "x"];
-
-    const animasiAngka = setInterval(() => {
-        if (indeksDigit < angkaSah.length) {
-            wadahAngka[indeksDigit] = angkaSah[indeksDigit];
-            boxAngka.innerText = wadahAngka.join("");
-            indeksDigit++;
-        } else {
-            clearInterval(animasiAngka);
-            const tgl = new Date();
-            const infoWaktu = `${String(tgl.getDate()).padStart(2, '0')}-${String(tgl.getMonth()+1).padStart(2, '0')}-${tgl.getFullYear()}`;
-            boxStatusWaktu.innerText = "Update Sah Hari Ini: " + infoWaktu;
-        }
-    }, 3000); 
-
-} else {
-    document.getElementById('angka-terbaru-box').innerText = "xxxx";
-    document.getElementById('waktu-terbaru-box').innerText = "Gagal memuat berkas JS.";
-}
-
-const tombolWarna = document.querySelectorAll('.color-palette .color-btn');
-tombolWarna.forEach(btn => {
-    btn.addEventListener('click', function() {
-        tombolWarna.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        warnaKuasAktif = this.getAttribute('data-color');
-    });
-});
-
-function perbaruiJamOtomatis() {
-    const sekarang = new Date();
-    const jam = String(sekarang.getHours()).padStart(2, '0');
-    const menit = String(sekarang.getMinutes()).padStart(2, '0');
-    const detik = String(sekarang.getSeconds()).padStart(2, '0');
-    
-    document.getElementById('live-update-time').innerHTML = 
-        `Jam ${jam}:${menit}:${detik} WIB | Fitur Kuas HP Aktif`;
-}
-perbaruiJamOtomatis(); 
-setInterval(perbaruiJamOtomatis, 1000); 
-
-const teksMentah = (typeof DATA_PAITO_SDYLOTTO !== 'undefined') ? DATA_PAITO_SDYLOTTO : "";
-const paitoTbody = document.getElementById('paito-tbody-data');
-
-if (paitoTbody && teksMentah.trim() !== "") {
-    paitoTbody.innerHTML = '';
-    
-    // Ambil semua angka murni dari file JS
-    let dataAngkaMurni = teksMentah.split(',')
-        .map(x => x.replace(/\s+/g, '').trim()) // Menghapus spasi enter tersembunyi
-        .filter(x => x !== "" && x.length >= 4); // Hanya mengambil data murni 4 digit
-
-    let indeksData = 0;
-    while (indeksData < dataAngkaMurni.length || indeksData === 0) {
-        let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
-        let jumlahTerisi = barisAngka.length;
+    if (typeof LIVE_RESULT_SDYLOTTO !== 'undefined') {
+        const angkaSah = LIVE_RESULT_SDYLOTTO.latestResult;
+        const boxAngka = document.getElementById('angka-terbaru-box');
+        const boxStatusWaktu = document.getElementById('waktu-terbaru-box');
         
-        let angkaIndikator = "7";
-        let classTambahan = "";
-        
-        if (jumlahTerisi < 7) {
-            angkaIndikator = String(jumlahTerisi);
-            classTambahan = 'class="mgg-row minggu-berjalan"';
-        } else {
-            classTambahan = 'class="mgg-row"';
-        }
+        boxAngka.innerText = "xxxx"; 
+        boxStatusWaktu.innerText = "Sinkronisasi data live...";
 
-        while (barisAngka.length < 7) {
-            barisAngka.push("KOSONG");
-        }
-        
-        let barisHTML = `<tr>`;
-        // Kolom indikator di kiri
-        barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
-        
-        // Cetak 7 kolom angka paito
-        barisAngka.forEach((draw) => {
-            let teksDraw = String(draw).trim();
-            
-            if (teksDraw === "-" || teksDraw === "" || teksDraw === "KOSONG") {
-                teksDraw = "xxxx";
-            } else if (teksDraw.length < 4) {
-                teksDraw = teksDraw.padStart(4, "0");
-            } else if (teksDraw.length > 4) {
-                teksDraw = teksDraw.slice(-4);
+        let indeksDigit = 0;
+        let wadahAngka = ["x", "x", "x", "x"];
+
+        const animasiAngka = setInterval(() => {
+            if (indeksDigit < angkaSah.length) {
+                wadahAngka[indeksDigit] = angkaSah[indeksDigit];
+                boxAngka.innerText = wadahAngka.join("");
+                indeksDigit++;
+            } else {
+                clearInterval(animasiAngka);
+                const tgl = new Date();
+                const infoWaktu = `${String(tgl.getDate()).padStart(2, '0')}-${String(tgl.getMonth()+1).padStart(2, '0')}-${tgl.getFullYear()}`;
+                boxStatusWaktu.innerText = "Update Sah Hari Ini: " + infoWaktu;
             }
-            
-            let digitHTML = '';
-            let pos = 0;
-            for (let karakterAngka of teksDraw) {
-                let styleTambahan = (karakterAngka === 'x') ? 'style="color:var(--text-muted); opacity:0.4;"' : '';
-                digitHTML += `<span data-pos="${pos}" ${styleTambahan}>${karakterAngka}</span>`;
-                pos++;
-            }
-            barisHTML += `<td class="paito-cell">${digitHTML}</td>`;
+        }, 3000); 
+
+    } else {
+        document.getElementById('angka-terbaru-box').innerText = "xxxx";
+        document.getElementById('waktu-terbaru-box').innerText = "Gagal memuat berkas JS.";
+    }
+
+    const tombolWarna = document.querySelectorAll('.color-palette .color-btn');
+    tombolWarna.forEach(btn => {
+        btn.addEventListener('click', function() {
+            tombolWarna.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            warnaKuasAktif = this.getAttribute('data-color');
         });
+    });
+
+    function perbaruiJamOtomatis() {
+        const sekarang = new Date();
+        const jam = String(sekarang.getHours()).padStart(2, '0');
+        const menit = String(sekarang.getMinutes()).padStart(2, '0');
+        const detik = String(sekarang.getSeconds()).padStart(2, '0');
         
-        barisHTML += `</tr>`;
-        paitoTbody.innerHTML += barisHTML;
+        document.getElementById('live-update-time').innerHTML = 
+            `Jam ${jam}:${menit}:${detik} WIB | Fitur Kuas HP Aktif`;
+    }
+    perbaruiJamOtomatis(); 
+    setInterval(perbaruiJamOtomatis, 1000); 
+
+    const teksMentah = (typeof DATA_PAITO_SDYLOTTO !== 'undefined') ? DATA_PAITO_SDYLOTTO : "";
+    const paitoTbody = document.getElementById('paito-tbody-data');
+
+    if (paitoTbody && teksMentah.trim() !== "") {
+        paitoTbody.innerHTML = '';
         
-        indeksData += 7; 
-    }
-} else if (paitoTbody) {
-    paitoTbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted); padding:10px;">Data Berkas Kosong.</td></tr>';
-}
+        // Ambil semua angka murni dari file JS berdasarkan koma
+        let dataAngkaMurni = teksMentah.split(',')
+            .map(x => x.replace(/\s+/g, '').trim()) 
+            .filter(x => x !== "" && x.length >= 4); 
 
-paitoTbody.addEventListener('click', function(e) {
-    if (e.target && e.target.tagName === 'SPAN') {
-        if (warnaKuasAktif === "transparent") {
-            e.target.style.backgroundColor = "transparent";
-            e.target.style.color = (e.target.innerText === "x") ? "var(--text-muted)" : "var(--text-main)";
-        } else {
-            e.target.style.backgroundColor = warnaKuasAktif;
-            e.target.style.color = "#000000"; 
+        let totalBaris = Math.ceil(dataAngkaMurni.length / 7);
+
+        for (let i = 0; i < totalBaris; i++) {
+            let barisData = [];
+            for (let j = 0; j < 7; j++) {
+                let index = (i * 7) + j;
+                if (index < dataAngkaMurni.length) {
+                    barisData.push(dataAngkaMurni[index]);
+                } else {
+                    barisData.push("KOSONG");
+                }
+            }
+
+            let jumlahTerisi = barisData.filter(x => x !== "KOSONG").length;
+            let angkaIndikator = String(i + 1);
+            let classTambahan = 'class="mgg-row"';
+
+            if (i === totalBaris - 1 && jumlahTerisi < 7) {
+                classTambahan = 'class="mgg-row minggu-berjalan"';
+            }
+            
+            let barisHTML = `<tr>`;
+            // Kolom nomor urut minggu di sebelah kiri
+            barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
+            
+            // Cetak 7 kolom hari (Senin s.d. Minggu) secara berurutan persis array data JS
+            barisData.forEach((draw) => {
+                let teksDraw = String(draw).trim();
+                
+                if (teksDraw === "-" || teksDraw === "" || teksDraw === "KOSONG") {
+                    teksDraw = "xxxx";
+                } else if (teksDraw.length < 4) {
+                    teksDraw = teksDraw.padStart(4, "0");
+                } else if (teksDraw.length > 4) {
+                    teksDraw = teksDraw.slice(-4);
+                }
+                
+                let digitHTML = '';
+                let pos = 0;
+                for (let karakterAngka of teksDraw) {
+                    let styleTambahan = (karakterAngka === 'x') ? 'style="color:var(--text-muted); opacity:0.4;"' : '';
+                    digitHTML += `<span data-pos="${pos}" ${styleTambahan}>${karakterAngka}</span>`;
+                    pos++;
+                }
+                barisHTML += `<td class="paito-cell">${digitHTML}</td>`;
+            });
+            
+            barisHTML += `</tr>`;
+            paitoTbody.innerHTML += barisHTML;
         }
-    }
-});
-
-document.getElementById('btn-cari-pola').addEventListener('click', function() {
-    const cariKepala = document.getElementById('input-kepala').value.trim();
-    const cariEkor = document.getElementById('input-ekor').value.trim();
-    const seluruhSpan = paitoTbody.querySelectorAll('.paito-cell span');
-
-    if (cariKepala === "" && cariEkor === "") {
-        alert("Masukkan angka Kepala atau Ekor terlebih dahulu!");
-        return;
+    } else if (paitoTbody) {
+        paitoTbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted); padding:10px;">Data Berkas Kosong.</td></tr>';
     }
 
-    seluruhSpan.forEach(span => {
-        if(span.innerText === "x") return; 
-        const posisiDigit = span.getAttribute('data-pos'); 
-
-        if (cariKepala !== "" && posisiDigit === "2" && span.innerText === cariKepala) {
-            span.style.backgroundColor = "#ffdf00"; 
-            span.style.color = "#000000";
-            span.style.fontWeight = "bold";
-        }
-        if (cariEkor !== "" && posisiDigit === "3" && span.innerText === cariEkor) {
-            span.style.backgroundColor = "#e0aaff"; 
-            span.style.color = "#000000";
-            span.style.fontWeight = "bold";
+    paitoTbody.addEventListener('click', function(e) {
+        if (e.target && e.target.tagName === 'SPAN') {
+            if (warnaKuasAktif === "transparent") {
+                e.target.style.backgroundColor = "transparent";
+                e.target.style.color = (e.target.innerText === "x") ? "var(--text-muted)" : "var(--text-main)";
+            } else {
+                e.target.style.backgroundColor = warnaKuasAktif;
+                e.target.style.color = "#000000"; 
+            }
         }
     });
-});
 
-document.getElementById('btn-bersih-pola').addEventListener('fold', function() {
-    // Tombol bersih pola reset penanda kuas manual
-});
-document.getElementById('btn-bersih-pola').addEventListener('click', function() {
-    document.getElementById('input-kepala').value = "";
-    document.getElementById('input-ekor').value = "";
-    const seluruhSpan = paitoTbody.querySelectorAll('.paito-cell span');
-    seluruhSpan.forEach(span => {
-        span.style.backgroundColor = "transparent";
-        span.style.color = (span.innerText === "x") ? "var(--text-muted)" : "var(--text-main)";
-        span.style.fontWeight = "normal";
+    document.getElementById('btn-cari-pola').addEventListener('click', function() {
+        const cariKepala = document.getElementById('input-kepala').value.trim();
+        const cariEkor = document.getElementById('input-ekor').value.trim();
+        const seluruhSpan = paitoTbody.querySelectorAll('.paito-cell span');
+
+        if (cariKepala === "" && cariEkor === "") {
+            alert("Masukkan angka Kepala atau Ekor terlebih dahulu!");
+            return;
+        }
+
+        seluruhSpan.forEach(span => {
+            if(span.innerText === "x") return; 
+            const posisiDigit = span.getAttribute('data-pos'); 
+
+            if (cariKepala !== "" && posisiDigit === "2" && span.innerText === cariKepala) {
+                span.style.backgroundColor = "#ffdf00"; 
+                span.style.color = "#000000";
+                span.style.fontWeight = "bold";
+            }
+            if (cariEkor !== "" && posisiDigit === "3" && span.innerText === cariEkor) {
+                span.style.backgroundColor = "#e0aaff"; 
+                span.style.color = "#000000";
+                span.style.fontWeight = "bold";
+            }
+        });
     });
-});
-</script>
 
-<script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
+    document.getElementById('btn-bersih-pola').addEventListener('click', function() {
+        document.getElementById('input-kepala').value = "";
+        document.getElementById('input-ekor').value = "";
+        const seluruhSpan = paitoTbody.querySelectorAll('.paito-cell span');
+        seluruhSpan.forEach(span => {
+            span.style.backgroundColor = "transparent";
+            span.style.color = (span.innerText === "x") ? "var(--text-muted)" : "var(--text-main)";
+            span.style.fontWeight = "normal";
+        });
+    });
+    </script>
 
-<script>
-  document.querySelectorAll('a').forEach(link => {
-    let href = link.getAttribute('href');
-    if (href && href.includes('.html?hari=')) {
-      let pasaran = href.split('.html')[0];
-      let hari = href.split('?hari=')[1];
-      link.setAttribute('href', '/' + pasaran + '/' + hari);
-    }
-  });
-  const urlParams = new URLSearchParams(window.location.search);
-  const hariParam = urlParams.get('hari');
-  if (hariParam) {
-    const namaHalaman = window.location.pathname.split('/').pop().replace('.html', '');
-    window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
-  }
-</script>
+    <script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
 
+    <script>
+      document.querySelectorAll('a').forEach(link => {
+        let href = link.getAttribute('href');
+        if (href && href.includes('.html?hari=')) {
+          let pasaran = href.split('.html')[0];
+          let hari = href.split('?hari=')[1];
+          link.setAttribute('href', '/' + pasaran + '/' + hari);
+        }
+      });
+      const urlParams = new URLSearchParams(window.location.search);
+      const hariParam = urlParams.get('hari');
+      if (hariParam) {
+        const namaHalaman = window.location.pathname.split('/').pop().replace('.html', '');
+        window.history.replaceState(null, '', '/' + namaHalaman + '/' + hariParam);
+      }
+    </script>
+</body>
 </html>
