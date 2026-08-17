@@ -393,9 +393,12 @@
             renderApp();
             setInterval(renderApp, 10000);
 
-            const sdy = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "");
-            const sgp = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "");
-            const hk = parseData(typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "");
+            // Mengambil semua data dan dibalik (.reverse()) agar data terbaru dari file JS ada di posisi indeks 0
+            const sdy = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "").reverse();
+            const sdyl = parseData(typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "").reverse();
+            const sgp = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "").reverse();
+            const hk = parseData(typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "").reverse();
+            const hkl = parseData(typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "").reverse();
 
             const tbody = document.querySelector("#monthlyTable tbody");
             tbody.innerHTML = "";
@@ -415,10 +418,10 @@
                     <tr>
                         <td class="date-col">${formattedDate}</td>
                         <td class="txt-sdy">${sdy[i] || '----'}</td>
-                        <td class="txt-sdy">${sdy[i] || '----'}</td>
+                        <td class="txt-sdy">${sdyl[i] || '----'}</td>
                         <td class="txt-sgp">${sgp[i] || '----'}</td>
                         <td class="txt-hk">${hk[i] || '----'}</td>
-                        <td class="txt-hk">${hk[i] || '----'}</td>
+                        <td class="txt-hk">${hkl[i] || '----'}</td>
                     </tr>
                 `;
             }
