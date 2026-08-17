@@ -14,7 +14,8 @@ const DATA_PAITO_SGP = `
   3064,8813,3396,5964,3052,
   9120,0715,7907,5102,7137,
   3525,2375,3200,6714,6149,
+  8754
 `;
 const LIVE_RESULT_SGP = {
-    latestResult: "6149"
+    latestResult: "8754"
 };
