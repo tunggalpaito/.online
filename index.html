@@ -170,6 +170,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ANIMASI KELAP-KELIP TEKS LINK KREN */
+        @keyframes blinkLink {
+            0% { opacity: 0.3; text-shadow: 0 0 2px #00ff88; }
+            50% { opacity: 1; text-shadow: 0 0 15px #00ff88, 0 0 25px #00ff88; }
+            100% { opacity: 0.3; text-shadow: 0 0 2px #00ff88; }
+        }
+
+        .blink-live-link {
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #00ff88;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: blinkLink 1.2s infinite ease-in-out;
+            transition: transform 0.2s;
+        }
+        .blink-live-link:hover {
+            transform: scale(1.03);
+            color: #ffffff;
+        }
+
         /* JUDUL PANEL */
         .portal-title {
             text-align: center;
@@ -329,7 +354,7 @@
         </div>
 
         <h2 class="portal-title">Prediksi Togel Hari <span id="namaHari">...</span><br>Nama Pasaran</h2>
-        
+
         <!-- Wadah Menu Klik Otomatis Pasaran -->
         <div class="pasaran-grid">
             
@@ -406,10 +431,15 @@
             </a>
 
         </div>
+        
+                <!-- TEKS LINK KREN KELAP-KELIP (DI ANTARA ATAS TEKS LIVE DRAW DAN DI BAWAH TOGEL HONGKONG) -->
+        <a href="https://tunggalpaito.online/live-draw-tercepat-semua-togel" class="blink-live-link">
+            ⚡ LIVE DRAW TERCEPAT ⚡
+        </a>
 
         <!-- BLOK TAMBAHAN LINK LIVE DRAW -->
         <div class="live-draw-block">
-            <h3 class="live-draw-title">Live Draw & Data Togel</h3>
+            <h3 class="live-draw-title">Data Togel</h3>
             <div class="link-grid">
                 <a href="https://tunggalpaito.online/live-draw-result-macau/" class="btn-nav-link">Macau</a>
                 <a href="https://tunggalpaito.online/live-draw-result-cambodia/" class="btn-nav-link">Cambodia</a>
@@ -419,8 +449,8 @@
                 <a href="#" onclick="window.open(['https://tunggalpaito.online/live-draw-result-singapore/', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
                 <a href="https://tunggalpaito.online/live-draw-result-taiwan/" class="btn-nav-link">Taiwan</a>
                 <a href="https://tunggalpaito.online/live-draw-result-hongkong/" class="btn-nav-link">Hongkong</a>
-                <a href="https://tunggalpaito.online/live-draw-sydney-lotto/" class="btn-nav-link">SDY LOTTO</a>
-                <a href="https://tunggalpaito.online/live-draw-hongkong-lotto/" class="btn-nav-link">HK LOTTO</a>
+                <a href="https://tunggalpaito.online/live-draw-tercepat-semua-togel/" class="btn-nav-link">SDY LOTTO</a>
+                <a href="https://tunggalpaito.online/live-draw-tercepat-semua-togel/" class="btn-nav-link">HK LOTTO</a>
             </div>
         </div>
 
