@@ -256,6 +256,43 @@
         footer p span { color: var(--accent); font-weight: bold; }
 
         @media (max-width: 600px) { body { padding-top: 150px; } header h1 { font-size: 1rem; } }
+
+        /* TAMBAHAN BLOK LINK LIVE DRAW */
+        .live-draw-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .live-draw-title {
+            color: var(--accent);
+            margin-bottom: 15px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        .btn-nav-link {
+            padding: 10px;
+            background: #050505;
+            border: 1px solid var(--border-glow);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .btn-nav-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #111;
+        }
     </style>
 </head>
 <body>
@@ -291,7 +328,7 @@
             </div>
         </div>
 
-        <h2 class="portal-title">Pilih Pasaran Prediksi Hari <span id="namaHari">...</span></h2>
+        <h2 class="portal-title">Prediksi Togel Hari <span id="namaHari">...</span><br>Nama Pasaran</h2>
         
         <!-- Wadah Menu Klik Otomatis Pasaran -->
         <div class="pasaran-grid">
@@ -344,7 +381,7 @@
             <!-- SINGAPORE -->
             <a href="https://tunggalpaito.online/prediksi-togel-singapore-hari-ini" class="pasaran-card" id="sgpCard">
                 <div class="pasaran-info">
-                    <h3>Singapore (SGP)</h3>
+                    <h3>Singapore</h3>
                     <p>Jadwal Putaran: Sen, Rab, Kam, Sab, Mng</p>
                 </div>
                 <div class="status-badge" id="sgpBadge">Checking...</div>
@@ -362,13 +399,31 @@
             <!-- HONGKONG -->
             <a href="https://tunggalpaito.online/prediksi-togel-hongkong-hari-ini" class="pasaran-card">
                 <div class="pasaran-info">
-                    <h3>Hongkong (HK)</h3>
+                    <h3>Hongkong</h3>
                     <p>Jadwal Putaran: Setiap Hari</p>
                 </div>
                 <div class="status-badge open">Active</div>
             </a>
 
         </div>
+
+        <!-- BLOK TAMBAHAN LINK LIVE DRAW -->
+        <div class="live-draw-block">
+            <h3 class="live-draw-title">Live Draw & Data Togel</h3>
+            <div class="link-grid">
+                <a href="https://tunggalpaito.online/live-draw-result-macau/" class="btn-nav-link">Macau</a>
+                <a href="https://tunggalpaito.online/live-draw-result-cambodia/" class="btn-nav-link">Cambodia</a>
+                <a href="https://tunggalpaito.online/live-draw-result-sydney/" class="btn-nav-link">Sydney</a>
+                <a href="https://tunggalpaito.online/live-draw-result-china/" class="btn-nav-link">China</a>
+                <a href="https://tunggalpaito.online/live-draw-result-japan/" class="btn-nav-link">Japan</a>
+                <a href="#" onclick="window.open(['https://tunggalpaito.online/live-draw-result-singapore/', 'https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4'][Math.floor(Math.random() * 2)], '_blank'); return false;" class="btn-nav-link">Singapore</a>
+                <a href="https://tunggalpaito.online/live-draw-result-taiwan/" class="btn-nav-link">Taiwan</a>
+                <a href="https://tunggalpaito.online/live-draw-result-hongkong/" class="btn-nav-link">Hongkong</a>
+                <a href="https://tunggalpaito.online/live-draw-sydney-lotto/" class="btn-nav-link">SDY LOTTO</a>
+                <a href="https://tunggalpaito.online/live-draw-hongkong-lotto/" class="btn-nav-link">HK LOTTO</a>
+            </div>
+        </div>
+
     </div>
 
     <!-- BAR BAWAH -->
