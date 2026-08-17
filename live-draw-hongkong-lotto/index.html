@@ -312,11 +312,13 @@ if (paitoTbody && teksMentah.trim() !== "") {
     paitoTbody.innerHTML = '';
     
     let dataAngkaMurni = teksMentah.split(',')
-    .map(x => x.replace(/\s+/g, '').trim())
-    .filter(x => x !== "" && x.length >= 4);
+        .map(x => x.replace(/\s+/g, '').trim())
+        .filter(x => x !== "" && x.length >= 4);
 
     let indeksData = 0;
-    while (indeksData < dataAngkaMurni.length || indeksData === 0) {
+    let totalData = dataAngkaMurni.length;
+
+    while (indeksData < totalData) {
         let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
         let jumlahTerisi = barisAngka.length;
         
@@ -330,19 +332,13 @@ if (paitoTbody && teksMentah.trim() !== "") {
             classTambahan = 'class="mgg-row"';
         }
 
-        while (barisAngka.length < 7) {
-            barisAngka.push("KOSONG");
-        }
-        
         let barisHTML = `<tr>`;
         barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
         
         barisAngka.forEach((draw) => {
             let teksDraw = String(draw).trim();
             
-            if (teksDraw === "-" || teksDraw === "" || teksDraw === "KOSONG") {
-                teksDraw = "xxxx";
-            } else if (teksDraw.length < 4) {
+            if (teksDraw.length < 4) {
                 teksDraw = teksDraw.padStart(4, "0");
             } else if (teksDraw.length > 4) {
                 teksDraw = teksDraw.slice(-4);
@@ -357,6 +353,11 @@ if (paitoTbody && teksMentah.trim() !== "") {
             }
             barisHTML += `<td class="paito-cell">${digitHTML}</td>`;
         });
+
+        // Sisa kolom hari berikutnya dikosongkan bersih jika baris belum penuh 7 hari
+        for (let i = barisAngka.length; i < 7; i++) {
+            barisHTML += `<td class="paito-cell" style="background: rgba(0,0,0,0.1);"><span></span></td>`;
+        }
         
         barisHTML += `</tr>`;
         paitoTbody.innerHTML += barisHTML;
@@ -390,7 +391,7 @@ document.getElementById('btn-cari-pola').addEventListener('click', function() {
     }
 
     seluruhSpan.forEach(span => {
-        if(span.innerText === "x") return; 
+        if(span.innerText === "x" || span.innerText === "") return; 
         const posisiDigit = span.getAttribute('data-pos'); 
 
         if (cariKepala !== "" && posisiDigit === "2" && span.innerText === cariKepala) {
