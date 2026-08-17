@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- OPTIMASI STRATEGIS META SEO PAITO WARNA SYDNEY LOTTO -->
     <title>Paito Warna Sydney Lotto 2026: Grafik Rekap Pengeluaran Tercepat</title>
-    <meta name="description" content="Paito Warna Sydney Lotto 2026 harian terlengkap. Grafik tabel pengeluaran data sydney lotto pools interaktif per digit angka untuk tarikan rumus jitu master paito.">
-    <meta name="keywords" content="paito warna sydney lotto, paito sydney lotto 2026, data sydney lotto harian, pengeluaran sydney lotto tercepat, grafik paito sydney lotto, rumus tarikan paito">
+    <meta name="description" content="Paito Warna Sydney Lotto 2026 harian terlengkap. Grafik tabel pengeluaran data sydneylotto pools interaktif per digit angka untuk tarikan rumus jitu master paito.">
+    <meta name="keywords" content="paito warna sydney lotto, paito sydneylotto 2026, data sydney lotto harian, pengeluaran sydney lotto tercepat, grafik paito sydney lotto, rumus tarikan paito">
     <link rel="canonical" href="https://angkastatistik.my.id/result-sdylotto">
     <!-- ROBOT OTOMATIS ANTI CACHE PENGUNJUNG (UNTUK FILE STYLE & SCRIPT) -->
     <script>
@@ -185,9 +185,9 @@
                     <a href="https://tunggalpaito.online/live-draw-result-singapore/index.html" class="btn-nav-link">SGP</a>
                     <a href="https://tunggalpaito.online/live-draw-result-taiwan/index.html" class="btn-nav-link">Taiwan</a>
                     <a href="https://tunggalpaito.online/live-draw-result-hongkong/index.html" class="btn-nav-link">HK</a>
-                    <!-- Tambahan Menu Sdylotto & Hklotto di bawah navigasi lama -->
+                    <!-- Menu Sdylotto & Hklotto -->
                     <a href="https://tunggalpaito.online/live-draw-sydney-lotto/index.html" class="btn-nav-link active">Sydney Lotto</a>
-                    <a href="https://tunggalpaito.online/live-draw-sydney-lotto/index.html" class="btn-nav-link">HK Lotto</a>
+                    <a href="https://tunggalpaito.online/live-draw-hk-lotto/index.html" class="btn-nav-link">HK Lotto</a>
                 </div>
                 <div class="system-controls">
                     <a href="index.html" class="btn-control">Menu Utama</a>
@@ -197,7 +197,7 @@
         </div>
 
         <p class="seo-footer-text">
-            Halaman grafik resmi <strong>Paito Warna Sydney Lotto 2026</strong> harian menyajikan tabel rekap data pengeluaran toto sdylotto pools tercepat dan terlengkap terupdate sepanjang tahun 2026. Manfaatkan fitur interaktif klik sel angka untuk memberikan pewarnaan kuas otomatis pada pola tarikan nomor main, angka ikut 2d, kepala, dan ekor harian sdylotto pools Anda.
+            Halaman grafik resmi <strong>Paito Warna Sydney Lotto 2026</strong> harian menyajikan tabel rekap data pengeluaran toto sydneylotto pools tercepat dan terlengkap terupdate sepanjang tahun 2026. Manfaatkan fitur interaktif klik sel angka untuk memberikan pewarnaan kuas otomatis pada pola tarikan nomor main, angka ikut 2d, kepala, dan ekor harian sydneylotto pools Anda.
         </p>
     </main>
 
@@ -238,7 +238,7 @@ hs.src='//s10.histats.com/js15_as.js';
 </a>
 </noscript>
 
-<!-- Tambahkan CSS ini di dalam tag <head> atau di atas script untuk efek kelap-kelip -->
+<!-- Efek Kelap-Kelip Baris Berjalan -->
 <style>
 @keyframes kelapKelip {
     0% { opacity: 1; font-weight: bold; color: #ff0000; }
@@ -251,6 +251,7 @@ hs.src='//s10.histats.com/js15_as.js';
 }
 </style>
 
+<!-- Memuat Berkas Data Sdy Lotto JS -->
 <script src="/result/sdylotto.js"></script>
 <script>
 let warnaKuasAktif = "transparent";
@@ -312,11 +313,13 @@ if (paitoTbody && teksMentah.trim() !== "") {
     paitoTbody.innerHTML = '';
     
     let dataAngkaMurni = teksMentah.split(',')
-    .map(x => x.replace(/\s+/g, '').trim())
-    .filter(x => x !== "" && x.length >= 4);
+        .map(x => x.replace(/\s+/g, '').trim())
+        .filter(x => x !== "" && x.length >= 4);
 
     let indeksData = 0;
-    while (indeksData < dataAngkaMurni.length || indeksData === 0) {
+    let totalData = dataAngkaMurni.length;
+
+    while (indeksData < totalData) {
         let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
         let jumlahTerisi = barisAngka.length;
         
@@ -330,19 +333,13 @@ if (paitoTbody && teksMentah.trim() !== "") {
             classTambahan = 'class="mgg-row"';
         }
 
-        while (barisAngka.length < 7) {
-            barisAngka.push("KOSONG");
-        }
-        
         let barisHTML = `<tr>`;
         barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
         
         barisAngka.forEach((draw) => {
             let teksDraw = String(draw).trim();
             
-            if (teksDraw === "-" || teksDraw === "" || teksDraw === "KOSONG") {
-                teksDraw = "xxxx";
-            } else if (teksDraw.length < 4) {
+            if (teksDraw.length < 4) {
                 teksDraw = teksDraw.padStart(4, "0");
             } else if (teksDraw.length > 4) {
                 teksDraw = teksDraw.slice(-4);
@@ -357,6 +354,11 @@ if (paitoTbody && teksMentah.trim() !== "") {
             }
             barisHTML += `<td class="paito-cell">${digitHTML}</td>`;
         });
+
+        // Kosongkan kolom tersisa jika belum genap 7 hari dalam seminggu
+        for (let i = barisAngka.length; i < 7; i++) {
+            barisHTML += `<td class="paito-cell" style="background: rgba(0,0,0,0.1);"><span></span></td>`;
+        }
         
         barisHTML += `</tr>`;
         paitoTbody.innerHTML += barisHTML;
@@ -390,7 +392,7 @@ document.getElementById('btn-cari-pola').addEventListener('click', function() {
     }
 
     seluruhSpan.forEach(span => {
-        if(span.innerText === "x") return; 
+        if(span.innerText === "x" || span.innerText === "") return; 
         const posisiDigit = span.getAttribute('data-pos'); 
 
         if (cariKepala !== "" && posisiDigit === "2" && span.innerText === cariKepala) {
