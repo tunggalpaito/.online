@@ -325,38 +325,34 @@ if (paitoTbody && teksMentah.trim() !== "") {
     paitoTbody.innerHTML = '';
     
     // Ambil semua angka murni dari file JS
-   let dataAngkaMurni = teksMentah.split(',')
-    .map(x => x.replace(/\s+/g, '').trim()) // Menghapus spasi enter tersembunyi
-    .filter(x => x !== "" && x.length >= 4); // Hanya mengambil data yang murni berupa angka 4 digit
+    let dataAngkaMurni = teksMentah.split(',')
+        .map(x => x.replace(/\s+/g, '').trim()) // Menghapus spasi enter tersembunyi
+        .filter(x => x !== "" && x.length >= 4); // Hanya mengambil data murni 4 digit
 
-    
-    // Pecah data menjadi baris-baris berkapasitas maksimal 7 angka keluaran per minggu
     let indeksData = 0;
     while (indeksData < dataAngkaMurni.length || indeksData === 0) {
         let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
         let jumlahTerisi = barisAngka.length;
         
-        // Tentukan angka indikator kolom pertama (Jika full isi 7, jika tidak isi sesuai jumlah kolom terisi)
         let angkaIndikator = "7";
         let classTambahan = "";
         
         if (jumlahTerisi < 7) {
             angkaIndikator = String(jumlahTerisi);
-            classTambahan = 'class="mgg-row minggu-berjalan"'; // Pasang animasi kelap-kelip merah
+            classTambahan = 'class="mgg-row minggu-berjalan"';
         } else {
             classTambahan = 'class="mgg-row"';
         }
 
-        // Lengkapi sisa kolom yang kosong dengan teks "KOSONG" agar bisa dicetak xxxx
         while (barisAngka.length < 7) {
             barisAngka.push("KOSONG");
         }
         
         let barisHTML = `<tr>`;
-        // 1. Cetak kolom indikator status minggu di paling kiri (7 atau angka kelap-kelip)
+        // Kolom indikator di kiri
         barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
         
-        // 2. Cetak 7 kolom angka paito di sebelahnya
+        // Cetak 7 kolom angka paito
         barisAngka.forEach((draw) => {
             let teksDraw = String(draw).trim();
             
@@ -381,7 +377,7 @@ if (paitoTbody && teksMentah.trim() !== "") {
         barisHTML += `</tr>`;
         paitoTbody.innerHTML += barisHTML;
         
-        indeksData += 7; // Lanjut ke 7 data berikutnya (minggu depan)
+        indeksData += 7; 
     }
 } else if (paitoTbody) {
     paitoTbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted); padding:10px;">Data Berkas Kosong.</td></tr>';
