@@ -19,12 +19,12 @@
             --card-bg: #0a0a0c;
             --card-border: #1a1a24;
             --accent-cyan: #00f2fe;
-            --accent-neon: #00ff88; /* Hijau Neon */
+            --accent-neon: #00ff88;
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
-            --color-sdy: #ff9f43; /* Orange */
-            --color-sgp: #4facfe; /* Biru */
-            --color-hk: #ff2a85;  /* Merah */
+            --color-sdy: #ff9f43; 
+            --color-sgp: #4facfe; 
+            --color-hk: #ff2a85;  
         }
 
         * {
@@ -45,7 +45,6 @@
             justify-content: space-between;
         }
 
-        /* HEADER */
         header {
             background: rgba(10, 10, 12, 0.9);
             backdrop-filter: blur(10px);
@@ -86,7 +85,6 @@
             flex: 1;
         }
 
-        /* LIVE DRAW GRID (5 Kolom Pas 1 Layar) */
         .live-draw-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -115,7 +113,6 @@
             text-overflow: ellipsis;
         }
 
-        /* LIVE BADGE KELAP-KELIP DINAMIS SESUAI JAM */
         .live-badge {
             display: inline-block;
             background: rgba(255, 42, 133, 0.2);
@@ -127,7 +124,7 @@
             font-weight: 700;
             margin-bottom: 4px;
             text-transform: uppercase;
-            visibility: hidden; /* Default mati */
+            visibility: hidden;
         }
 
         .live-badge.active-blink {
@@ -160,7 +157,6 @@
             font-weight: 700;
         }
 
-        /* TABEL BULANAN FIT LAYAR 100% */
         .monthly-section {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -194,7 +190,6 @@
             font-size: 8px;
         }
 
-        /* Tanggal / Bulan / Tahun Menjadi Warna Putih & Menyesuaikan Ukuran */
         .date-col {
             font-family: 'Orbitron', sans-serif;
             color: #ffffff;
@@ -202,12 +197,10 @@
             background: #040406;
         }
 
-        /* Warna Teks Tabel */
         .txt-sdy { color: var(--color-sdy); font-weight: 600; font-family: 'Orbitron'; }
         .txt-sgp { color: var(--color-sgp); font-weight: 600; font-family: 'Orbitron'; }
         .txt-hk  { color: var(--color-hk); font-weight: 600; font-family: 'Orbitron'; }
 
-        /* KETERANGAN & SEO SECTION */
         .seo-content-section {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -237,7 +230,6 @@
             margin-top: 6px;
         }
 
-        /* Kata Kunci Terkait Warna Hijau Neon */
         .keyword-tag {
             background: rgba(0, 255, 136, 0.05);
             border: 1px solid rgba(0, 255, 136, 0.3);
@@ -249,7 +241,6 @@
             text-shadow: 0 0 5px rgba(0, 255, 136, 0.4);
         }
 
-        /* FOOTER COPYRIGHT */
         footer {
             background: #050507;
             border-top: 1px solid var(--card-border);
@@ -263,7 +254,6 @@
 </head>
 <body>
 
-    <!-- BAR ATAS: JUDUL & NAMA TUNGGAL PAITO -->
     <header>
         <a href="https://tunggalpaito.online/" class="logo-area">
             <i class="fa-solid fa-bolt-lightning logo-icon"></i>
@@ -275,10 +265,8 @@
     </header>
 
     <div class="container">
-        <!-- LIVE DRAW GRID -->
         <div class="live-draw-grid" id="liveDrawGrid"></div>
 
-        <!-- TABEL BULANAN -->
         <div class="monthly-section">
             <table class="monthly-table" id="monthlyTable">
                 <thead>
@@ -297,7 +285,6 @@
             </table>
         </div>
 
-        <!-- KETERANGAN LENGKAP & SEO TERKAIT -->
         <div class="seo-content-section">
             <h2>Pusat Live Draw & Result Tercepat Resmi</h2>
             <p>Selamat datang di <strong>Tunggal Paito</strong>, situs penyedia informasi live draw pasaran resmi terlengkap dan terakurat. Dapatkan update result angka keluar pasaran Sydney (SDY), Singapore (SGP), Hongkong (HK), serta pasaran lotto lainnya secara real-time dengan sistem indikator live otomatis sesuai jadwal pemutaran resmi.</p>
@@ -317,7 +304,6 @@
         </div>
     </div>
 
-    <!-- FOOTER COPYRIGHT OTOMATIS -->
     <footer>
         <p>&copy; <span id="year"></span> <span>TUNGGAL PAITO</span> All Rights Reserved. <br>| <a href="https://tunggalpaito.online/privacy-policy" style="color: #ffb703; text-decoration: none;">Kebijakan Privasi</a></p>
         <script>
@@ -351,7 +337,7 @@
                 return totalMinutes >= start && totalMinutes <= end;
             } 
             else if (marketKey === 'sgp') {
-                if (day === 2 || day === 3) return false;
+                if (day === 2 || day === 5) return false;
                 const start = 17 * 60 + 45;
                 const end = 18 * 60 + 0;
                 return totalMinutes >= start && totalMinutes <= end;
@@ -393,7 +379,6 @@
             renderApp();
             setInterval(renderApp, 10000);
 
-            // Parsing data dan dibalik agar data terbaru berada di baris paling atas tabel
             const sdy  = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "").reverse();
             const sdyl = parseData(typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "").reverse();
             const sgp  = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "").reverse();
@@ -403,26 +388,62 @@
             const tbody = document.querySelector("#monthlyTable tbody");
             tbody.innerHTML = "";
 
-            // Menghasilkan daftar tanggal otomatis secara berurutan mundur ke bawah
+            const now = new Date();
+            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
+
+            // Jam batas akhir result selesai diputar (dalam total menit)
+            const sdyResultTime = 14 * 60 + 0;   // Jam 14:00
+            const sgpResultTime = 18 * 60 + 15;  // Jam 18:15
+            const hkResultTime  = 23 * 60 + 15;  // Jam 23:15
+
             const rowCount = 15;
             for(let i = 0; i < rowCount; i++) {
                 let d = new Date();
                 d.setDate(d.getDate() - i);
                 
+                let dayOfWeek = d.getDay(); 
                 let day = String(d.getDate()).padStart(2, '0');
                 let month = String(d.getMonth() + 1).padStart(2, '0');
                 let year = d.getFullYear();
                 let formattedDate = `${day}-${month}-${year}`;
 
-                // PERBAIKAN UTAMA: Menggunakan variabel sdyl dan hkl secara tepat
+                // Pengecekan apakah baris tabel ini adalah hari ini secara akurat
+                let isToday = (d.toDateString() === now.toDateString());
+
+                // --- LOGIKA SYDNEY & SDY LOTTO ---
+                let sdyDisplay = sdy[i] || '----';
+                let sdylDisplay = sdyl[i] || '----';
+                if (isToday && currentTotalMinutes < sdyResultTime) {
+                    sdyDisplay = "-";
+                    sdylDisplay = "-";
+                }
+
+                // --- LOGIKA SINGAPORE (Libur & Jam Result) ---
+                let sgpDisplay = "";
+                if (dayOfWeek === 2 || dayOfWeek === 5) {
+                    sgpDisplay = "LIBUR";
+                } else if (isToday && currentTotalMinutes < sgpResultTime) {
+                    sgpDisplay = "-";
+                } else {
+                    sgpDisplay = sgp[i] || '----';
+                }
+
+                // --- LOGIKA HONGKONG & HK LOTTO ---
+                let hkDisplay = hk[i] || '----';
+                let hklDisplay = hkl[i] || '----';
+                if (isToday && currentTotalMinutes < hkResultTime) {
+                    hkDisplay = "-";
+                    hklDisplay = "-";
+                }
+
                 tbody.innerHTML += `
                     <tr>
                         <td class="date-col">${formattedDate}</td>
-                        <td class="txt-sdy">${sdy[i] || '----'}</td>
-                        <td class="txt-sdy">${sdyl[i] || '----'}</td>
-                        <td class="txt-sgp">${sgp[i] || '----'}</td>
-                        <td class="txt-hk">${hk[i] || '----'}</td>
-                        <td class="txt-hk">${hkl[i] || '----'}</td>
+                        <td class="txt-sdy">${sdyDisplay}</td>
+                        <td class="txt-sdy">${sdylDisplay}</td>
+                        <td class="txt-sgp">${sgpDisplay}</td>
+                        <td class="txt-hk">${hkDisplay}</td>
+                        <td class="txt-hk">${hklDisplay}</td>
                     </tr>
                 `;
             }
