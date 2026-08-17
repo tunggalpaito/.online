@@ -324,39 +324,54 @@ const paitoTbody = document.getElementById('paito-tbody-data');
 if (paitoTbody && teksMentah.trim() !== "") {
     paitoTbody.innerHTML = '';
     
-    // Ambil semua angka murni dari file JS
-   let dataAngkaMurni = teksMentah.split(',')
-    .map(x => x.replace(/\s+/g, '').trim()) // Menghapus spasi enter tersembunyi
-    .filter(x => x !== "" && x.length >= 4); // Hanya mengambil data yang murni berupa angka 4 digit
+    let dataAngkaMurni = teksMentah.split(',')
+    .map(x => x.replace(/\s+/g, '').trim())
+    .filter(x => x !== "" && x.length >= 4);
 
-    
-    // Pecah data menjadi baris-baris berkapasitas maksimal 7 angka keluaran per minggu
+    // Urutan kolom header tabel: [Indikator, Sen, Sel, Rab, Kam, Jum, Sab, Mgg]
+    // Berarti indeks 0=Senin, 1=Selasa, 2=Rabu, 3=Kamis, 4=Jumat, 5=Sabtu, 6=Minggu.
+    // JavaScript getDay(): 0 = Minggu, 1 = Senin, 2 = Selasa, 3 = Rabu, 4 = Kamis, 5 = Jumat, 6 = Sabtu.
+    // Mapping hari JS (0-6) ke indeks kolom tabel (0-6):
+    // Minggu (0) -> Indeks 6 (Mgg)
+    // Senin (1) -> Indeks 0 (Sen)
+    // Selasa (2) -> Indeks 1 (Sel)
+    // Rabu (3) -> Indeks 2 (Rab)
+    // Kamis (4) -> Indeks 3 (Kam)
+    // Jumat (5) -> Indeks 4 (Jum)
+    // Sabtu (6) -> Indeks 5 (Sab)
+    const mapHariKeKolom = [6, 0, 1, 2, 3, 4, 5];
+    const hariIniJS = new Date().getDay();
+    const targetKolomIndex = mapHariKeKolom[hariIniJS];
+
     let indeksData = 0;
     while (indeksData < dataAngkaMurni.length || indeksData === 0) {
         let barisAngka = dataAngkaMurni.slice(indeksData, indeksData + 7);
         let jumlahTerisi = barisAngka.length;
         
-        // Tentukan angka indikator kolom pertama (Jika full isi 7, jika tidak isi sesuai jumlah kolom terisi)
         let angkaIndikator = "7";
         let classTambahan = "";
         
-        if (jumlahTerisi < 7) {
+        // Baris aktif (yang paling baru/terakhir dipotong) diberi tanda/animasi jika belum genap 7 hari, 
+        // ATAU jika jumlah data terakhir pas jatuh pada hari berjalan.
+        // Mari kita sesuaikan logika baris berjalan agar mendeteksi baris terakhir yang sedang berjalan.
+        let apakahBarisBerjalan = (indeksData + 7 >= dataAngkaMurni.length);
+
+        if (apakahBarisBerjalan) {
+            // Hitung kolom berdasarkan jumlah data yang sudah ada di baris terakhir ini
+            // Jika jumlahTerisi <= targetKolomIndex + 1, berarti hari ini berada di baris ini
             angkaIndikator = String(jumlahTerisi);
-            classTambahan = 'class="mgg-row minggu-berjalan"'; // Pasang animasi kelap-kelip merah
+            classTambahan = 'class="mgg-row minggu-berjalan"';
         } else {
             classTambahan = 'class="mgg-row"';
         }
 
-        // Lengkapi sisa kolom yang kosong dengan teks "KOSONG" agar bisa dicetak xxxx
         while (barisAngka.length < 7) {
             barisAngka.push("KOSONG");
         }
         
         let barisHTML = `<tr>`;
-        // 1. Cetak kolom indikator status minggu di paling kiri (7 atau angka kelap-kelip)
         barisHTML += `<td ${classTambahan}>${angkaIndikator}</td>`;
         
-        // 2. Cetak 7 kolom angka paito di sebelahnya
         barisAngka.forEach((draw) => {
             let teksDraw = String(draw).trim();
             
@@ -381,7 +396,7 @@ if (paitoTbody && teksMentah.trim() !== "") {
         barisHTML += `</tr>`;
         paitoTbody.innerHTML += barisHTML;
         
-        indeksData += 7; // Lanjut ke 7 data berikutnya (minggu depan)
+        indeksData += 7;
     }
 } else if (paitoTbody) {
     paitoTbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted); padding:10px;">Data Berkas Kosong.</td></tr>';
@@ -426,9 +441,6 @@ document.getElementById('btn-cari-pola').addEventListener('click', function() {
     });
 });
 
-document.getElementById('btn-bersih-pola').addEventListener('fold', function() {
-    // Tombol bersih pola reset penanda kuas manual
-});
 document.getElementById('btn-bersih-pola').addEventListener('click', function() {
     document.getElementById('input-kepala').value = "";
     document.getElementById('input-ekor').value = "";
