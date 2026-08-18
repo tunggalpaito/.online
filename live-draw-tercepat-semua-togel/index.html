@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Live Draw Tercepat & Paito Warna Resmi - TUNGGAL PAITO</title>
-    <meta name="description" content="Situs Live Draw Tercepat, Result SGP, Result HK, Result Sydney resmi dan akurat. Dilengkapi tabel paito warna dan data pasaran terlengkap hari ini.">
-    <meta name="keywords" content="live draw sdy, live draw sgp, live draw hk, result sydney, result singapore, result hongkong, paito warna, tunggal paito, live draw tercepat">
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,11 +22,7 @@
             --color-hk: #ff2a85;  
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             background-color: var(--bg-color);
@@ -53,19 +47,8 @@
             width: 100%;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            font-size: 18px;
-            color: var(--accent-cyan);
-            filter: drop-shadow(0 0 6px var(--accent-cyan));
-        }
-
+        .logo-area { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+        .logo-icon { font-size: 18px; color: var(--accent-cyan); filter: drop-shadow(0 0 6px var(--accent-cyan)); }
         .logo-text {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
@@ -73,14 +56,9 @@
             background: linear-gradient(135deg, var(--accent-cyan), var(--color-sgp));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
         }
 
-        .container {
-            width: 100%;
-            padding: 8px;
-            flex: 1;
-        }
+        .container { width: 100%; padding: 8px; flex: 1; }
 
         .live-draw-grid {
             display: grid;
@@ -111,7 +89,7 @@
         }
 
         .live-badge {
-            display: inline-block;
+            display: none; 
             background: rgba(255, 42, 133, 0.2);
             color: var(--color-hk);
             border: 1px solid rgba(255, 42, 133, 0.4);
@@ -121,25 +99,19 @@
             font-weight: 700;
             margin-bottom: 4px;
             text-transform: uppercase;
-            visibility: hidden;
         }
 
         .live-badge.active-blink {
-            visibility: visible;
-            animation: liveBlink 0.8s infinite alternate;
+            display: inline-block; 
+            animation: liveBlink 0.6s infinite alternate;
         }
 
         @keyframes liveBlink {
-            0% { opacity: 0.2; }
-            100% { opacity: 1; box-shadow: 0 0 6px var(--color-hk); }
+            0% { opacity: 0.1; }
+            100% { opacity: 1; box-shadow: 0 0 8px var(--color-hk); }
         }
 
-        .number-box-container {
-            display: flex;
-            justify-content: center;
-            gap: 2px;
-        }
-
+        .number-box-container { display: flex; justify-content: center; gap: 2px; }
         .num-box {
             width: 18px;
             height: 22px;
@@ -187,56 +159,10 @@
             font-size: 8px;
         }
 
-        .date-col {
-            font-family: 'Orbitron', sans-serif;
-            color: #ffffff;
-            font-size: 7px;
-            background: #040406;
-        }
-
+        .date-col { font-family: 'Orbitron', sans-serif; color: #ffffff; font-size: 7px; background: #040406; }
         .txt-sdy { color: var(--color-sdy); font-weight: 600; font-family: 'Orbitron'; }
         .txt-sgp { color: var(--color-sgp); font-weight: 600; font-family: 'Orbitron'; }
         .txt-hk  { color: var(--color-hk); font-weight: 600; font-family: 'Orbitron'; }
-
-        .seo-content-section {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 10px;
-            color: var(--text-muted);
-            line-height: 1.4;
-            width: 100%;
-        }
-
-        .seo-content-section h2, .seo-content-section h3 {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--accent-cyan);
-            font-size: 11px;
-            margin-bottom: 4px;
-        }
-
-        .seo-content-section p {
-            margin-bottom: 6px;
-        }
-
-        .keyword-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 6px;
-        }
-
-        .keyword-tag {
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            color: var(--accent-neon);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 8px;
-            font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 5px rgba(0, 255, 136, 0.4);
-        }
 
         footer {
             background: #050507;
@@ -276,38 +202,17 @@
                         <th>HK-L</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Diisi otomatis oleh JavaScript -->
-                </tbody>
+                <tbody></tbody>
             </table>
-        </div>
-
-        <div class="seo-content-section">
-            <h2>Pusat Live Draw & Result Tercepat Resmi</h2>
-            <p>Selamat datang di <strong>Tunggal Paito</strong>, situs penyedia informasi live draw pasaran resmi terlengkap dan terakurat. Dapatkan update result angka keluar pasaran Sydney (SDY), Singapore (SGP), Hongkong (HK), serta pasaran lotto lainnya secara real-time hasil resmi.</p>
-            
-            <h3>Terkait TUNGGAL PAITO</h3>
-            <div class="keyword-tags">
-                <span class="keyword-tag">Live Draw Sdy</span>
-                <span class="keyword-tag">Live Draw Sgp</span>
-                <span class="keyword-tag">Live Draw Hk</span>
-                <span class="keyword-tag">Result Sydney</span>
-                <span class="keyword-tag">Result Singapore</span>
-                <span class="keyword-tag">Result Hongkong</span>
-                <span class="keyword-tag">Paito Warna Resmi</span>
-                <span class="keyword-tag">Tunggal Paito</span>
-                <span class="keyword-tag">Live Result Tercepat</span>
-            </div>
         </div>
     </div>
 
     <footer>
-        <p>&copy; <span id="year"></span> <span>TUNGGAL PAITO</span> All Rights Reserved. <br>| <a href="https://tunggalpaito.online/privacy-policy" style="color: #ffb703; text-decoration: none;">Kebijakan Privasi</a></p>
-        <script>
-            document.getElementById("year").textContent = new Date().getFullYear();
-        </script>
+        <p>&copy; <span id="year"></span> <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
+        <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
     </footer>
 
+    <!-- Script Data Paito & Live Result -->
     <script src="/result/sdy.js"></script>
     <script src="/result/sdylotto.js"></script>
     <script src="/result/sgp.js"></script>
@@ -317,67 +222,72 @@
     <script>
         function parseData(str) {
             if (!str) return [];
-            return str.split(',').map(i => i.trim()).filter(i => i.length > 0);
+            let rawItems = str.split(',');
+            let cleaned = [];
+            for (let item of rawItems) {
+                let match = item.match(/\d{4}/);
+                if (match) {
+                    cleaned.push(match[0]);
+                }
+            }
+            return cleaned;
         }
 
-        // Fungsi mengecek apakah status live harus menyala (kelap-kelip) pada jam masing-masing pasaran
-        function checkLiveStatus(marketKey) {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const day = now.getDay();
-            const totalMinutes = hours * 60 + minutes;
-
-            if (marketKey === 'sdy') {
-                const start = 13 * 60 + 45; // 13:45
-                const end = 14 * 60 + 15;   // Batas toleransi live selesai (14:15)
-                const isUpdated = typeof LIVE_RESULT_SDY !== 'undefined' && LIVE_RESULT_SDY.latestResult && LIVE_RESULT_SDY.latestResult !== "----";
-                return totalMinutes >= start && totalMinutes < end && !isUpdated;
-            } 
-            else if (marketKey === 'sdylotto') {
-                const start = 13 * 60 + 55; // 13:55
-                const end = 14 * 60 + 25;   // 14:25
-                const isUpdated = typeof LIVE_RESULT_SDYLOTTO !== 'undefined' && LIVE_RESULT_SDYLOTTO.latestResult && LIVE_RESULT_SDYLOTTO.latestResult !== "----";
-                return totalMinutes >= start && totalMinutes < end && !isUpdated;
+        function isMarketUpdated(marketObj, paitoStr) {
+            if (typeof marketObj !== 'undefined' && marketObj.latestResult) {
+                let cleanRes = String(marketObj.latestResult).trim();
+                if (cleanRes !== "" && cleanRes !== "----") return cleanRes;
             }
-            else if (marketKey === 'sgp') {
-                if (day === 2 || day === 5) return false; // Selasa & Jumat libur
-                const start = 17 * 60 + 45; // 17:45
-                const end = 18 * 60 + 15;   // 18:15
-                const isUpdated = typeof LIVE_RESULT_SGP !== 'undefined' && LIVE_RESULT_SGP.latestResult && LIVE_RESULT_SGP.latestResult !== "----";
-                return totalMinutes >= start && totalMinutes < end && !isUpdated;
-            } 
-            else if (marketKey === 'hk') {
-                const start = 22 * 60 + 50; // 22:50
-                const end = 23 * 60 + 30;   // 23:30
-                const isUpdated = typeof LIVE_RESULT_HK !== 'undefined' && LIVE_RESULT_HK.latestResult && LIVE_RESULT_HK.latestResult !== "----";
-                return totalMinutes >= start && totalMinutes < end && !isUpdated;
-            }
-            else if (marketKey === 'hklotto') {
-                const start = 22 * 60 + 55; // 22:55
-                const end = 23 * 60 + 35;   // 23:35
-                const isUpdated = typeof LIVE_RESULT_HKLOTTO !== 'undefined' && LIVE_RESULT_HKLOTTO.latestResult && LIVE_RESULT_HKLOTTO.latestResult !== "----";
-                return totalMinutes >= start && totalMinutes < end && !isUpdated;
+            let arr = parseData(paitoStr);
+            if (arr.length > 0) {
+                return arr[arr.length - 1];
             }
             return false;
         }
 
+        function checkLiveStatus(marketKey, marketObj, paitoStr) {
+            const now = new Date();
+            const totalMinutes = now.getHours() * 60 + now.getMinutes();
+            const day = now.getDay();
+
+            let start = 0;
+            if (marketKey === 'sdy') start = 13 * 60 + 45;       
+            else if (marketKey === 'sdylotto') start = 13 * 60 + 55; 
+            else if (marketKey === 'sgp') {
+                if (day === 2 || day === 5) return false; 
+                start = 17 * 60 + 45; 
+            }
+            else if (marketKey === 'hk') start = 22 * 60 + 50;       
+            else if (marketKey === 'hklotto') start = 22 * 60 + 55;  
+
+            let end = start + 30;
+            let isTimeInRange = (totalMinutes >= start && totalMinutes < end);
+            let alreadyUpdated = (isMarketUpdated(marketObj, paitoStr) !== false);
+
+            return isTimeInRange && !alreadyUpdated;
+        }
+
         function renderApp() {
             const markets = [
-                { key: 'sdy', name: "SYDNEY", live: (typeof LIVE_RESULT_SDY !== 'undefined' && LIVE_RESULT_SDY.latestResult) ? LIVE_RESULT_SDY.latestResult : "----", color: "var(--color-sdy)" },
-                { key: 'sdylotto', name: "SDY LOTTO", live: (typeof LIVE_RESULT_SDYLOTTO !== 'undefined' && LIVE_RESULT_SDYLOTTO.latestResult) ? LIVE_RESULT_SDYLOTTO.latestResult : "----", color: "var(--color-sdy)" },
-                { key: 'sgp', name: "SINGAPORE", live: (typeof LIVE_RESULT_SGP !== 'undefined' && LIVE_RESULT_SGP.latestResult) ? LIVE_RESULT_SGP.latestResult : "----", color: "var(--color-sgp)" },
-                { key: 'hk', name: "HONGKONG", live: (typeof LIVE_RESULT_HK !== 'undefined' && LIVE_RESULT_HK.latestResult) ? LIVE_RESULT_HK.latestResult : "----", color: "var(--color-hk)" },
-                { key: 'hklotto', name: "HK LOTTO", live: (typeof LIVE_RESULT_HKLOTTO !== 'undefined' && LIVE_RESULT_HKLOTTO.latestResult) ? LIVE_RESULT_HKLOTTO.latestResult : "----", color: "var(--color-hk)" }
+                { key: 'sdy', name: "SYDNEY", paito: typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "", liveObj: window.LIVE_RESULT_SDY, color: "var(--color-sdy)" },
+                { key: 'sdylotto', name: "SDY LOTTO", paito: typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "", liveObj: window.LIVE_RESULT_SDYLOTTO, color: "var(--color-sdy)" },
+                { key: 'sgp', name: "SINGAPORE", paito: typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "", liveObj: window.LIVE_RESULT_SGP, color: "var(--color-sgp)" },
+                { key: 'hk', name: "HONGKONG", paito: typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "", liveObj: window.LIVE_RESULT_HK, color: "var(--color-hk)" },
+                { key: 'hklotto', name: "HK LOTTO", paito: typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "", liveObj: window.LIVE_RESULT_HKLOTTO, color: "var(--color-hk)" }
             ];
 
             const grid = document.getElementById("liveDrawGrid");
             grid.innerHTML = markets.map(m => {
-                let isLive = checkLiveStatus(m.key);
-                let isUpdated = m.live !== "----";
-                let blinkClass = (isLive && !isUpdated) ? "active-blink" : "";
+                let displayNum = "----";
+                let updatedVal = isMarketUpdated(m.liveObj, m.paito);
                 
-                let digits = m.live.split('').map(c => `<div class="num-box" style="color:${m.color}">${c}</div>`).join('');
+                if (updatedVal !== false) {
+                    displayNum = updatedVal;
+                }
+
+                let isLive = checkLiveStatus(m.key, m.liveObj, m.paito);
+                let blinkClass = isLive ? "active-blink" : "";
+                let digits = displayNum.split('').map(c => `<div class="num-box" style="color:${m.color}">${c}</div>`).join('');
                 
                 return `
                     <div class="live-card">
@@ -390,88 +300,68 @@
         }
 
         function renderTable() {
-            const sdy  = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "").reverse();
-            const sdyl = parseData(typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "").reverse();
-            const sgp  = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "").reverse();
-            const hk   = parseData(typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "").reverse();
-            const hkl  = parseData(typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "").reverse();
+            const sdyArr  = parseData(typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "");
+            const sdylArr = parseData(typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "");
+            const sgpArr  = parseData(typeof DATA_PAITO_SGP !== 'undefined' ? DATA_PAITO_SGP : "");
+            const hkArr   = parseData(typeof DATA_PAITO_HK !== 'undefined' ? DATA_PAITO_HK : "");
+            const hklArr  = parseData(typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "");
 
             const tbody = document.querySelector("#monthlyTable tbody");
             tbody.innerHTML = "";
 
-            const now = new Date();
-            const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
-
-            const sdyStart  = 13 * 60 + 45;
-            const sdylStart = 13 * 60 + 55;
-            const sgpStart  = 17 * 60 + 45;
-            const hkStart   = 22 * 60 + 50;
-            const hklStart  = 22 * 60 + 55;
-
-            const sdyHasReleased  = currentTotalMinutes >= sdyStart && typeof LIVE_RESULT_SDY !== 'undefined' && LIVE_RESULT_SDY.latestResult && LIVE_RESULT_SDY.latestResult !== "----";
-            const sdylHasReleased = currentTotalMinutes >= sdylStart && typeof LIVE_RESULT_SDYLOTTO !== 'undefined' && LIVE_RESULT_SDYLOTTO.latestResult && LIVE_RESULT_SDYLOTTO.latestResult !== "----";
-            const sgpHasReleased  = currentTotalMinutes >= sgpStart && typeof LIVE_RESULT_SGP !== 'undefined' && LIVE_RESULT_SGP.latestResult && LIVE_RESULT_SGP.latestResult !== "----";
-            const hkHasReleased   = currentTotalMinutes >= hkStart && typeof LIVE_RESULT_HK !== 'undefined' && LIVE_RESULT_HK.latestResult && LIVE_RESULT_HK.latestResult !== "----";
-            const hklHasReleased  = currentTotalMinutes >= hklStart && typeof LIVE_RESULT_HKLOTTO !== 'undefined' && LIVE_RESULT_HKLOTTO.latestResult && LIVE_RESULT_HKLOTTO.latestResult !== "----";
-
-            const rowCount = 15;
-            for(let i = 0; i < rowCount; i++) {
+            for(let i = 0; i < 15; i++) {
                 let d = new Date();
                 d.setDate(d.getDate() - i);
                 
-                let dayOfWeek = d.getDay(); 
-                let day = String(d.getDate()).padStart(2, '0');
-                let month = String(d.getMonth() + 1).padStart(2, '0');
-                let year = d.getFullYear();
-                let formattedDate = `${day}-${month}-${year}`;
+                let formattedDate = `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+                let dayOfWeek = d.getDay(); // 0: Min, 1: Sen, 2: Sel, 3: Rab, 4: Kam, 5: Jum, 6: Sab
 
-                let isToday = (i === 0);
-
-                // --- SYDNEY UTAMA ---
-                let sdyDisplay = "";
-                if (isToday) {
-                    sdyDisplay = sdyHasReleased ? LIVE_RESULT_SDY.latestResult : "-";
-                } else {
-                    let idx = sdyHasReleased ? i : i - 1;
-                    sdyDisplay = sdy[idx] || '----';
+                let sdyDisplay = "----";
+                let sdyTargetIdx = sdyArr.length - 1 - i;
+                if (sdyTargetIdx >= 0 && sdyTargetIdx < sdyArr.length) {
+                    sdyDisplay = sdyArr[sdyTargetIdx];
                 }
 
-                // --- SDY LOTTO ---
-                let sdylDisplay = "";
-                if (isToday) {
-                    sdylDisplay = sdylHasReleased ? LIVE_RESULT_SDYLOTTO.latestResult : "-";
-                } else {
-                    let idx = sdylHasReleased ? i : i - 1;
-                    sdylDisplay = sdyl[idx] || '----';
+                let sdylDisplay = "----";
+                let sdylTargetIdx = sdylArr.length - 1 - i;
+                if (sdylTargetIdx >= 0 && sdylTargetIdx < sdylArr.length) {
+                    sdylDisplay = sdylArr[sdylTargetIdx];
                 }
 
-                // --- SINGAPORE ---
                 let sgpDisplay = "";
                 if (dayOfWeek === 2 || dayOfWeek === 5) {
                     sgpDisplay = "LIBUR";
-                } else if (isToday) {
-                    sgpDisplay = sgpHasReleased ? LIVE_RESULT_SGP.latestResult : "-";
                 } else {
-                    let idx = sgpHasReleased ? i : i - 1;
-                    sgpDisplay = sgp[idx] || '----';
+                    // PEMETAAN OTOMATIS BERDASARKAN HARI EFEKTIF BUKA PASARAN SGP:
+                    // Mencari elemen data array paito terakhir yang berpasangan langsung dengan tanggal 17 Agustus 2026 (Senin)
+                    // dan bergerak mundur hanya melewati hari-hari buka pasaran (mengabaikan Selasa & Jumat).
+                    let activeMarketDaysBack = 0;
+                    for (let k = 0; k <= i; k++) {
+                        let pastD = new Date();
+                        pastD.setDate(pastD.getDate() - k);
+                        let pdw = pastD.getDay();
+                        if (pdw !== 2 && pdw !== 5) {
+                            activeMarketDaysBack++;
+                        }
+                    }
+                    let sgpTargetIdx = (sgpArr.length - 1) - (activeMarketDaysBack - 1);
+                    if (sgpTargetIdx >= 0 && sgpTargetIdx < sgpArr.length) {
+                        sgpDisplay = sgpArr[sgpTargetIdx];
+                    } else {
+                        sgpDisplay = "----";
+                    }
                 }
 
-                // --- HONGKONG ---
-                let hkDisplay = "";
-                if (isToday) {
-                    hkDisplay = hkHasReleased ? LIVE_RESULT_HK.latestResult : "-";
-                } else {
-                    let idx = hkHasReleased ? i : i - 1;
-                    hkDisplay = hk[idx] || '----';
+                let hkDisplay = "----";
+                let hkTargetIdx = hkArr.length - 1 - i;
+                if (hkTargetIdx >= 0 && hkTargetIdx < hkArr.length) {
+                    hkDisplay = hkArr[hkTargetIdx];
                 }
 
-                // --- HK LOTTO ---
-                let hklDisplay = "";
-                if (isToday) {
-                    hklDisplay = hklHasReleased ? LIVE_RESULT_HKLOTTO.latestResult : "-";
-                } else {
-                    let idx = hklHasReleased ? i : i - 1;
-                    hklDisplay = hkl[idx] || '----';
+                let hklDisplay = "----";
+                let hklTargetIdx = hklArr.length - 1 - i;
+                if (hklTargetIdx >= 0 && hklTargetIdx < hklArr.length) {
+                    hklDisplay = hklArr[hklTargetIdx];
                 }
 
                 tbody.innerHTML += `
