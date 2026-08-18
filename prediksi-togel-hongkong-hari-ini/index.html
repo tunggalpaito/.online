@@ -359,30 +359,13 @@
             </div>
             <script src="https://pl30187164.effectivecpmnetwork.com/27/ba/bd/27babd93febcd37a091303b95048fdf4.js"></script>
             <script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
-            
-            <div id="histats_counter" style="display:flex; justify-content:center; align-items:center; height:18px; overflow:hidden; transform:scale(.55); transform-origin:center; opacity:.85;"></div>
-
-            <script type="text/javascript">
-            var _Hasync= _Hasync || [];
-            _Hasync.push(['Histats.start', '1,5037448,4,600,110,30,00001001']);
-            _Hasync.push(['Histats.fasi','1']);
-            _Hasync.push(['Histats.track_hits','']);
-            (function(){
-            var hs=document.createElement('script'); hs.type='text/javascript'; hs.async=true;
-            hs.src='//s10.histats.com/js15_as.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-            })();
-            </script>
-            <noscript>
-            <a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0"></a>
-            </noscript>
 
             <div id="tp-comment-wrapper" style="width: 100%; max-width: 100%; box-sizing: border-box; padding: 10px; margin: 0 auto; overflow-x: hidden;">
     <div style="background: #111111; border: 2px solid #ff0000; padding: 20px 15px; border-radius: 4px; width: 100%; box-sizing: border-box;">
 
         <div style="margin-bottom: 15px; width: 100%; box-sizing: border-box;">
             <label style="display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Selamat Bergabung kembali di room Prediksi Hongkong pools. Untuk kenyamanan bersama, dilarang posting promosi WA, Web atau FB. Jadikan wadah ini tempat berprediksi yang damai dan elegan.</label>
-              <br>
+             <br>
             <textarea id="tp-komentar-isi" rows="4" placeholder="Tulis komentar..." style="width: 100%; max-width: 100%; box-sizing: border-box; background: #fdfbf7; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none; resize: vertical;"></textarea>
         </div>
 
@@ -405,7 +388,7 @@
         <hr style="border: 0; border-top: 1px solid #333333; margin: 20px 0;">
 
         <!-- Daftar Komentar Masuk -->
-        <h4 style="color: #3498db; font-family: Arial, sans-serif; font-size: 15px; margin-bottom: 10px;">Daftar Komentar</h4>
+        <h4 style="color: #3498db; font-family: Arial, sans-serif; font-size: 15px; margin-bottom: 10px;">Ruang Prediktor</h4>
         <div id="tp-daftar-list" style="width: 100%; box-sizing: border-box; word-break: break-word;">
             <p style="color: #888; font-size: 13px;">Memuat komentar dari server...</p>
         </div>
@@ -420,10 +403,10 @@
     // ID BIN BARU ANDA
     const TP_BIN_ID = "6a83ee65da38895dfef16c24"; 
     const TP_API_URL = `https://api.jsonbin.io/v3/b/${TP_BIN_ID}/latest`;
-
-    // 💡 TENTUKAN NAMA HALAMAN DI SINI (Ganti sesuai nama pasaran halaman ini)
-    // Pilihan: "macau", "cambodia", "sdy", "sdylotto", "china", "japan", "sgp", "taiwan", "hklotto", "hk"
     const TP_HALAMAN_ID = "hk"; 
+
+    // Variabel untuk menyimpan jumlah komentar terakhir agar tahu jika ada yang baru
+    let tpJumlahKomentarLama = -1;
 
     // Otomatis isi kolom Nama dan Email dari localStorage
     window.addEventListener('DOMContentLoaded', () => {
@@ -455,8 +438,32 @@
         `;
     }
 
-    // 1. Fungsi Ambil Komentar Khusus Halaman Ini (Dipisah Hari Ini & Sebelumnya)
-    async function tpMuatPublik() {
+    // 🔊 Fungsi untuk membunyikan suara Notifikasi otomatis menggunakan Audio API browser
+    function tpMainkanSuaraNotifikasi() {
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            osc.type = "sine"; 
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // Nada D5
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); // Nada A5
+
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        } catch (e) {
+            console.log("Audio diblokir browser sebelum ada interaksi.");
+        }
+    }
+
+    // 1. Fungsi Ambil Komentar (Dipisah Hari Ini & Sebelumnya + Deteksi Komentar Baru & Suara)
+    async function tpMuatPublik(isInitialLoad = false) {
         try {
             let response = await fetch(TP_API_URL);
             let result = await response.json();
@@ -464,17 +471,23 @@
             let semuaDataHalaman = result.record || {};
             let dataKomentar = semuaDataHalaman[TP_HALAMAN_ID] || [];
             
+            // Cek apakah ada komentar baru masuk dari orang lain
+            if (!isInitialLoad && tpJumlahKomentarLama !== -1 && dataKomentar.length > tpJumlahKomentarLama) {
+                tpMainkanSuaraNotifikasi(); 
+            }
+            
+            tpJumlahKomentarLama = dataKomentar.length;
+
             let html = "";
             if(dataKomentar.length === 0) {
                 html = '<p style="color: #888; font-size: 13px;">Belum ada komentar.</p>';
             } else {
-                let hariIniStr = new Date().toLocaleDateString('en-CA'); // Format YYYY-MM-DD lokal
+                let hariIniStr = new Date().toLocaleDateString('en-CA'); 
 
                 let htmlHariIni = "";
                 let htmlSebelumnya = "";
 
                 dataKomentar.forEach(item => {
-                    // Jika data lama belum ada properti tanggal, defaultkan ke hari ini
                     let itemTanggal = item.tanggal || hariIniStr;
 
                     if (itemTanggal === hariIniStr) {
@@ -484,13 +497,12 @@
                     }
                 });
 
-                // Susun tampilan kategori pembatas
                 if (htmlHariIni !== "") {
-                    html += `<div style="font-size: 12px; font-weight: bold; color: #f39c12; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">📌 Hari Ini</div>` + htmlHariIni;
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #f39c12; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">Obrolan hari ini</div>` + htmlHariIni;
                 }
 
                 if (htmlSebelumnya !== "") {
-                    html += `<div style="font-size: 12px; font-weight: bold; color: #e74c3c; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">⏳ Komentar Hari Sebelumnya / Arsip</div>` + htmlSebelumnya;
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #e74c3c; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">Obrolan terdahulu</div>` + htmlSebelumnya;
                 }
 
                 if (htmlHariIni === "" && htmlSebelumnya === "") {
@@ -503,7 +515,7 @@
         }
     }
 
-    // 2. Fungsi Kirim Komentar Khusus Halaman Ini (Menyimpan Tanggal, Bulan, Tahun)
+    // 2. Fungsi Kirim Komentar
     async function tpKirimPublik() {
         let isi = document.getElementById("tp-komentar-isi").value.trim();
         let nama = document.getElementById("tp-komentar-nama").value.trim();
@@ -522,9 +534,7 @@
         tombol.disabled = true;
 
         let sekarang = new Date();
-        let tanggalHariIni = sekarang.toLocaleDateString('en-CA'); // Format YYYY-MM-DD untuk pembanding sistem
-        
-        // Format tanggal lengkap (misal: 18 Agu 2026, 14:30 WIB)
+        let tanggalHariIni = sekarang.toLocaleDateString('en-CA'); 
         let formatTanggalLengkap = sekarang.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         let formatJam = sekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
         let waktuLengkapGabung = `${formatTanggalLengkap}, ${formatJam} WIB`;
@@ -538,7 +548,6 @@
                 semuaDataHalaman[TP_HALAMAN_ID] = [];
             }
 
-            // Masukkan data baru dengan tanggal lengkap dan key pembanding tanggal
             semuaDataHalaman[TP_HALAMAN_ID].unshift({ 
                 nama: nama, 
                 email: email, 
@@ -549,15 +558,13 @@
 
             let putRes = await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`, {
                 method: 'PUT',
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(semuaDataHalaman)
             });
 
             if(putRes.ok) {
                 document.getElementById("tp-komentar-isi").value = "";
-                tpMuatPublik();
+                tpMuatPublik(true); 
                 alert("Komentar berhasil dikirim!");
             } else {
                 alert("Gagal menyimpan komentar ke server.");
@@ -570,9 +577,31 @@
         tombol.disabled = false;
     }
 
-    tpMuatPublik();
-</script>
+    // Load pertama kali saat halaman dibuka
+    tpMuatPublik(true);
 
+    // Cek otomatis setiap 5 detik untuk mendeteksi komentar baru dan membunyikan suara notifikasi
+    setInterval(() => {
+        tpMuatPublik(false);
+    }, 5000);
+</script>
+                
+            <div id="histats_counter" style="display:flex; justify-content:center; align-items:center; height:18px; overflow:hidden; transform:scale(.55); transform-origin:center; opacity:.85;"></div>
+
+            <script type="text/javascript">
+            var _Hasync= _Hasync || [];
+            _Hasync.push(['Histats.start', '1,5037448,4,600,110,30,00001001']);
+            _Hasync.push(['Histats.fasi','1']);
+            _Hasync.push(['Histats.track_hits','']);
+            (function(){
+            var hs=document.createElement('script'); hs.type='text/javascript'; hs.async=true;
+            hs.src='//s10.histats.com/js15_as.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+            })();
+            </script>
+            <noscript>
+            <a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0"></a>
+            </noscript>
         </section>
 
         <style>
