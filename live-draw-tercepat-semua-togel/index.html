@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Live Draw Tercepat & Paito Warna Resmi - TUNGGAL PAITO</title>
-    <!-- SEO Meta Tags -->
     <meta name="description" content="Situs Live Draw Tercepat, Result SGP, Result HK, Result Sydney resmi dan akurat. Dilengkapi tabel paito warna dan data pasaran terlengkap hari ini.">
     <meta name="keywords" content="live draw sdy, live draw sgp, live draw hk, result sydney, result singapore, result hongkong, paito warna, tunggal paito, live draw tercepat">
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -280,8 +277,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Diisi lewat script otomatis -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
 
@@ -311,7 +307,6 @@
         </script>
     </footer>
 
-    <!-- FILE DATA EXTERNAL -->
     <script src="/result/sdy.js"></script>
     <script src="/result/sdylotto.js"></script>
     <script src="/result/sgp.js"></script>
@@ -362,7 +357,11 @@
             const grid = document.getElementById("liveDrawGrid");
             grid.innerHTML = markets.map(m => {
                 let isLive = checkLiveStatus(m.key);
-                let blinkClass = isLive ? "active-blink" : "";
+                
+                // Tambahan: Berhenti kelap-kelip jika pasaran sudah update (data tidak "----")
+                let isUpdated = m.live !== "----";
+                let blinkClass = (isLive && !isUpdated) ? "active-blink" : "";
+                
                 let digits = m.live.split('').map(c => `<div class="num-box" style="color:${m.color}">${c}</div>`).join('');
                 
                 return `
@@ -410,6 +409,8 @@
                 let day = String(d.getDate()).padStart(2, '0');
                 let month = String(d.getMonth() + 1).padStart(2, '0');
                 let year = d.getFullYear();
+                
+                // Tambahan: Tanggal otomatis terisi berdasarkan tanggal saat ini mundur per baris
                 let formattedDate = `${day}-${month}-${year}`;
 
                 let isToday = (i === 0);
