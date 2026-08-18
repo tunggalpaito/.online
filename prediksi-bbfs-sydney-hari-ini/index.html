@@ -456,49 +456,88 @@
             }
         });
 
-        function hitungRumusCerdasGlobal(masterData, globalIndex) {
-            // NUCLEAR ENGINE: Ambil 3 baris data untuk melihat "Kecepatan Perubahan" (Velocity)
-            let d0 = masterData[globalIndex].replace(/\D/g, '').split('').map(Number);
-            let d1 = globalIndex > 0 ? masterData[globalIndex - 1].replace(/\D/g, '').split('').map(Number) : d0;
-            let d2 = globalIndex > 1 ? masterData[globalIndex - 2].replace(/\D/g, '').split('').map(Number) : d1;
+function hitungRumusCerdasGlobal(masterData, globalIndex) {
+            // 1. KAMUS POLA ANGKA (Index, Mistik Lama, Mistik Baru)
+            const indexMap   = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+            const mistikLama = {0:1, 1:0, 2:5, 5:2, 3:8, 8:3, 4:7, 7:4, 6:9, 9:6};
+            const mistikBaru = {0:8, 8:0, 1:7, 7:1, 2:6, 6:2, 3:9, 9:3, 4:5, 5:4};
 
-            // MENGHITUNG VELOCITY (Jarak mutlak pergerakan angka dari hari ke hari)
-            let velAs = Math.abs(d0[0] - d1[0]) + Math.abs(d1[0] - d2[0]);
-            let velKop = Math.abs(d0[1] - d1[1]) + Math.abs(d1[1] - d2[1]);
-            let velKep = Math.abs(d0[2] - d1[2]) + Math.abs(d1[2] - d2[2]);
-            let velEkr = Math.abs(d0[3] - d1[3]) + Math.abs(d1[3] - d2[3]);
+            // 2. AMBIL HISTORY DATA DENGAN AMAN
+            const getDigit = (offset) => {
+                let idx = globalIndex > offset - 1 ? globalIndex - offset : 0;
+                return masterData[idx].replace(/\D/g, '').split('').map(Number);
+            };
 
-            // Core Heat (Suhu Inti dari pergerakan result)
-            let coreHeat = velAs + velKop + velKep + velEkr;
+            let d0 = getDigit(0); // Result terakhir [As, Kop, Kep, Ekr]
+            let d1 = getDigit(1); // Result 1 periode sebelumnya
+            
+            let as = d0[0], kop = d0[1], kep = d0[2], ekr = d0[3];
 
-            // NON-LINEAR OFF CALCULATION (Menggunakan Kuadrat & Pangkat Tiga)
-            // Ini membuat tebakan Off sangat liar dan bereaksi kuat terhadap perubahan sekecil apa pun
-            let off1 = (Math.pow(d0[3], 2) + velAs + coreHeat) % 10; // Ekor kuadrat + Velocity As
-            let off2 = (Math.pow(d0[0], 3) + velEkr + (coreHeat * 7)) % 10; // As pangkat 3 + Velocity Ekor
+            // 3. ANALISIS FREKUENSI 7 PERIODE (Untuk melihat tren angka yang sedang panas)
+            let allDigits = [];
+            for (let i = 0; i <= 6; i++) allDigits.push(...getDigit(i));
+            let frequency = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0};
+            allDigits.forEach(n => frequency[n]++);
 
-            // PRIME SHIFT (Loncatan Prima): Jika off bertabrakan, lempar dengan jarak bilangan prima (7)
-            if (off1 === off2) {
-                off2 = (off2 + 7) % 10; 
-            }
+            // 4. PENENTUAN ANGKA KUAT (Power Numbers)
+            // Rumus: Mengambil turunan dari Kepala dan Ekor menggunakan algoritma mistik/index
+            let powerNumbers = new Set([
+                kep, ekr,
+                indexMap[ekr], mistikLama[ekr], mistikBaru[ekr],
+                indexMap[kep], mistikLama[kep], mistikBaru[kep]
+            ]);
 
-            let offNumbers = [off1, off2];
+            // 5. PENENTUAN ANGKA LEMAH / MATI (Weak Numbers)
+            // Rumus 1: Angka mati dari jumlah As + Kop
+            let mati1 = (as + kop) % 10;
+            // Rumus 2: Angka mati dari mistik lama ekor periode sebelumnya
+            let mati2 = mistikLama[d1[3]];
+            // Rumus 3: Index dari jumlah 2D belakang (Kepala + Ekor)
+            let mati3 = indexMap[(kep + ekr) % 10];
+            
+            let weakNumbers = Array.from(new Set([mati1, mati2, mati3]));
 
-            // POOL ACAK TERSTRUKTUR (Scrambling Pool)
-            let bbfs = [];
-            let pool = [0,1,2,3,4,5,6,7,8,9].filter(n => !offNumbers.includes(n));
-
-            // Mengurutkan sisa angka berdasarkan "Titik Panas" (Bobot Energi)
-            // Angka yang memiliki resonansi dengan Core Heat akan diprioritaskan ditarik ke dalam 7 digit
+            // Pastikan angka mati maksimal 3 digit (jika kembar, biarkan saja, skor yang akan menentukan)
+            
+            // 6. SKORING CERDAS (Smart Scoring Engine)
+            let pool = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            
             pool.sort((a, b) => {
-                let weightA = (a * 3 + coreHeat) % 10;
-                let weightB = (b * 3 + coreHeat) % 10;
-                return weightB - weightA; // Sortir menurun (Paling Panas ke Dingin)
+                let scoreA = 0;
+                let scoreB = 0;
+
+                // A. Bonus Point jika masuk dalam radius Angka Kuat (Index/Mistik)
+                if (powerNumbers.has(a)) scoreA += 50;
+                if (powerNumbers.has(b)) scoreB += 50;
+
+                // B. Bonus Point dari Frekuensi Tren (angka yang sering keluar diberi bobot naik)
+                scoreA += frequency[a] * 5;
+                scoreB += frequency[b] * 5;
+
+                // C. Penalti Ekstrim jika angka tersebut masuk rumusan Angka Lemah/Mati
+                if (weakNumbers.includes(a)) scoreA -= 100;
+                if (weakNumbers.includes(b)) scoreB -= 100;
+
+                // D. Delta Cross (Pengaman deterministik absolut agar tidak ada nilai yang identik)
+                let deltaA = Math.abs(a - ekr) + Math.abs(a - as);
+                let deltaB = Math.abs(b - ekr) + Math.abs(b - as);
+                scoreA -= deltaA; // Semakin kecil jaraknya ke As/Ekor, semakin baik
+                scoreB -= deltaB;
+
+                // E. Penentuan Peringkat (Descending - Skor terbesar di atas)
+                if (scoreA !== scoreB) {
+                    return scoreB - scoreA;
+                }
+                
+                // F. Tie-Breaker (Jika skor kebetulan sama persis, urutkan murni dari besaran angka)
+                return b - a;
             });
 
-            // Potong menjadi tepat 7 digit yang paling agresif
-            bbfs = pool.slice(0, 7);
+            // 7. HASIL FINAL
+            // Ambil Top 7 digit dengan skor tertinggi (otomatis menendang 3 angka terlemah/mati)
+            let bbfs = pool.slice(0, 7);
 
-            // Urutkan kembali dari kecil ke besar agar tampilan rapi di layar
+            // Urutkan rapi dari kecil ke besar untuk tampilan
             bbfs.sort((a, b) => a - b);
             return bbfs;
         }
@@ -547,7 +586,7 @@
                 `;
             }
         }
-    </script>
+</script>
 <!-- START POPUP IKLAN -->
 <style>
     .popup-overlay {
