@@ -379,10 +379,10 @@
             </noscript>
 
             <div id="tp-comment-wrapper" style="width: 100%; max-width: 100%; box-sizing: border-box; padding: 10px; margin: 0 auto; overflow-x: hidden;">
-            <div style="background: #111111; border: 2px solid #ff0000; padding: 20px 15px; border-radius: 4px; width: 100%; box-sizing: border-box;">
+    <div style="background: #111111; border: 2px solid #ff0000; padding: 20px 15px; border-radius: 4px; width: 100%; box-sizing: border-box;">
 
         <div style="margin-bottom: 15px; width: 100%; box-sizing: border-box;">
-            <label style="display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Selamat Bergabung kembali di room Prediksi Magnum Macau. Untuk kenyamanan bersama, dilarang posting promosi WA, Web atau FB. Jadikan wadah ini tempat berprediksi yang damai dan elegan.</label>
+            <label style="display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Selamat Bergabung kembali di room Prediksi Macau. Untuk kenyamanan bersama, dilarang posting promosi WA, Web atau FB. Jadikan wadah ini tempat berprediksi yang damai dan elegan.</label>
               <br>
             <textarea id="tp-komentar-isi" rows="4" placeholder="Tulis komentar..." style="width: 100%; max-width: 100%; box-sizing: border-box; background: #fdfbf7; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none; resize: vertical;"></textarea>
         </div>
@@ -421,6 +421,14 @@
     // ID BIN BARU YANG SUDAH PUBLIC
     const TP_BIN_ID = "6a83dbf5da38895dfef1428e"; 
     const TP_API_URL = `https://api.jsonbin.io/v3/b/${TP_BIN_ID}/latest`;
+
+    // Otomatis isi kolom Nama dan Email dari localStorage jika sudah pernah tersimpan
+    window.addEventListener('DOMContentLoaded', () => {
+        let savedNama = localStorage.getItem('tp_saved_nama');
+        let savedEmail = localStorage.getItem('tp_saved_email');
+        if (savedNama) document.getElementById("tp-komentar-nama").value = savedNama;
+        if (savedEmail) document.getElementById("tp-komentar-email").value = savedEmail;
+    });
 
     // Fungsi pembantu Gravatar
     function tpGetGravatar(email) {
@@ -471,6 +479,10 @@
             return;
         }
 
+        // Simpan otomatis ke browser pengunjung (localStorage)
+        localStorage.setItem('tp_saved_nama', nama);
+        localStorage.setItem('tp_saved_email', email);
+
         let tombol = document.getElementById("tp-btn-submit");
         tombol.innerText = "Mengirim...";
         tombol.disabled = true;
@@ -497,8 +509,7 @@
 
             if(putRes.ok) {
                 document.getElementById("tp-komentar-isi").value = "";
-                document.getElementById("tp-komentar-nama").value = "";
-                document.getElementById("tp-komentar-email").value = "";
+                // Kolom nama dan email sengaja dibiarkan tersimpan/tidak dikosongkan agar pengunjung tidak perlu mengetik ulang saat ingin berkomentar kembali
                 tpMuatPublik();
                 alert("Komentar berhasil dikirim!");
             } else {
@@ -514,8 +525,7 @@
 
     // Jalankan saat halaman dibuka
     tpMuatPublik();
-    </script>
-
+</script>
         </section>
 
         <style>
