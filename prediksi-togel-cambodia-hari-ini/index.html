@@ -359,56 +359,64 @@
             </div>
             <script src="https://pl30187164.effectivecpmnetwork.com/27/ba/bd/27babd93febcd37a091303b95048fdf4.js"></script>
             <script src="https://crypotential.com/aau2deh1y8?key=28127d0dedbc5859c5a05ec19fed2ae4"></script>
-
+            
             <div id="tp-comment-wrapper" style="width: 100%; max-width: 100%; box-sizing: border-box; padding: 10px; margin: 0 auto; overflow-x: hidden;">
     <div style="background: #111111; border: 2px solid #ff0000; padding: 20px 15px; border-radius: 4px; width: 100%; box-sizing: border-box;">
 
+        <!-- Form Komentar Utama -->
         <div style="margin-bottom: 15px; width: 100%; box-sizing: border-box;">
             <label style="display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Selamat Bergabung kembali di room Prediksi Cambodia. Untuk kenyamanan bersama, dilarang posting promosi WA, Web atau FB. Jadikan wadah ini tempat berprediksi yang damai dan elegan.</label>
-             <br>
-            <textarea id="tp-komentar-isi" rows="4" placeholder="Tulis komentar..." style="width: 100%; max-width: 100%; box-sizing: border-box; background: #fdfbf7; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none; resize: vertical;"></textarea>
+            <br>
+            <textarea id="tp-komentar-isi" rows="4" placeholder="Tulis komentar..." style="width: 100%; max-width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none; resize: vertical;"></textarea>
         </div>
 
         <div style="margin-bottom: 15px; width: 100%; box-sizing: border-box;">
             <label style="display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Nama</label>
-            <input type="text" id="tp-komentar-nama" placeholder="Nama Anda" style="width: 100%; max-width: 100%; box-sizing: border-box; background: #fdfbf7; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none;">
+            <input type="text" id="tp-komentar-nama" placeholder="Nama Anda" style="width: 100%; max-width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none;">
         </div>
 
         <div style="margin-bottom: 15px; width: 100%; box-sizing: border-box;">
             <label style="display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Email</label>
-            <input type="email" id="tp-komentar-email" placeholder="Email Anda" style="width: 100%; max-width: 100%; box-sizing: border-box; background: #fdfbf7; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none;">
-            <!-- Teks kecil petunjuk Gravatar -->
+            <input type="email" id="tp-komentar-email" placeholder="Email Anda" style="width: 100%; max-width: 100%; box-sizing: border-box; background: #ffffff; border: 2px solid #000000; color: #000000; padding: 10px; font-size: 14px; border-radius: 3px; outline: none;">
             <div style="text-align: left; margin-top: 5px;">
-                <a href="https://gravatar.com" target="_blank" style="color: #3498db; font-family: Arial, sans-serif; font-size: 11px; text-decoration: underline;">Cara membuat Gravatar sesuai email Anda? Klik di sini</a>
+                <a href="https://gravatar.com" target="_blank" style="color: #39ff14; font-family: Arial, sans-serif; font-size: 11px; text-decoration: underline; font-weight: bold;">Cara membuat Gravatar sesuai email Anda? Klik di sini</a>
             </div>
         </div>
 
-        <button onclick="tpKirimPublik()" id="tp-btn-submit" style="background: #111111; color: #f39c12; border: 2px solid #f39c12; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 3px; font-size: 14px; width: 100%; max-width: 100%; box-sizing: border-box;">Kirim Komentar</button>
+        <button onclick="tpKirimPublik()" id="tp-btn-submit" style="background: #111111; color: #39ff14; border: 2px solid #39ff14; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 3px; font-size: 14px; width: 100%; max-width: 100%; box-sizing: border-box; text-shadow: 0 0 5px #39ff14;">Kirim Komentar</button>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px;">
+            <button onclick="tpKeBawah()" style="background: #222; color: #39ff14; border: 1px solid #39ff14; padding: 8px 12px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 3px; flex: 1;">Lihat Komen Paling Bawah</button>
+        </div>
 
         <hr style="border: 0; border-top: 1px solid #333333; margin: 20px 0;">
 
         <!-- Daftar Komentar Masuk -->
-        <h4 style="color: #3498db; font-family: Arial, sans-serif; font-size: 15px; margin-bottom: 10px;">Ruang Prediktor</h4>
+        <h4 style="color: #39ff14; font-family: Arial, sans-serif; font-size: 15px; margin-bottom: 10px; font-weight: bold; text-shadow: 0 0 5px #39ff14;">Ruang Prediktor</h4>
         <div id="tp-daftar-list" style="width: 100%; box-sizing: border-box; word-break: break-word;">
             <p style="color: #888; font-size: 13px;">Memuat komentar dari server...</p>
+        </div>
+
+        <!-- Tombol Pintasan Navigasi Bawah -->
+        <div style="display: flex; justify-content: space-between; margin-top: 15px; gap: 10px;">
+            <button onclick="tpKeAtas()" style="background: #222; color: #39ff14; border: 1px solid #39ff14; padding: 8px 12px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 3px; flex: 1;">Lihat Komen Paling Atas</button>
         </div>
 
     </div>
 </div>
 
-<!-- Library tambahan kecil untuk membaca enkripsi MD5 email Gravatar -->
+<!-- Library tambahan MD5 Gravatar -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 
 <script>
-    // ID BIN BARU ANDA
     const TP_BIN_ID = "6a83ee65da38895dfef16c24"; 
     const TP_API_URL = `https://api.jsonbin.io/v3/b/${TP_BIN_ID}/latest`;
     const TP_HALAMAN_ID = "cambodia"; 
 
-    // Variabel untuk menyimpan jumlah komentar terakhir agar tahu jika ada yang baru
     let tpJumlahKomentarLama = -1;
+    let dataKomentarCache = [];
+    let lastRenderedDataString = "";
 
-    // Otomatis isi kolom Nama dan Email dari localStorage
     window.addEventListener('DOMContentLoaded', () => {
         let savedNama = localStorage.getItem('tp_saved_nama');
         let savedEmail = localStorage.getItem('tp_saved_email');
@@ -416,29 +424,23 @@
         if (savedEmail) document.getElementById("tp-komentar-email").value = savedEmail;
     });
 
-    // Fungsi pembantu Gravatar
     function tpGetGravatar(email) {
         let cleanEmail = email ? email.trim().toLowerCase() : "default@email.com";
         let hash = (typeof md5 === 'function') ? md5(cleanEmail) : "00000000000000000000000000000000";
         return `https://www.gravatar.com/avatar/${hash}?s=80&d=identicon`;
     }
 
-    // Fungsi pembantu untuk membuat kotak HTML item komentar
-    function tpBuatItemHtml(item) {
-        let avatarUrl = tpGetGravatar(item.email);
-        return `
-            <div style="background: #fdfbf7; border: 1px solid #000000; padding: 10px; margin-bottom: 10px; border-radius: 3px; box-sizing: border-box; width: 100%; display: flex; align-items: flex-start; gap: 10px;">
-                <img src="${avatarUrl}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #000; flex-shrink: 0; background: #ccc;">
-                <div style="flex-grow: 1; min-width: 0;">
-                    <strong style="color: #2980b9; font-size: 13px; font-family: Arial, sans-serif;">${item.nama}</strong>
-                    <span style="font-size: 11px; color: #666; float: right;">${item.waktu}</span>
-                    <p style="color: #000000; font-family: Arial, sans-serif; font-size: 13px; margin: 5px 0 0 0; word-break: break-word;">${item.isi}</p>
-                </div>
-            </div>
-        `;
+    function tpKeAtas() {
+        document.getElementById("tp-comment-wrapper").scrollIntoView({ behavior: 'smooth' });
     }
 
-    // 🔊 Fungsi untuk membunyikan suara Notifikasi otomatis menggunakan Audio API browser
+    function tpKeBawah() {
+        let listEl = document.getElementById("tp-daftar-list");
+        if (listEl) {
+            listEl.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
     function tpMainkanSuaraNotifikasi() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -446,8 +448,8 @@
             const gainNode = audioCtx.createGain();
 
             osc.type = "sine"; 
-            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // Nada D5
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); // Nada A5
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
 
             gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
@@ -458,11 +460,159 @@
             osc.start();
             osc.stop(audioCtx.currentTime + 0.4);
         } catch (e) {
-            console.log("Audio diblokir browser sebelum ada interaksi.");
+            console.log("Audio diblokir browser.");
         }
     }
 
-    // 1. Fungsi Ambil Komentar (Dipisah Hari Ini & Sebelumnya + Deteksi Komentar Baru & Suara)
+    function tpBuatItemHtml(item, index) {
+        let avatarUrl = tpGetGravatar(item.email);
+        let savedNama = localStorage.getItem('tp_saved_nama') || '';
+        let savedEmail = localStorage.getItem('tp_saved_email') || '';
+        let perluInputExtra = (!savedNama.trim());
+        
+        let htmlBalasan = "";
+        if (item.replies && item.replies.length > 0) {
+            item.replies.forEach((reply, replyIndex) => {
+                let replyAvatar = tpGetGravatar(reply.email);
+                let uniqueReplyFormId = `tp-form-balas-${index}-${replyIndex}`;
+                let uniqueTextareaId = `tp-balas-isi-${index}-${replyIndex}`;
+                let uniqueNamaId = `tp-balas-nama-${index}-${replyIndex}`;
+                let uniqueEmailId = `tp-balas-email-${index}-${replyIndex}`;
+                let uniqueBtnId = `tp-btn-balas-${index}-${replyIndex}`;
+
+                let existingReplyForm = document.getElementById(uniqueReplyFormId);
+                let currentDisplay = 'none';
+                let savedText = '';
+                let currentNamaBalas = savedNama;
+                let currentEmailBalas = savedEmail;
+
+                if (existingReplyForm) {
+                    currentDisplay = existingReplyForm.style.display;
+                    let textareaEl = document.getElementById(uniqueTextareaId);
+                    let namaEl = document.getElementById(uniqueNamaId);
+                    let emailEl = document.getElementById(uniqueEmailId);
+                    if (textareaEl) savedText = textareaEl.value;
+                    if (namaEl && namaEl.value) currentNamaBalas = namaEl.value;
+                    if (emailEl && emailEl.value) currentEmailBalas = emailEl.value;
+                }
+
+                let inputExtraHtml = "";
+                if (perluInputExtra) {
+                    inputExtraHtml = `
+                        <input type="text" id="${uniqueNamaId}" placeholder="Nama Anda" value="${currentNamaBalas}" style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1px solid #000; color: #000; padding: 5px; font-size: 11px; border-radius: 2px; outline: none; margin-bottom: 5px;">
+                        <input type="email" id="${uniqueEmailId}" placeholder="Email Anda" value="${currentEmailBalas}" style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1px solid #000; color: #000; padding: 5px; font-size: 11px; border-radius: 2px; outline: none; margin-bottom: 5px;">
+                    `;
+                }
+
+                htmlBalasan += `
+                    <div style="background: #ffffff; border-left: 3px solid #39ff14; padding: 8px; margin-top: 8px; border-radius: 2px; border: 1px solid #e0e0e0;">
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <img src="${replyAvatar}" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid #000; flex-shrink: 0; background: #ccc;">
+                            <div style="flex-grow: 1; min-width: 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px;">
+                                    <strong style="color: #39ff14; font-size: 12px; font-family: Arial, sans-serif; font-weight: bold; text-shadow: 0 0 3px #000000; background: #111; padding: 1px 4px; border-radius: 2px;">${reply.nama}</strong>
+                                    <span style="font-size: 10px; color: #555;">${reply.waktu}</span>
+                                </div>
+                                <p style="color: #ff3333; font-family: Arial, sans-serif; font-size: 12px; font-weight: 500; margin: 4px 0 6px 0; word-break: break-word; clear: both; display: block; text-shadow: 0 0 2px rgba(255,0,0,0.3);">${reply.isi}</p>
+                                
+                                <button onclick="tpTampilkanFormBalasNested('${uniqueReplyFormId}', '${uniqueTextareaId}', '${reply.nama}')" style="background: none; border: none; color: #2980b9; font-size: 11px; cursor: pointer; padding: 0; font-weight: bold; text-decoration: underline;">Balas</button>
+                            </div>
+                        </div>
+
+                        <!-- Form Balas untuk Balasan -->
+                        <div id="${uniqueReplyFormId}" style="display: ${currentDisplay}; margin-top: 8px; padding: 8px; background: #f0f0f0; border-radius: 3px; border: 1px solid #ccc;">
+                            <textarea id="${uniqueTextareaId}" rows="2" placeholder="Tulis balasan..." style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1px solid #000; color: #000; padding: 5px; font-size: 11px; border-radius: 2px; outline: none; margin-bottom: 5px;">${savedText}</textarea>
+                            ${inputExtraHtml}
+                            <button onclick="tpKirimBalasan(${index}, '${reply.nama}', '${uniqueTextareaId}', '${uniqueNamaId}', '${uniqueEmailId}', '${uniqueReplyFormId}')" id="${uniqueBtnId}" style="background: #111; color: #39ff14; border: 1px solid #39ff14; padding: 4px 8px; font-size: 10px; cursor: pointer; border-radius: 2px; font-weight: bold;">Kirim Balasan</button>
+                            <button onclick="tpTutupFormBalasNested('${uniqueReplyFormId}', '${uniqueTextareaId}')" style="background: #ccc; color: #000; border: none; padding: 4px 8px; font-size: 10px; cursor: pointer; border-radius: 2px; margin-left: 4px;">Sembunyikan</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        let existingForm = document.getElementById(`tp-form-balas-${index}`);
+        let currentDisplayMain = 'none';
+        let savedTextMain = '';
+        let currentNamaMain = savedNama;
+        let currentEmailMain = savedEmail;
+        let mainTextareaId = `tp-balas-isi-${index}`;
+        let mainNamaId = `tp-balas-nama-${index}`;
+        let mainEmailId = `tp-balas-email-${index}`;
+        let mainFormId = `tp-form-balas-${index}`;
+
+        if (existingForm) {
+            currentDisplayMain = existingForm.style.display;
+            let textareaEl = document.getElementById(mainTextareaId);
+            let namaEl = document.getElementById(mainNamaId);
+            let emailEl = document.getElementById(mainEmailId);
+            if (textareaEl) savedTextMain = textareaEl.value;
+            if (namaEl && namaEl.value) currentNamaMain = namaEl.value;
+            if (emailEl && emailEl.value) currentEmailMain = emailEl.value;
+        }
+
+        let inputExtraMainHtml = "";
+        if (perluInputExtra) {
+            inputExtraMainHtml = `
+                <input type="text" id="${mainNamaId}" placeholder="Nama Anda" value="${currentNamaMain}" style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1px solid #000; color: #000; padding: 6px; font-size: 12px; border-radius: 2px; outline: none; margin-bottom: 5px;">
+                <input type="email" id="${mainEmailId}" placeholder="Email Anda" value="${currentEmailMain}" style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1px solid #000; color: #000; padding: 6px; font-size: 12px; border-radius: 2px; outline: none; margin-bottom: 5px;">
+            `;
+        }
+
+        return `
+            <div style="background: #ffffff; border: 1px solid #cccccc; padding: 10px; margin-bottom: 10px; border-radius: 3px; box-sizing: border-box; width: 100%;">
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <img src="${avatarUrl}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #000; flex-shrink: 0; background: #ccc;">
+                    <div style="flex-grow: 1; min-width: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 5px;">
+                            <strong style="color: #39ff14; font-size: 13px; font-family: Arial, sans-serif; font-weight: bold; text-shadow: 0 0 3px #000000; background: #111; padding: 1px 5px; border-radius: 2px;">${item.nama}</strong>
+                            <span style="font-size: 11px; color: #555;">${item.waktu}</span>
+                        </div>
+                        <p style="color: #ff3333; font-family: Arial, sans-serif; font-size: 13px; font-weight: 500; margin: 6px 0 6px 0; word-break: break-word; clear: both; display: block; text-shadow: 0 0 2px rgba(255,0,0,0.3);">${item.isi}</p>
+                        
+                        <button onclick="tpTampilkanFormBalasNested('${mainFormId}', '${mainTextareaId}', '${item.nama}')" style="background: none; border: none; color: #2980b9; font-size: 11px; cursor: pointer; padding: 0; font-weight: bold; text-decoration: underline;">Balas</button>
+                    </div>
+                </div>
+
+                <div style="margin-left: 20px; margin-top: 5px;">
+                    ${htmlBalasan}
+                </div>
+
+                <!-- Form Balas Utama -->
+                <div id="${mainFormId}" style="display: ${currentDisplayMain}; margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 3px; border: 1px solid #ccc;">
+                    <textarea id="${mainTextareaId}" rows="2" placeholder="Tulis balasan..." style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1px solid #000; color: #000; padding: 6px; font-size: 12px; border-radius: 2px; outline: none; margin-bottom: 5px;">${savedTextMain}</textarea>
+                    ${inputExtraMainHtml}
+                    <button onclick="tpKirimBalasan(${index}, '${item.nama}', '${mainTextareaId}', '${mainNamaId}', '${mainEmailId}', '${mainFormId}')" id="tp-btn-balas-${index}" style="background: #111; color: #39ff14; border: 1px solid #39ff14; padding: 5px 10px; font-size: 11px; cursor: pointer; border-radius: 2px; font-weight: bold;">Kirim Balasan</button>
+                    <button onclick="tpTutupFormBalasNested('${mainFormId}', '${mainTextareaId}')" style="background: #ccc; color: #000; border: none; padding: 5px 10px; font-size: 11px; cursor: pointer; border-radius: 2px; margin-left: 5px;">Sembunyikan</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function tpTampilkanFormBalasNested(formId, textareaId, namaTarget) {
+        let formEl = document.getElementById(formId);
+        if (formEl) {
+            let isHidden = (formEl.style.display === 'none' || formEl.style.display === '');
+            formEl.style.display = isHidden ? 'block' : 'none';
+            
+            if (isHidden) {
+                let textareaEl = document.getElementById(textareaId);
+                if (textareaEl && !textareaEl.value.trim()) {
+                    textareaEl.value = `@${namaTarget} `;
+                }
+            }
+        }
+    }
+
+    function tpTutupFormBalasNested(formId, textareaId) {
+        let formEl = document.getElementById(formId);
+        if (formEl) {
+            formEl.style.display = 'none';
+            let textareaEl = document.getElementById(textareaId);
+            if (textareaEl) textareaEl.value = '';
+        }
+    }
+
     async function tpMuatPublik(isInitialLoad = false) {
         try {
             let response = await fetch(TP_API_URL);
@@ -471,7 +621,14 @@
             let semuaDataHalaman = result.record || {};
             let dataKomentar = semuaDataHalaman[TP_HALAMAN_ID] || [];
             
-            // Cek apakah ada komentar baru masuk dari orang lain
+            let dataStringCheck = JSON.stringify(dataKomentar);
+            if (!isInitialLoad && dataStringCheck === lastRenderedDataString) {
+                return; 
+            }
+            
+            lastRenderedDataString = dataStringCheck;
+            dataKomentarCache = dataKomentar; 
+
             if (!isInitialLoad && tpJumlahKomentarLama !== -1 && dataKomentar.length > tpJumlahKomentarLama) {
                 tpMainkanSuaraNotifikasi(); 
             }
@@ -483,39 +640,31 @@
                 html = '<p style="color: #888; font-size: 13px;">Belum ada komentar.</p>';
             } else {
                 let hariIniStr = new Date().toLocaleDateString('en-CA'); 
-
                 let htmlHariIni = "";
                 let htmlSebelumnya = "";
 
-                dataKomentar.forEach(item => {
+                dataKomentar.forEach((item, index) => {
                     let itemTanggal = item.tanggal || hariIniStr;
-
                     if (itemTanggal === hariIniStr) {
-                        htmlHariIni += tpBuatItemHtml(item);
+                        htmlHariIni += tpBuatItemHtml(item, index);
                     } else {
-                        htmlSebelumnya += tpBuatItemHtml(item);
+                        htmlSebelumnya += tpBuatItemHtml(item, index);
                     }
                 });
 
                 if (htmlHariIni !== "") {
-                    html += `<div style="font-size: 12px; font-weight: bold; color: #f39c12; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">Obrolan hari ini</div>` + htmlHariIni;
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #39ff14; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px; text-shadow: 0 0 3px #000;">Obrolan hari ini</div>` + htmlHariIni;
                 }
-
                 if (htmlSebelumnya !== "") {
-                    html += `<div style="font-size: 12px; font-weight: bold; color: #e74c3c; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">Obrolan terdahulu</div>` + htmlSebelumnya;
-                }
-
-                if (htmlHariIni === "" && htmlSebelumnya === "") {
-                    html = '<p style="color: #888; font-size: 13px;">Belum ada komentar.</p>';
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #39ff14; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px; text-shadow: 0 0 3px #000;">Obrolan terdahulu</div>` + htmlSebelumnya;
                 }
             }
             document.getElementById("tp-daftar-list").innerHTML = html;
         } catch (error) {
-            document.getElementById("tp-daftar-list").innerHTML = '<p style="color: #e74c3c; font-size: 13px;">Gagal memuat komentar.</p>';
+            console.log("Gagal memuat komentar.");
         }
     }
 
-    // 2. Fungsi Kirim Komentar
     async function tpKirimPublik() {
         let isi = document.getElementById("tp-komentar-isi").value.trim();
         let nama = document.getElementById("tp-komentar-nama").value.trim();
@@ -553,7 +702,8 @@
                 email: email, 
                 isi: isi, 
                 waktu: waktuLengkapGabung, 
-                tanggal: tanggalHariIni 
+                tanggal: tanggalHariIni,
+                replies: [] 
             });
 
             let putRes = await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`, {
@@ -564,8 +714,7 @@
 
             if(putRes.ok) {
                 document.getElementById("tp-komentar-isi").value = "";
-                tpMuatPublik(true); 
-                alert("Komentar berhasil dikirim!");
+                await tpMuatPublik(true); 
             } else {
                 alert("Gagal menyimpan komentar ke server.");
             }
@@ -577,10 +726,72 @@
         tombol.disabled = false;
     }
 
-    // Load pertama kali saat halaman dibuka
+    async function tpKirimBalasan(index, namaTarget, textareaId, namaId, emailId, formId) {
+        let textareaBalas = document.getElementById(textareaId);
+        let inputNamaBalas = document.getElementById(namaId);
+        let inputEmailBalas = document.getElementById(emailId);
+
+        let isiBalasan = textareaBalas ? textareaBalas.value.trim() : "";
+        let nama = inputNamaBalas ? inputNamaBalas.value.trim() : localStorage.getItem('tp_saved_nama') || "";
+        let email = inputEmailBalas ? inputEmailBalas.value.trim() : localStorage.getItem('tp_saved_email') || "";
+
+        if (!isiBalasan || isiBalasan === `@${namaTarget}`) {
+            alert("Isi balasan tidak boleh kosong!");
+            return;
+        }
+
+        if (!nama) {
+            alert("Harap isi kolom Nama terlebih dahulu!");
+            return;
+        }
+
+        localStorage.setItem('tp_saved_nama', nama);
+        localStorage.setItem('tp_saved_email', email);
+
+        let sekarang = new Date();
+        let formatTanggalLengkap = sekarang.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        let formatJam = sekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        let waktuLengkapGabung = `${formatTanggalLengkap}, ${formatJam} WIB`;
+
+        try {
+            let getRes = await fetch(TP_API_URL);
+            let getResult = await getRes.json();
+            
+            let semuaDataHalaman = getResult.record || {};
+            let daftarKomentar = semuaDataHalaman[TP_HALAMAN_ID] || [];
+
+            if (daftarKomentar[index]) {
+                if (!daftarKomentar[index].replies) {
+                    daftarKomentar[index].replies = [];
+                }
+
+                daftarKomentar[index].replies.push({
+                    nama: nama,
+                    email: email,
+                    isi: isiBalasan,
+                    waktu: waktuLengkapGabung
+                });
+
+                let putRes = await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`, {
+                    method: 'PUT',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(semuaDataHalaman)
+                });
+
+                if (putRes.ok) {
+                    if (textareaBalas) textareaBalas.value = `@${namaTarget} `;
+                    await tpMuatPublik(true);
+                } else {
+                    alert("Gagal mengirim balasan.");
+                }
+            }
+        } catch (e) {
+            alert("Terjadi kesalahan koneksi saat membalas.");
+        }
+    }
+
     tpMuatPublik(true);
 
-    // Cek otomatis setiap 5 detik untuk mendeteksi komentar baru dan membunyikan suara notifikasi
     setInterval(() => {
         tpMuatPublik(false);
     }, 5000);
