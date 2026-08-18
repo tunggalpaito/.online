@@ -283,7 +283,7 @@
         <hr style="border: 0; border-top: 1px solid #333333; margin: 20px 0;">
 
         <!-- Daftar Komentar Masuk -->
-        <h4 style="color: #3498db; font-family: Arial, sans-serif; font-size: 15px; margin-bottom: 10px;">Daftar Komentar</h4>
+        <h4 style="color: #3498db; font-family: Arial, sans-serif; font-size: 15px; margin-bottom: 10px;">Ruang Prediktor</h4>
         <div id="tp-daftar-list" style="width: 100%; box-sizing: border-box; word-break: break-word;">
             <p style="color: #888; font-size: 13px;">Memuat komentar dari server...</p>
         </div>
@@ -393,11 +393,11 @@
                 });
 
                 if (htmlHariIni !== "") {
-                    html += `<div style="font-size: 12px; font-weight: bold; color: #f39c12; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">📌 Hari Ini</div>` + htmlHariIni;
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #f39c12; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">Obrolan hari ini</div>` + htmlHariIni;
                 }
 
                 if (htmlSebelumnya !== "") {
-                    html += `<div style="font-size: 12px; font-weight: bold; color: #e74c3c; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">⏳ Komentar Hari Sebelumnya / Arsip</div>` + htmlSebelumnya;
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #e74c3c; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">Obrolan terdahulu</div>` + htmlSebelumnya;
                 }
 
                 if (htmlHariIni === "" && htmlSebelumnya === "") {
