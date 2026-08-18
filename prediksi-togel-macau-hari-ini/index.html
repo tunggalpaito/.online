@@ -377,8 +377,8 @@
             <noscript>
             <a href="/" target="_blank"><img src="//sstatic1.histats.com/0.gif?5037448&101" alt="" border="0"></a>
             </noscript>
-
-            <div id="tp-comment-wrapper" style="width: 100%; max-width: 100%; box-sizing: border-box; padding: 10px; margin: 0 auto; overflow-x: hidden;">
+            
+             <div id="tp-comment-wrapper" style="width: 100%; max-width: 100%; box-sizing: border-box; padding: 10px; margin: 0 auto; overflow-x: hidden;">
     <div style="background: #111111; border: 2px solid #ff0000; padding: 20px 15px; border-radius: 4px; width: 100%; box-sizing: border-box;">
 
         <div style="margin-bottom: 15px; width: 100%; box-sizing: border-box;">
@@ -441,7 +441,22 @@
         return `https://www.gravatar.com/avatar/${hash}?s=80&d=identicon`;
     }
 
-    // 1. Fungsi Ambil Komentar Khusus Halaman Ini
+    // Fungsi pembantu untuk membuat kotak HTML item komentar
+    function tpBuatItemHtml(item) {
+        let avatarUrl = tpGetGravatar(item.email);
+        return `
+            <div style="background: #fdfbf7; border: 1px solid #000000; padding: 10px; margin-bottom: 10px; border-radius: 3px; box-sizing: border-box; width: 100%; display: flex; align-items: flex-start; gap: 10px;">
+                <img src="${avatarUrl}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #000; flex-shrink: 0; background: #ccc;">
+                <div style="flex-grow: 1; min-width: 0;">
+                    <strong style="color: #2980b9; font-size: 13px; font-family: Arial, sans-serif;">${item.nama}</strong>
+                    <span style="font-size: 11px; color: #666; float: right;">${item.waktu}</span>
+                    <p style="color: #000000; font-family: Arial, sans-serif; font-size: 13px; margin: 5px 0 0 0; word-break: break-word;">${item.isi}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // 1. Fungsi Ambil Komentar Khusus Halaman Ini (Dipisah Hari Ini & Sebelumnya)
     async function tpMuatPublik() {
         try {
             let response = await fetch(TP_API_URL);
@@ -454,27 +469,42 @@
             if(dataKomentar.length === 0) {
                 html = '<p style="color: #888; font-size: 13px;">Belum ada komentar.</p>';
             } else {
+                let hariIniStr = new Date().toLocaleDateString('en-CA'); // Format YYYY-MM-DD lokal
+
+                let htmlHariIni = "";
+                let htmlSebelumnya = "";
+
                 dataKomentar.forEach(item => {
-                    let avatarUrl = tpGetGravatar(item.email);
-                    html += `
-                        <div style="background: #fdfbf7; border: 1px solid #000000; padding: 10px; margin-bottom: 10px; border-radius: 3px; box-sizing: border-box; width: 100%; display: flex; align-items: flex-start; gap: 10px;">
-                            <img src="${avatarUrl}" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #000; flex-shrink: 0; background: #ccc;">
-                            <div style="flex-grow: 1; min-width: 0;">
-                                <strong style="color: #2980b9; font-size: 13px; font-family: Arial, sans-serif;">${item.nama}</strong>
-                                <span style="font-size: 11px; color: #666; float: right;">${item.waktu}</span>
-                                <p style="color: #000000; font-family: Arial, sans-serif; font-size: 13px; margin: 5px 0 0 0; word-break: break-word;">${item.isi}</p>
-                            </div>
-                        </div>
-                    `;
+                    // Jika data lama belum ada properti tanggal, defaultkan ke hari ini
+                    let itemTanggal = item.tanggal || hariIniStr;
+
+                    if (itemTanggal === hariIniStr) {
+                        htmlHariIni += tpBuatItemHtml(item);
+                    } else {
+                        htmlSebelumnya += tpBuatItemHtml(item);
+                    }
                 });
+
+                // Susun tampilan kategori pembatas
+                if (htmlHariIni !== "") {
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #f39c12; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">📌 Hari Ini</div>` + htmlHariIni;
+                }
+
+                if (htmlSebelumnya !== "") {
+                    html += `<div style="font-size: 12px; font-weight: bold; color: #e74c3c; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px dashed #444; padding-bottom: 3px;">⏳ Komentar Hari Sebelumnya / Arsip</div>` + htmlSebelumnya;
+                }
+
+                if (htmlHariIni === "" && htmlSebelumnya === "") {
+                    html = '<p style="color: #888; font-size: 13px;">Belum ada komentar.</p>';
+                }
             }
             document.getElementById("tp-daftar-list").innerHTML = html;
         } catch (error) {
-            document.getElementById("tp-daftar-list").innerHTML = '<p style="color: #e74c3c; font-size: 13px;"></p>';
+            document.getElementById("tp-daftar-list").innerHTML = '<p style="color: #e74c3c; font-size: 13px;">Gagal memuat komentar.</p>';
         }
     }
 
-    // 2. Fungsi Kirim Komentar Khusus Halaman Ini
+    // 2. Fungsi Kirim Komentar Khusus Halaman Ini (Menyimpan Tanggal, Bulan, Tahun)
     async function tpKirimPublik() {
         let isi = document.getElementById("tp-komentar-isi").value.trim();
         let nama = document.getElementById("tp-komentar-nama").value.trim();
@@ -492,7 +522,13 @@
         tombol.innerText = "Mengirim...";
         tombol.disabled = true;
 
-        let waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WIB";
+        let sekarang = new Date();
+        let tanggalHariIni = sekarang.toLocaleDateString('en-CA'); // Format YYYY-MM-DD untuk pembanding sistem
+        
+        // Format tanggal lengkap (misal: 18 Agu 2026, 14:30 WIB)
+        let formatTanggalLengkap = sekarang.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        let formatJam = sekarang.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        let waktuLengkapGabung = `${formatTanggalLengkap}, ${formatJam} WIB`;
         
         try {
             let getRes = await fetch(TP_API_URL);
@@ -503,7 +539,14 @@
                 semuaDataHalaman[TP_HALAMAN_ID] = [];
             }
 
-            semuaDataHalaman[TP_HALAMAN_ID].unshift({ nama: nama, email: email, isi: isi, waktu: waktuSekarang });
+            // Masukkan data baru dengan tanggal lengkap dan key pembanding tanggal
+            semuaDataHalaman[TP_HALAMAN_ID].unshift({ 
+                nama: nama, 
+                email: email, 
+                isi: isi, 
+                waktu: waktuLengkapGabung, 
+                tanggal: tanggalHariIni 
+            });
 
             let putRes = await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`, {
                 method: 'PUT',
