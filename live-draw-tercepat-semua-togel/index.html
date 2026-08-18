@@ -391,10 +391,15 @@
             const now = new Date();
             const currentTotalMinutes = now.getHours() * 60 + now.getMinutes();
 
-            // Jam batas akhir result selesai diputar (dalam total menit)
+            // Jam batas akhir result selesai diputar
             const sdyResultTime = 14 * 60 + 0;   // Jam 14:00
             const sgpResultTime = 18 * 60 + 15;  // Jam 18:15
             const hkResultTime  = 23 * 60 + 15;  // Jam 23:15
+
+            // Penentuan apakah hari ini sudah rilis result atau belum
+            const sdyHasReleased = currentTotalMinutes >= sdyResultTime;
+            const sgpHasReleased = currentTotalMinutes >= sgpResultTime;
+            const hkHasReleased  = currentTotalMinutes >= hkResultTime;
 
             const rowCount = 15;
             for(let i = 0; i < rowCount; i++) {
@@ -407,33 +412,55 @@
                 let year = d.getFullYear();
                 let formattedDate = `${day}-${month}-${year}`;
 
-                // Pengecekan apakah baris tabel ini adalah hari ini secara akurat
-                let isToday = (d.toDateString() === now.toDateString());
+                let isToday = (i === 0);
 
-                // --- LOGIKA SYDNEY & SDY LOTTO ---
-                let sdyDisplay = sdy[i] || '----';
-                let sdylDisplay = sdyl[i] || '----';
-                if (isToday && currentTotalMinutes < sdyResultTime) {
-                    sdyDisplay = "-";
-                    sdylDisplay = "-";
+                // --- SYDNEY & SDY LOTTO ---
+                let sdyDisplay = "";
+                let sdylDisplay = "";
+                if (isToday) {
+                    if (sdyHasReleased) {
+                        sdyDisplay = typeof LIVE_RESULT_SDY !== 'undefined' ? LIVE_RESULT_SDY.latestResult : (sdy[0] || '----');
+                        sdylDisplay = typeof LIVE_RESULT_SDYLOTTO !== 'undefined' ? LIVE_RESULT_SDYLOTTO.latestResult : (sdyl[0] || '----');
+                    } else {
+                        sdyDisplay = "-";
+                        sdylDisplay = "-";
+                    }
+                } else {
+                    let idx = sdyHasReleased ? i : i - 1;
+                    sdyDisplay = sdy[idx] || '----';
+                    sdylDisplay = sdyl[idx] || '----';
                 }
 
-                // --- LOGIKA SINGAPORE (Libur & Jam Result) ---
+                // --- SINGAPORE ---
                 let sgpDisplay = "";
                 if (dayOfWeek === 2 || dayOfWeek === 5) {
                     sgpDisplay = "LIBUR";
-                } else if (isToday && currentTotalMinutes < sgpResultTime) {
-                    sgpDisplay = "-";
+                } else if (isToday) {
+                    if (sgpHasReleased) {
+                        sgpDisplay = typeof LIVE_RESULT_SGP !== 'undefined' ? LIVE_RESULT_SGP.latestResult : (sgp[0] || '----');
+                    } else {
+                        sgpDisplay = "-";
+                    }
                 } else {
-                    sgpDisplay = sgp[i] || '----';
+                    let idx = sgpHasReleased ? i : i - 1;
+                    sgpDisplay = sgp[idx] || '----';
                 }
 
-                // --- LOGIKA HONGKONG & HK LOTTO ---
-                let hkDisplay = hk[i] || '----';
-                let hklDisplay = hkl[i] || '----';
-                if (isToday && currentTotalMinutes < hkResultTime) {
-                    hkDisplay = "-";
-                    hklDisplay = "-";
+                // --- HONGKONG & HK LOTTO ---
+                let hkDisplay = "";
+                let hklDisplay = "";
+                if (isToday) {
+                    if (hkHasReleased) {
+                        hkDisplay = typeof LIVE_RESULT_HK !== 'undefined' ? LIVE_RESULT_HK.latestResult : (hk[0] || '----');
+                        hklDisplay = typeof LIVE_RESULT_HKLOTTO !== 'undefined' ? LIVE_RESULT_HKLOTTO.latestResult : (hkl[0] || '----');
+                    } else {
+                        hkDisplay = "-";
+                        hklDisplay = "-";
+                    }
+                } else {
+                    let idx = hkHasReleased ? i : i - 1;
+                    hkDisplay = hk[idx] || '----';
+                    hklDisplay = hkl[idx] || '----';
                 }
 
                 tbody.innerHTML += `
