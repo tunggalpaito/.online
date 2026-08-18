@@ -320,6 +320,7 @@
             return str.split(',').map(i => i.trim()).filter(i => i.length > 0);
         }
 
+        // Fungsi mengecek apakah status live harus menyala (kelap-kelip) pada jam masing-masing pasaran
         function checkLiveStatus(marketKey) {
             const now = new Date();
             const hours = now.getHours();
@@ -328,31 +329,33 @@
             const totalMinutes = hours * 60 + minutes;
 
             if (marketKey === 'sdy') {
-                const start = 13 * 60 + 45;
+                const start = 13 * 60 + 45; // 13:45
+                const end = 14 * 60 + 15;   // Batas toleransi live selesai (14:15)
                 const isUpdated = typeof LIVE_RESULT_SDY !== 'undefined' && LIVE_RESULT_SDY.latestResult && LIVE_RESULT_SDY.latestResult !== "----";
-                return totalMinutes >= start && !isUpdated;
+                return totalMinutes >= start && totalMinutes < end && !isUpdated;
             } 
             else if (marketKey === 'sdylotto') {
-                const start = 13 * 60 + 55;
+                const start = 13 * 60 + 55; // 13:55
+                const end = 14 * 60 + 25;   // 14:25
                 const isUpdated = typeof LIVE_RESULT_SDYLOTTO !== 'undefined' && LIVE_RESULT_SDYLOTTO.latestResult && LIVE_RESULT_SDYLOTTO.latestResult !== "----";
-                return totalMinutes >= start && !isUpdated;
+                return totalMinutes >= start && totalMinutes < end && !isUpdated;
             }
             else if (marketKey === 'sgp') {
-                if (day === 2 || day === 5) return false;
-                const start = 17 * 60 + 45;
+                if (day === 2 || day === 5) return false; // Selasa & Jumat libur
+                const start = 17 * 60 + 45; // 17:45
+                const end = 18 * 60 + 15;   // 18:15
                 const isUpdated = typeof LIVE_RESULT_SGP !== 'undefined' && LIVE_RESULT_SGP.latestResult && LIVE_RESULT_SGP.latestResult !== "----";
-                return totalMinutes >= start && !isUpdated;
+                return totalMinutes >= start && totalMinutes < end && !isUpdated;
             } 
             else if (marketKey === 'hk') {
-                const start = 22 * 60 + 50;
-                // Asumsi durasi live kelap-kelip berjalan selama 10 menit (sampai 23:00) atau berhenti saat sudah ada result valid
-                const end = 23 * 60; 
+                const start = 22 * 60 + 50; // 22:50
+                const end = 23 * 60 + 30;   // 23:30
                 const isUpdated = typeof LIVE_RESULT_HK !== 'undefined' && LIVE_RESULT_HK.latestResult && LIVE_RESULT_HK.latestResult !== "----";
                 return totalMinutes >= start && totalMinutes < end && !isUpdated;
             }
             else if (marketKey === 'hklotto') {
-                const start = 22 * 60 + 55;
-                const end = 23 * 60 + 5;
+                const start = 22 * 60 + 55; // 22:55
+                const end = 23 * 60 + 35;   // 23:35
                 const isUpdated = typeof LIVE_RESULT_HKLOTTO !== 'undefined' && LIVE_RESULT_HKLOTTO.latestResult && LIVE_RESULT_HKLOTTO.latestResult !== "----";
                 return totalMinutes >= start && totalMinutes < end && !isUpdated;
             }
@@ -405,11 +408,11 @@
             const hkStart   = 22 * 60 + 50;
             const hklStart  = 22 * 60 + 55;
 
-            const sdyHasReleased  = currentTotalMinutes >= sdyStart;
-            const sdylHasReleased = currentTotalMinutes >= sdylStart;
-            const sgpHasReleased  = currentTotalMinutes >= sgpStart;
-            const hkHasReleased   = currentTotalMinutes >= hkStart;
-            const hklHasReleased  = currentTotalMinutes >= hklStart;
+            const sdyHasReleased  = currentTotalMinutes >= sdyStart && typeof LIVE_RESULT_SDY !== 'undefined' && LIVE_RESULT_SDY.latestResult && LIVE_RESULT_SDY.latestResult !== "----";
+            const sdylHasReleased = currentTotalMinutes >= sdylStart && typeof LIVE_RESULT_SDYLOTTO !== 'undefined' && LIVE_RESULT_SDYLOTTO.latestResult && LIVE_RESULT_SDYLOTTO.latestResult !== "----";
+            const sgpHasReleased  = currentTotalMinutes >= sgpStart && typeof LIVE_RESULT_SGP !== 'undefined' && LIVE_RESULT_SGP.latestResult && LIVE_RESULT_SGP.latestResult !== "----";
+            const hkHasReleased   = currentTotalMinutes >= hkStart && typeof LIVE_RESULT_HK !== 'undefined' && LIVE_RESULT_HK.latestResult && LIVE_RESULT_HK.latestResult !== "----";
+            const hklHasReleased  = currentTotalMinutes >= hklStart && typeof LIVE_RESULT_HKLOTTO !== 'undefined' && LIVE_RESULT_HKLOTTO.latestResult && LIVE_RESULT_HKLOTTO.latestResult !== "----";
 
             const rowCount = 15;
             for(let i = 0; i < rowCount; i++) {
@@ -427,11 +430,7 @@
                 // --- SYDNEY UTAMA ---
                 let sdyDisplay = "";
                 if (isToday) {
-                    if (sdyHasReleased && typeof LIVE_RESULT_SDY !== 'undefined' && LIVE_RESULT_SDY.latestResult && LIVE_RESULT_SDY.latestResult !== "----") {
-                        sdyDisplay = LIVE_RESULT_SDY.latestResult;
-                    } else {
-                        sdyDisplay = "-";
-                    }
+                    sdyDisplay = sdyHasReleased ? LIVE_RESULT_SDY.latestResult : "-";
                 } else {
                     let idx = sdyHasReleased ? i : i - 1;
                     sdyDisplay = sdy[idx] || '----';
@@ -440,11 +439,7 @@
                 // --- SDY LOTTO ---
                 let sdylDisplay = "";
                 if (isToday) {
-                    if (sdylHasReleased && typeof LIVE_RESULT_SDYLOTTO !== 'undefined' && LIVE_RESULT_SDYLOTTO.latestResult && LIVE_RESULT_SDYLOTTO.latestResult !== "----") {
-                        sdylDisplay = LIVE_RESULT_SDYLOTTO.latestResult;
-                    } else {
-                        sdylDisplay = "-";
-                    }
+                    sdylDisplay = sdylHasReleased ? LIVE_RESULT_SDYLOTTO.latestResult : "-";
                 } else {
                     let idx = sdylHasReleased ? i : i - 1;
                     sdylDisplay = sdyl[idx] || '----';
@@ -455,11 +450,7 @@
                 if (dayOfWeek === 2 || dayOfWeek === 5) {
                     sgpDisplay = "LIBUR";
                 } else if (isToday) {
-                    if (sgpHasReleased && typeof LIVE_RESULT_SGP !== 'undefined' && LIVE_RESULT_SGP.latestResult && LIVE_RESULT_SGP.latestResult !== "----") {
-                        sgpDisplay = LIVE_RESULT_SGP.latestResult;
-                    } else {
-                        sgpDisplay = "-";
-                    }
+                    sgpDisplay = sgpHasReleased ? LIVE_RESULT_SGP.latestResult : "-";
                 } else {
                     let idx = sgpHasReleased ? i : i - 1;
                     sgpDisplay = sgp[idx] || '----';
@@ -468,11 +459,7 @@
                 // --- HONGKONG ---
                 let hkDisplay = "";
                 if (isToday) {
-                    if (hkHasReleased && typeof LIVE_RESULT_HK !== 'undefined' && LIVE_RESULT_HK.latestResult && LIVE_RESULT_HK.latestResult !== "----") {
-                        hkDisplay = LIVE_RESULT_HK.latestResult;
-                    } else {
-                        hkDisplay = "-";
-                    }
+                    hkDisplay = hkHasReleased ? LIVE_RESULT_HK.latestResult : "-";
                 } else {
                     let idx = hkHasReleased ? i : i - 1;
                     hkDisplay = hk[idx] || '----';
@@ -481,11 +468,7 @@
                 // --- HK LOTTO ---
                 let hklDisplay = "";
                 if (isToday) {
-                    if (hklHasReleased && typeof LIVE_RESULT_HKLOTTO !== 'undefined' && LIVE_RESULT_HKLOTTO.latestResult && LIVE_RESULT_HKLOTTO.latestResult !== "----") {
-                        hklDisplay = LIVE_RESULT_HKLOTTO.latestResult;
-                    } else {
-                        hklDisplay = "-";
-                    }
+                    hklDisplay = hklHasReleased ? LIVE_RESULT_HKLOTTO.latestResult : "-";
                 } else {
                     let idx = hklHasReleased ? i : i - 1;
                     hklDisplay = hkl[idx] || '----';
@@ -507,7 +490,6 @@
         document.addEventListener("DOMContentLoaded", () => {
             renderApp();
             renderTable();
-            // Lakukan pembaruan secara berkala setiap 10 detik agar transisi status live, result, dan tabel otomatis terisi
             setInterval(() => {
                 renderApp();
                 renderTable();
