@@ -58,9 +58,9 @@ const DATA_PAITO_MACAU = `
   15 Aug,6344,9494,8480,6464,3062,6021,
   16 Aug,1126,1480,2750,7204,7003,2060,
   17 Aug,8474,1143,4641,8372,0607,5697,
-  18 Aug,7262,
+  18 Aug,7262,8142,
 `;
 
 const LIVE_RESULT_MACAU = {
-    latestResult: "7262"
+    latestResult: "8142"
 };
