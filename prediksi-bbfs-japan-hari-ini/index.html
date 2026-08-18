@@ -462,133 +462,152 @@
             }
         });
 
-        function hitungRumusCerdas(semuaResult, currentIndex) {
-            let targetIdx = currentIndex;
+        const lockedResultsCache = {};
 
-            let clean = semuaResult[targetIdx].replace(/\D/g, '');
-            if (clean.length < 4) {
-                for (let i = currentIndex - 1; i >= 0; i--) {
-                    let cleanPrev = semuaResult[i].replace(/\D/g, '');
-                    if (cleanPrev.length >= 4) {
-                        targetIdx = i;
+function hitungRumusCerdas(semuaResult, currentIndex) {
+    if (lockedResultsCache[currentIndex]) {
+        return lockedResultsCache[currentIndex];
+    }
+
+    let targetIdx = currentIndex;
+
+    let clean = semuaResult[targetIdx].replace(/\D/g, '');
+    if (clean.length < 4) {
+        for (let i = currentIndex - 1; i >= 0; i--) {
+            let cleanPrev = semuaResult[i].replace(/\D/g, '');
+            if (cleanPrev.length >= 4) {
+                targetIdx = i;
+                break;
+            }
+        }
+    }
+
+    let digits = [6, 4, 8, 9, 1, 3];
+    if (targetIdx !== -1) {
+        let cleanResult = semuaResult[targetIdx].replace(/\D/g, '');
+        if (cleanResult.length >= 4) {
+            digits = cleanResult.split('').map(Number);
+        }
+    }
+
+    let as = digits[0] || 0;
+    let kop = digits[1] || 0;       
+    let kepala = digits[2] || 0;
+    let ekor = digits[digits.length - 1] || 0;
+
+    const mistikLama = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
+    const mistikBaru = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
+    const indexVal   = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
+
+    let bbfsSet = new Set();
+
+    bbfsSet.add(as);
+    bbfsSet.add(kop);
+    bbfsSet.add(kepala);
+    bbfsSet.add(ekor);
+
+    bbfsSet.add(mistikLama[kepala] !== undefined ? mistikLama[kepala] : (kepala + 5) % 10);
+    bbfsSet.add(mistikLama[ekor] !== undefined ? mistikLama[ekor] : (ekor + 5) % 10);
+    bbfsSet.add(mistikBaru[ekor] !== undefined ? mistikBaru[ekor] : (ekor + 3) % 10);
+    bbfsSet.add(indexVal[kop] !== undefined ? indexVal[kop] : (kop + 5) % 10);
+    bbfsSet.add(indexVal[ekor] !== undefined ? indexVal[ekor] : (ekor + 5) % 10);
+
+    let jml2D = (kepala + ekor) % 10;
+    let jmlAll = (as + kop + kepala + ekor) % 10;
+    bbfsSet.add(jml2D);
+    bbfsSet.add(jmlAll);
+
+    let bbfs = Array.from(bbfsSet);
+
+    if (bbfs.length > 7) {
+        bbfs = bbfs.slice(0, 7);
+    } else if (bbfs.length < 7) {
+        let n = 0;
+        while (bbfs.length < 7 && n <= 9) {
+            if (!bbfs.includes(n)) {
+                bbfs.push(n);
+            }
+            n++;
+        }
+    }
+
+    bbfs.sort((a, b) => a - b);
+    
+    lockedResultsCache[currentIndex] = bbfs;
+    return bbfs;
+}
+
+function prosesDanTampilkanTrack(dataResult) {
+    const containerTrek = document.getElementById('japan-track');
+    if (!containerTrek) return;
+
+    containerTrek.innerHTML = '';
+
+    for (let i = 0; i < dataResult.length; i++) {
+        let resSaatIni = dataResult[i];
+        let list7Digit = hitungRumusCerdas(dataResult, i);
+        let string7Digit = list7Digit.join('');
+
+        let htmlStatus = '';
+
+        if (i < dataResult.length - 1) {
+            let cleanNext = dataResult[i + 1].replace(/\D/g, '');
+            let resBerikutnya = cleanNext.split('').map(Number);
+            
+            if (resBerikutnya.length >= 4) {
+                let asNext = resBerikutnya[0];
+                let kopNext = resBerikutnya[1];
+                let kepalaNext = resBerikutnya[2];
+                let ekorNext = resBerikutnya[resBerikutnya.length - 1];
+
+                // Urutan pengecekan mutlak dari Ekor -> Kepala -> Kop -> As
+                let resCekUrut = [ekorNext, kepalaNext, kopNext, asNext];
+                let matchedCount = 0;
+                let checkedDigits = new Set(); // Menyimpan angka yang sudah dicek untuk mendeteksi angka yang sama di depan
+
+                for (let digit of resCekUrut) {
+                    // Jika angka ini sudah pernah muncul sebelumnya dalam jalur pengecekan, stop!
+                    if (checkedDigits.has(digit)) {
                         break;
                     }
-                }
-            }
-
-            let digits = [6, 4, 8, 9, 1, 3];
-            if (targetIdx !== -1) {
-                let cleanResult = semuaResult[targetIdx].replace(/\D/g, '');
-                if (cleanResult.length >= 4) {
-                    digits = cleanResult.split('').map(Number);
-                }
-            }
-
-            let as = digits[0] || 0;
-            let kop = digits[1] || 0;       
-            let kepala = digits[2] || 0;
-            let ekor = digits[digits.length - 1] || 0;
-
-            // TABEL MISTIK & INDEX STANDAR PAITO
-            const mistikLama = {0:1, 1:0, 2:5, 3:8, 4:7, 5:2, 6:9, 7:4, 8:3, 9:6};
-            const mistikBaru = {0:8, 1:7, 2:6, 3:9, 4:5, 5:4, 6:2, 7:1, 8:0, 9:3};
-            const indexVal   = {0:5, 1:6, 2:7, 3:8, 4:9, 5:0, 6:1, 7:2, 8:3, 9:4};
-
-            let bbfsSet = new Set();
-
-            // Masukkan komponen dasar 4D
-            bbfsSet.add(as);
-            bbfsSet.add(kop);
-            bbfsSet.add(kepala);
-            bbfsSet.add(ekor);
-
-            // Masukkan Mistik & Index dari Kepala dan Ekor
-            bbfsSet.add(mistikLama[kepala] !== undefined ? mistikLama[kepala] : (kepala + 5) % 10);
-            bbfsSet.add(mistikLama[ekor] !== undefined ? mistikLama[ekor] : (ekor + 5) % 10);
-            bbfsSet.add(mistikBaru[ekor] !== undefined ? mistikBaru[ekor] : (ekor + 3) % 10);
-            bbfsSet.add(indexVal[kop] !== undefined ? indexVal[kop] : (kop + 5) % 10);
-            bbfsSet.add(indexVal[ekor] !== undefined ? indexVal[ekor] : (ekor + 5) % 10);
-
-            // Jumlah kontrol
-            let jml2D = (kepala + ekor) % 10;
-            let jmlAll = (as + kop + kepala + ekor) % 10;
-            bbfsSet.add(jml2D);
-            bbfsSet.add(jmlAll);
-
-            let bbfs = Array.from(bbfsSet);
-
-            // Pas 7 digit stabil
-            if (bbfs.length > 7) {
-                bbfs = bbfs.slice(0, 7);
-            } else if (bbfs.length < 7) {
-                let n = 0;
-                while (bbfs.length < 7 && n <= 9) {
-                    if (!bbfs.includes(n)) {
-                        bbfs.push(n);
-                    }
-                    n++;
-                }
-            }
-
-            bbfs.sort((a, b) => a - b);
-            return bbfs;
-        }
-
-        function prosesDanTampilkanTrack(dataResult) {
-            const containerTrek = document.getElementById('japan-track');
-            if (!containerTrek) return;
-
-            containerTrek.innerHTML = '';
-
-            for (let i = 0; i < dataResult.length; i++) {
-                let resSaatIni = dataResult[i];
-                let list7Digit = hitungRumusCerdas(dataResult, i);
-                let string7Digit = list7Digit.join('');
-
-                let htmlStatus = '';
-
-                if (i < dataResult.length - 1) {
-                    let cleanNext = dataResult[i + 1].replace(/\D/g, '');
-                    let resBerikutnya = cleanNext.split('').map(Number);
                     
-                    if (resBerikutnya.length >= 4) {
-                        let resCek = [resBerikutnya[0], resBerikutnya[1], resBerikutnya[2], resBerikutnya[resBerikutnya.length - 1]];
-                        let matchedCount = 0;
-                        let seenDigits = new Set();
+                    checkedDigits.add(digit);
 
-                        for (let digit of resCek) {
-                            if (list7Digit.includes(digit) && !seenDigits.has(digit)) {
-                                seenDigits.add(digit);
-                                matchedCount++;
-                            }
-                        }
-
-                        if (matchedCount >= 4) {
-                            htmlStatus = `<span class="status-check status-win">4D</span>`;
-                        } else if (matchedCount === 3) {
-                            htmlStatus = `<span class="status-check status-win">3D</span>`;
-                        } else if (matchedCount === 2) {
-                            htmlStatus = `<span class="status-check status-win">2D</span>`;
-                        } else {
-                            htmlStatus = `<span class="status-check status-lose">X</span>`;
-                        }
+                    // Cek apakah angka tersebut ada di dalam list 7 digit
+                    if (list7Digit.includes(digit)) {
+                        matchedCount++;
                     } else {
-                        htmlStatus = `<span class="status-check"></span>`;
+                        break; // Jika tidak masuk dalam list 7 digit, stop!
                     }
-                } else {
-                    htmlStatus = `<span class="status-check"></span>`;
                 }
 
-                containerTrek.innerHTML += `
-                    <div class="history-item">
-                        <span>${resSaatIni}</span>
-                        <span class="am-badge">  ${string7Digit}</span>
-                        <span>${htmlStatus}</span>
-                    </div>
-                `;
+                // Penilaian akhir berdasarkan jumlah kecocokan berurutan dari ekor
+                if (matchedCount === 4) {
+                    htmlStatus = `<span class="status-check status-win">4D</span>`;
+                } else if (matchedCount === 3) {
+                    htmlStatus = `<span class="status-check status-win">3D</span>`;
+                } else if (matchedCount === 2) {
+                    htmlStatus = `<span class="status-check status-win">2D</span>`;
+                } else {
+                    htmlStatus = `<span class="status-check status-lose">X</span>`;
+                }
+            } else {
+                htmlStatus = `<span class="status-check"></span>`;
             }
+        } else {
+            htmlStatus = `<span class="status-check"></span>`;
         }
-    </script>
+
+        containerTrek.innerHTML += `
+            <div class="history-item">
+                <span>${resSaatIni}</span>
+                <span class="am-badge">  ${string7Digit}</span>
+                <span>${htmlStatus}</span>
+            </div>
+        `;
+    }
+}
+        </script>
 <!-- START POPUP IKLAN -->
 <style>
     .popup-overlay {
