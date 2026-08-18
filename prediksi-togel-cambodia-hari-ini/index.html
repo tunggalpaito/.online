@@ -417,11 +417,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 
 <script>
-    // ID BIN BARU YANG SUDAH PUBLIC
-    const TP_BIN_ID = "6a83dbf5da38895dfef1428e"; 
+    // ID BIN BARU ANDA
+    const TP_BIN_ID = "6a83ee65da38895dfef16c24"; 
     const TP_API_URL = `https://api.jsonbin.io/v3/b/${TP_BIN_ID}/latest`;
 
-    // Otomatis isi kolom Nama dan Email dari localStorage jika sudah pernah tersimpan
+    // 💡 TENTUKAN NAMA HALAMAN DI SINI (Ganti sesuai nama pasaran halaman ini)
+    // Pilihan: "macau", "cambodia", "sdy", "sdylotto", "china", "japan", "sgp", "taiwan", "hklotto", "hk"
+    const TP_HALAMAN_ID = "cambodia"; 
+
+    // Otomatis isi kolom Nama dan Email dari localStorage
     window.addEventListener('DOMContentLoaded', () => {
         let savedNama = localStorage.getItem('tp_saved_nama');
         let savedEmail = localStorage.getItem('tp_saved_email');
@@ -436,12 +440,14 @@
         return `https://www.gravatar.com/avatar/${hash}?s=80&d=identicon`;
     }
 
-    // 1. Fungsi Ambil Komentar
+    // 1. Fungsi Ambil Komentar Khusus Halaman Ini
     async function tpMuatPublik() {
         try {
             let response = await fetch(TP_API_URL);
             let result = await response.json();
-            let dataKomentar = result.record.komentar || [];
+            
+            let semuaDataHalaman = result.record || {};
+            let dataKomentar = semuaDataHalaman[TP_HALAMAN_ID] || [];
             
             let html = "";
             if(dataKomentar.length === 0) {
@@ -467,7 +473,7 @@
         }
     }
 
-    // 2. Fungsi Kirim Komentar
+    // 2. Fungsi Kirim Komentar Khusus Halaman Ini
     async function tpKirimPublik() {
         let isi = document.getElementById("tp-komentar-isi").value.trim();
         let nama = document.getElementById("tp-komentar-nama").value.trim();
@@ -478,7 +484,6 @@
             return;
         }
 
-        // Simpan otomatis ke browser pengunjung (localStorage)
         localStorage.setItem('tp_saved_nama', nama);
         localStorage.setItem('tp_saved_email', email);
 
@@ -489,26 +494,26 @@
         let waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WIB";
         
         try {
-            // Ambil data lama
             let getRes = await fetch(TP_API_URL);
             let getResult = await getRes.json();
-            let dataKomentar = getResult.record.komentar || [];
+            
+            let semuaDataHalaman = getResult.record || {};
+            if (!semuaDataHalaman[TP_HALAMAN_ID]) {
+                semuaDataHalaman[TP_HALAMAN_ID] = [];
+            }
 
-            // Tambah komentar baru di posisi teratas
-            dataKomentar.unshift({ nama: nama, email: email, isi: isi, waktu: waktuSekarang });
+            semuaDataHalaman[TP_HALAMAN_ID].unshift({ nama: nama, email: email, isi: isi, waktu: waktuSekarang });
 
-            // Kirim update ke server
             let putRes = await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`, {
                 method: 'PUT',
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ komentar: dataKomentar })
+                body: JSON.stringify(semuaDataHalaman)
             });
 
             if(putRes.ok) {
                 document.getElementById("tp-komentar-isi").value = "";
-                // Kolom nama dan email sengaja dibiarkan tersimpan/tidak dikosongkan agar pengunjung tidak perlu mengetik ulang saat ingin berkomentar kembali
                 tpMuatPublik();
                 alert("Komentar berhasil dikirim!");
             } else {
@@ -522,7 +527,6 @@
         tombol.disabled = false;
     }
 
-    // Jalankan saat halaman dibuka
     tpMuatPublik();
 </script>
 
