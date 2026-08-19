@@ -24,40 +24,17 @@ LIVE DRAW & PAITO
 <div class=live-draw-grid id=liveDrawGrid></div>
 <div class=monthly-section>
 <table class=monthly-table id=monthlyTable>
-<thead>
-<tr>
-<th>TGL</th>
-<th>SYD</th>
-<th>SDY-L</th>
-<th>SGP</th>
-<th>HK</th>
-<th>HK-L</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
+<thead><tr><th>TGL</th><th>SYD</th><th>SDY-L</th><th>SGP</th><th>HK</th><th>HK-L</th></tr></thead>
+<tbody></tbody>
 </table>
 </div>
 <div class=seo-content-section>
 <h2>Pusat Live Draw & Result Tercepat Resmi</h2>
-<p>Selamat datang di <strong>Tunggal Paito</strong>, situs penyedia informasi live draw pasaran resmi terlengkap dan terakurat. Dapatkan update result angka keluar pasaran Sydney (SDY), Singapore (SGP), Hongkong (HK), serta pasaran lotto lainnya secara real-time hasil resmi.</p>
-<h3>Terkait TUNGGAL PAITO</h3>
-<div class=keyword-tags>
-<span class=keyword-tag>Live Draw Sdy</span>
-<span class=keyword-tag>Live Draw Sgp</span>
-<span class=keyword-tag>Live Draw Hk</span>
-<span class=keyword-tag>Result Sydney</span>
-<span class=keyword-tag>Result Singapore</span>
-<span class=keyword-tag>Result Hongkong</span>
-<span class=keyword-tag>Paito Warna Resmi</span>
-<span class=keyword-tag>Tunggal Paito</span>
-<span class=keyword-tag>Live Result Tercepat</span>
-</div>
+<p>Selamat datang di <strong>Tunggal Paito</strong>, situs penyedia informasi live draw pasaran resmi terlengkap dan terakurat.</p>
 </div>
 </div>
 <footer>
-<p>&copy; <span id=year></span> <span>TUNGGAL PAITO</span> All Rights Reserved. <br>| <a href=https://tunggalpaito.online/privacy-policy style=color:#ffb703;text-decoration:none>Kebijakan Privasi</a></p>
-<script>document.getElementById("year").textContent=(new Date).getFullYear()</script>
+<p>&copy; <span id=year></span> <span>TUNGGAL PAITO</span> All Rights Reserved.</p>
 </footer>
 <script src=/result/sdy.js?v=99></script>
 <script src=/result/sdylotto.js?v=99></script>
@@ -65,93 +42,31 @@ LIVE DRAW & PAITO
 <script src=/result/hk.js?v=99></script>
 <script src=/result/hklotto.js?v=99></script>
 <script>
-function parseData(e){if(Array.isArray(e))return e;return e?e.split(",").map((e=>e.trim())).filter((e=>e.length>0)):[]}
-function checkLiveStatus(e){const t=new Date,n=t.getHours(),s=t.getMinutes(),l=t.getDay(),a=60*n+s;if("sdy"===e||"sdylotto"===e){const e=835;return a>=825&&a<=e}if("sgp"===e){if(2===l||5===l)return!1;const e=1080;return a>=1065&&a<=e}if("hk"===e||"hklotto"===e){const e=1385;return a>=1365&&a<=e}return!1}
-function renderApp(){const e=[{key:"sdy",name:"SYDNEY",live:"undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:"----",color:"var(--color-sdy)"},{key:"sdylotto",name:"SDY LOTTO",live:"undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:"----",color:"var(--color-sdy)"},{key:"sgp",name:"SINGAPORE",live:"undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:"----",color:"var(--color-sgp)"},{key:"hk",name:"HONGKONG",live:"undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:"----",color:"var(--color-hk)"},{key:"hklotto",name:"HK LOTTO",live:"undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:"----",color:"var(--color-hk)"}];document.getElementById("liveDrawGrid").innerHTML=e.map((e=>{let t=checkLiveStatus(e.key)?"active-blink":"",n=e.live.split("").map((t=>`<div class="num-box" style="color:${e.color}">${t}</div>`)).join("");return`<div class="live-card"><div class="market-name" style="color:${e.color}">${e.name}</div><div class="live-badge ${t}">LIVE</div><div class="number-box-container">${n}</div></div>`})).join("")}
+function parseData(e){return Array.isArray(e)?e:(e?e.split(",").map(i=>i.trim()):[])}
+function renderApp(){const e=[{key:"sdy",name:"SYDNEY",live:"undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:"----",color:"var(--color-sdy)"},{key:"sdylotto",name:"SDY LOTTO",live:"undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:"----",color:"var(--color-sdy)"},{key:"sgp",name:"SINGAPORE",live:"undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:"----",color:"var(--color-sgp)"},{key:"hk",name:"HONGKONG",live:"undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:"----",color:"var(--color-hk)"},{key:"hklotto",name:"HK LOTTO",live:"undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:"----",color:"var(--color-hk)"}];document.getElementById("liveDrawGrid").innerHTML=e.map((e=>{return`<div class="live-card"><div class="market-name" style="color:${e.color}">${e.name}</div><div class="number-box-container">${e.live.split("").map(t=>`<div class="num-box" style="color:${e.color}">${t}</div>`).join("")}</div></div>`})).join("")}
 
-document.addEventListener("DOMContentLoaded",(()=>{
+document.addEventListener("DOMContentLoaded",()=>{
     renderApp();
-    setInterval(renderApp,1e4);
-
-    // Ambil dan balik data masing-masing secara independen
-    const arrSdy  = parseData("undefined"!=typeof DATA_PAITO_SDY?DATA_PAITO_SDY:"").reverse();
-    const arrSdyL = parseData("undefined"!=typeof DATA_PAITO_SDYLOTTO?DATA_PAITO_SDYLOTTO:"").reverse();
-    const arrSgp  = parseData("undefined"!=typeof DATA_PAITO_SGP?DATA_PAITO_SGP:"").reverse();
-    const arrHk   = parseData("undefined"!=typeof DATA_PAITO_HK?DATA_PAITO_HK:"").reverse();
-    const arrHkL  = parseData("undefined"!=typeof DATA_PAITO_HKLOTTO?DATA_PAITO_HKLOTTO:"").reverse();
-
+    const e=parseData(typeof DATA_PAITO_SDY!=="undefined"?DATA_PAITO_SDY:[]).reverse();
+    const t=parseData(typeof DATA_PAITO_SDYLOTTO!=="undefined"?DATA_PAITO_SDYLOTTO:[]).reverse();
+    const n=parseData(typeof DATA_PAITO_SGP!=="undefined"?DATA_PAITO_SGP:[]).reverse();
+    const s=parseData(typeof DATA_PAITO_HK!=="undefined"?DATA_PAITO_HK:[]).reverse();
+    const l=parseData(typeof DATA_PAITO_HKLOTTO!=="undefined"?DATA_PAITO_HKLOTTO:[]).reverse();
     const a=document.querySelector("#monthlyTable tbody");
-    a.innerHTML="";
-    const now=new Date, timeMin=60*now.getHours()+now.getMinutes();
-    const isSdyLiveTime = timeMin>=840;
-    const isSgpLiveTime = timeMin>=1095;
-    const isHkLiveTime  = timeMin>=1395;
-
-    let sgpIndex=0;
+    const r=new Date, o=60*r.getHours()+r.getMinutes(), d=o>=840, T=o>=1095, i=o>=1395;
+    let L=0;
     for(let r=0; r<15; r++){
-        let dt=new Date(); dt.setDate(dt.getDate()-r);
-        let dayOfWeek=dt.getDay();
-        let dateStr=`${String(dt.getDate()).padStart(2,"0")}-${String(dt.getMonth()+1).padStart(2,"0")}-${dt.getFullYear()}`;
-        let isToday=(0===r);
-
-        // --- SYDNEY ---
-        let c="";
-        if(isToday){
-            c = isSdyLiveTime ? ("undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:arrSdy[0]||"----") : "-";
-        } else {
-            let idx = isSdyLiveTime ? r : r-1;
-            c = arrSdy[idx] || "----";
-        }
-
-        // --- SDY LOTTO ---
-        let E="";
-        if(isToday){
-            E = isSdyLiveTime ? ("undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:arrSdyL[0]||"----") : "-";
-        } else {
-            let idx = isSdyLiveTime ? r : r-1;
-            E = arrSdyL[idx] || "----";
-        }
-
-        // --- SINGAPORE ---
-        let f="";
-        if(2===dayOfWeek||5===dayOfWeek){
-            f="LIBUR";
-        } else {
-            if(isToday){
-                f = isSgpLiveTime ? ("undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:arrSgp[sgpIndex]||"----") : "-";
-            } else {
-                f = arrSgp[isSgpLiveTime ? sgpIndex : sgpIndex] || arrSgp[sgpIndex] || "----";
-            }
-            sgpIndex++;
-        }
-
-        // --- HONGKONG ---
-        let O="";
-        if(isToday){
-            O = isHkLiveTime ? ("undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:arrHk[0]||"----") : "-";
-        } else {
-            let idx = isHkLiveTime ? r : r-1;
-            O = arrHk[idx] || "----";
-        }
-
-        // --- HK LOTTO ---
-        let D="";
-        if(isToday){
-            D = isHkLiveTime ? ("undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:arrHkL[0]||"----") : "-";
-        } else {
-            let idx = isHkLiveTime ? r : r-1;
-            D = arrHkL[idx] || "----";
-        }
-
-        a.innerHTML+=`<tr>
-            <td class="date-col">${dateStr}</td>
-            <td class="txt-sdy">${c}</td>
-            <td class="txt-sdy">${E}</td>
-            <td class="txt-sgp">${f}</td>
-            <td class="txt-hk">${O}</td>
-            <td class="txt-hk">${D}</td>
-        </tr>`;
+        let dDate=new Date(); dDate.setDate(dDate.getDate()-r);
+        let u=`${String(dDate.getDate()).padStart(2,"0")}-${String(dDate.getMonth()+1).padStart(2,"0")}`, day=dDate.getDay();
+        let c=d?(r==0?("undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:e[0]):e[r]):e[r]||"----";
+        let E=d?(r==0?("undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:t[0]):t[r]):t[r]||"----";
+        let f=(day==2||day==5)?"LIBUR":((r==0&&T)?("undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:n[L]):(n[L]||"----"));
+        if(day!=2&&day!=5) L++;
+        let O=i?(r==0?("undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:s[0]):s[r]):"----";
+        let D=i?(r==0?("undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:l[0]):l[r]):"----";
+        a.innerHTML+=`<tr><td class="date-col">${u}</td><td class="txt-sdy">${c}</td><td class="txt-sdy">${E}</td><td class="txt-sgp">${f}</td><td class="txt-hk">${O}</td><td class="txt-hk">${D}</td></tr>`;
     }
-}))</script>
+}))
+</script>
 </body>
 </html>
