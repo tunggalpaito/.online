@@ -318,7 +318,7 @@
     <script src="/result/hk.js"></script>
     <script src="/result/hklotto.js"></script>
 
-    <script>
+<script>
         function parseData(str) {
             if (!str) return [];
             return str.split(',').map(i => i.trim()).filter(i => i.length > 0);
@@ -438,12 +438,14 @@
                 } else {
                     if (isToday) {
                         if (sgpHasReleased) {
-                            sgpDisplay = typeof LIVE_RESULT_SGP !== 'undefined' ? LIVE_RESULT_SGP.latestResult : (sgp[0] || '----');
+                            sgpDisplay = typeof LIVE_RESULT_SGP !== 'undefined' ? LIVE_RESULT_SGP.latestResult : (sgp[sgpIndex] || '----');
                         } else {
                             sgpDisplay = "-";
                         }
                     } else {
-                        sgpDisplay = sgp[sgpIndex] || '----';
+                        // Pastikan pengambilan data paito SGP disesuaikan dengan index aktif hari buka
+                        let idxSgp = sgpHasReleased ? sgpIndex : sgpIndex - 1;
+                        sgpDisplay = sgp[idxSgp] || sgp[sgpIndex] || '----';
                     }
                     sgpIndex++; 
                 }
