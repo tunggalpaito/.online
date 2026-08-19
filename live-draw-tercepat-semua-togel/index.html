@@ -100,21 +100,23 @@ LIVE DRAW & PAITO
             E = t[idx] || "----";
         }
 
-        // Logika SGP (Cek Hari Libur: Selasa [2] dan Jumat [5])
-        // Logika SGP (Cek Hari Libur: Selasa [2] dan Jumat [5])
+// Logika SGP (Cek Hari Libur: Selasa [2] dan Jumat [5])
         let f = "";
         if (dayOfWeek === 2 || dayOfWeek === 5) {
             f = "LIBUR";
         } else {
             if (S) {
-                // Jika ada live result hari ini, pakai itu. Jika belum, ambil data array terbaru (n[0] atau n[indexSgp])
-                if (typeof LIVE_RESULT_SGP !== "undefined" && LIVE_RESULT_SGP.latestResult) {
+                // Untuk hari ini (19-08-2026)
+                if (T && typeof LIVE_RESULT_SGP !== "undefined" && LIVE_RESULT_SGP.latestResult) {
                     f = LIVE_RESULT_SGP.latestResult;
                 } else {
-                    f = n[indexSgp] || "----";
-                    indexSgp++; // Ambil untuk data historis berikutnya
+                    f = "-";
                 }
+                // Jika data array n sudah termasuk data hari ini di indeks ke-0, 
+                // kita increment indexSgp agar baris berikutnya (tanggal 17) mengambil data indeks ke-1 (angka di bawahnya).
+                indexSgp++; 
             } else {
+                // Untuk tanggal-tanggal sebelumnya (17-08-2026 dan seterusnya)
                 f = n[indexSgp] || "----";
                 indexSgp++;
             }
