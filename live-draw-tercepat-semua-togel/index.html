@@ -64,7 +64,50 @@ LIVE DRAW & PAITO
 <script src=/result/sgp.js></script>
 <script src=/result/hk.js></script>
 <script src=/result/hklotto.js></script>
-<script>function parseData(e){if(Array.isArray(e))return e;return e?e.split(",").map((e=>e.trim())).filter((e=>e.length>0)):[]}function checkLiveStatus(e){const t=new Date,n=t.getHours(),s=t.getMinutes(),l=t.getDay(),a=60*n+s;if("sdy"===e||"sdylotto"===e){const e=835;return a>=825&&a<=e}if("sgp"===e){if(2===l||5===l)return!1;const e=1080;return a>=1065&&a<=e}if("hk"===e||"hklotto"===e){const e=1385;return a>=1365&&a<=e}return!1}function renderApp(){const e=[{key:"sdy",name:"SYDNEY",live:"undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:"----",color:"var(--color-sdy)"},{key:"sdylotto",name:"SDY LOTTO",live:"undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:"----",color:"var(--color-sdy)"},{key:"sgp",name:"SINGAPORE",live:"undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:"----",color:"var(--color-sgp)"},{key:"hk",name:"HONGKONG",live:"undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:"----",color:"var(--color-hk)"},{key:"hklotto",name:"HK LOTTO",live:"undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:"----",color:"var(--color-hk)"}];document.getElementById("liveDrawGrid").innerHTML=e.map((e=>{let t=checkLiveStatus(e.key)?"active-blink":"",n=e.live.split("").map((t=>`<div class="num-box" style="color:${e.color}">${t}</div>`)).join("");return`\n                    <div class="live-card">\n                        <div class="market-name" style="color:${e.color}">${e.name}</div>\n                        <div class="live-badge ${t}">LIVE</div>\n                        <div class="number-box-container">${n}</div>\n                    </div>\n                `})).join("")}document.addEventListener("DOMContentLoaded", (() => {
+<script>
+function parseData(e){if(Array.isArray(e))return e;return e?e.split(",").map((e=>e.trim())).filter((e=>e.length>0)):[]}
+
+function checkLiveStatus(e){
+    const t=new Date,n=t.getHours(),s=t.getMinutes(),l=t.getDay(),a=60*n+s;
+    if("sdy"===e||"sdylotto"===e){const e=835;return a>=825&&a<=e}
+    if("sgp"===e){if(2===l||5===l)return!1;const e=1080;return a>=1065&&a<=e}
+    if("hk"===e||"hklotto"===e){const e=1385;return a>=1365&&a<=e}
+    return!1;
+}
+
+// Fungsi bantu untuk mengecek apakah result sudah keluar (bukan "----" atau "-")
+function isResultAvailable(res) {
+    return res && res !== "----" && res !== "-";
+}
+
+function renderApp(){
+    const e=[
+        {key:"sdy",name:"SYDNEY",live:"undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:"----",color:"var(--color-sdy)"},
+        {key:"sdylotto",name:"SDY LOTTO",live:"undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:"----",color:"var(--color-sdy)"},
+        {key:"sgp",name:"SINGAPORE",live:"undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:"----",color:"var(--color-sgp)"},
+        {key:"hk",name:"HONGKONG",live:"undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:"----",color:"var(--color-hk)"},
+        {key:"hklotto",name:"HK LOTTO",live:"undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:"----",color:"var(--color-hk)"}
+    ];
+
+    document.getElementById("liveDrawGrid").innerHTML=e.map((e=>{
+        let timeActive = checkLiveStatus(e.key);
+        let hasResult = isResultAvailable(e.live);
+        
+        // Animasi kelap-kelip hanya menyala jika waktu live aktif DAN result belum keluar
+        let t = (timeActive && !hasResult) ? "active-blink" : "";
+        
+        let n=e.live.split("").map((t=>`<div class="num-box" style="color:${e.color}">${t}</div>`)).join("");
+        return`
+            <div class="live-card">
+                <div class="market-name" style="color:${e.color}">${e.name}</div>
+                <div class="live-badge ${t}">LIVE</div>
+                <div class="number-box-container">${n}</div>
+            </div>
+        `;
+    })).join("");
+}
+
+document.addEventListener("DOMContentLoaded", (() => {
     renderApp(), setInterval(renderApp, 1e4);
     const e = parseData("undefined" != typeof DATA_PAITO_SDY ? DATA_PAITO_SDY : "").reverse(),
           t = parseData("undefined" != typeof DATA_PAITO_SDYLOTTO ? DATA_PAITO_SDYLOTTO : "").reverse(),
@@ -80,7 +123,7 @@ LIVE DRAW & PAITO
           T = o >= 1095,
           i = o >= 1395;
 
-    let indexSgp = 0; // Indeks khusus untuk data SGP agar sinkron
+    let indexSgp = 0;
 
     for (let r = 0; r < 15; r++) {
         let o = new Date();
@@ -92,31 +135,31 @@ LIVE DRAW & PAITO
 
         // Logika SDY
         if (S) {
-            c = d ? ("undefined" != typeof LIVE_RESULT_SDY ? LIVE_RESULT_SDY.latestResult : e[0] || "----") : "-";
-            E = d ? ("undefined" != typeof LIVE_RESULT_SDYLOTTO ? LIVE_RESULT_SDYLOTTO.latestResult : t[0] || "----") : "-";
+            let liveSdy = "undefined" != typeof LIVE_RESULT_SDY ? LIVE_RESULT_SDY.latestResult : "";
+            let liveSdyLotto = "undefined" != typeof LIVE_RESULT_SDYLOTTO ? LIVE_RESULT_SDYLOTTO.latestResult : "";
+            
+            c = isResultAvailable(liveSdy) ? liveSdy : (d ? (e[0] || "----") : "-");
+            E = isResultAvailable(liveSdyLotto) ? liveSdyLotto : (d ? (t[0] || "----") : "-");
         } else {
             let idx = d ? r : r - 1;
             c = e[idx] || "----";
             E = t[idx] || "----";
         }
 
-// Logika SGP (Cek Hari Libur: Selasa [2] dan Jumat [5])
+        // Logika SGP
         let f = "";
         if (dayOfWeek === 2 || dayOfWeek === 5) {
             f = "LIBUR";
         } else {
             if (S) {
-                // Untuk hari ini (19-08-2026)
-                if (T && typeof LIVE_RESULT_SGP !== "undefined" && LIVE_RESULT_SGP.latestResult) {
-                    f = LIVE_RESULT_SGP.latestResult;
+                let liveSgp = "undefined" != typeof LIVE_RESULT_SGP ? LIVE_RESULT_SGP.latestResult : "";
+                if (isResultAvailable(liveSgp)) {
+                    f = liveSgp;
                 } else {
-                    f = "-";
+                    f = T ? (n[0] || "-") : "-";
                 }
-                // Jika data array n sudah termasuk data hari ini di indeks ke-0, 
-                // kita increment indexSgp agar baris berikutnya (tanggal 17) mengambil data indeks ke-1 (angka di bawahnya).
                 indexSgp++; 
             } else {
-                // Untuk tanggal-tanggal sebelumnya (17-08-2026 dan seterusnya)
                 f = n[indexSgp] || "----";
                 indexSgp++;
             }
@@ -125,8 +168,11 @@ LIVE DRAW & PAITO
         // Logika HK
         let O = "", D = "";
         if (S) {
-            O = i ? ("undefined" != typeof LIVE_RESULT_HK ? LIVE_RESULT_HK.latestResult : s[0] || "----") : "-";
-            D = i ? ("undefined" != typeof LIVE_RESULT_HKLOTTO ? LIVE_RESULT_HKLOTTO.latestResult : l[0] || "----") : "-";
+            let liveHk = "undefined" != typeof LIVE_RESULT_HK ? LIVE_RESULT_HK.latestResult : "";
+            let liveHkLotto = "undefined" != typeof LIVE_RESULT_HKLOTTO ? LIVE_RESULT_HKLOTTO.latestResult : "";
+            
+            O = isResultAvailable(liveHk) ? liveHk : (i ? (s[0] || "----") : "-");
+            D = isResultAvailable(liveHkLotto) ? liveHkLotto : (i ? (l[0] || "----") : "-");
         } else {
             let idxHk = i ? r : r - 1;
             O = s[idxHk] || "----";
@@ -144,6 +190,17 @@ LIVE DRAW & PAITO
             </tr>
         `;
     }
-}));</script>
+}));
+</script>
+<script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123) return false; // Blokir F12 (Inspect Element)
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+    }
+    </script>
 </body>
 </html>
