@@ -67,130 +67,82 @@ LIVE DRAW & PAITO
 <script>
 function parseData(e){if(Array.isArray(e))return e;return e?e.split(",").map((e=>e.trim())).filter((e=>e.length>0)):[]}
 
-function checkLiveStatus(e){
-    const t=new Date,n=t.getHours(),s=t.getMinutes(),l=t.getDay(),a=60*n+s;
-    if("sdy"===e||"sdylotto"===e){const e=835;return a>=825&&a<=e}
-    if("sgp"===e){if(2===l||5===l)return!1;const e=1080;return a>=1065&&a<=e}
-    if("hk"===e||"hklotto"===e){const e=1385;return a>=1365&&a<=e}
-    return!1;
+// Fungsi untuk menentukan apakah jadwal live sedang berlangsung
+function checkLiveStatus(key){
+    const now = new Date, h = now.getHours(), m = now.getMinutes(), day = now.getDay(), totalM = 60 * h + m;
+    if("sdy" === key || "sdylotto" === key) return (totalM >= 825 && totalM <= 835);
+    if("sgp" === key) return (day !== 2 && day !== 5 && totalM >= 1065 && totalM <= 1080);
+    if("hk" === key) return (totalM >= 1365 && totalM <= 1385);
+    if("hklotto" === key) return (totalM >= 1386 && totalM <= 1400); // Sesuaikan jam hklotto di sini
+    return !1;
 }
 
-// Fungsi bantu untuk mengecek apakah result sudah keluar (bukan "----" atau "-")
-function isResultAvailable(res) {
-    return res && res !== "----" && res !== "-";
-}
+function isDataValid(d) { return d !== undefined && d !== "----" && d !== "-" && d !== ""; }
 
 function renderApp(){
-    const e=[
-        {key:"sdy",name:"SYDNEY",live:"undefined"!=typeof LIVE_RESULT_SDY?LIVE_RESULT_SDY.latestResult:"----",color:"var(--color-sdy)"},
-        {key:"sdylotto",name:"SDY LOTTO",live:"undefined"!=typeof LIVE_RESULT_SDYLOTTO?LIVE_RESULT_SDYLOTTO.latestResult:"----",color:"var(--color-sdy)"},
-        {key:"sgp",name:"SINGAPORE",live:"undefined"!=typeof LIVE_RESULT_SGP?LIVE_RESULT_SGP.latestResult:"----",color:"var(--color-sgp)"},
-        {key:"hk",name:"HONGKONG",live:"undefined"!=typeof LIVE_RESULT_HK?LIVE_RESULT_HK.latestResult:"----",color:"var(--color-hk)"},
-        {key:"hklotto",name:"HK LOTTO",live:"undefined"!=typeof LIVE_RESULT_HKLOTTO?LIVE_RESULT_HKLOTTO.latestResult:"----",color:"var(--color-hk)"}
+    const markets = [
+        {key:"sdy",name:"SYDNEY",live:typeof LIVE_RESULT_SDY!=="undefined"?LIVE_RESULT_SDY.latestResult:"----",color:"var(--color-sdy)"},
+        {key:"sdylotto",name:"SDY LOTTO",live:typeof LIVE_RESULT_SDYLOTTO!=="undefined"?LIVE_RESULT_SDYLOTTO.latestResult:"----",color:"var(--color-sdy)"},
+        {key:"sgp",name:"SINGAPORE",live:typeof LIVE_RESULT_SGP!=="undefined"?LIVE_RESULT_SGP.latestResult:"----",color:"var(--color-sgp)"},
+        {key:"hk",name:"HONGKONG",live:typeof LIVE_RESULT_HK!=="undefined"?LIVE_RESULT_HK.latestResult:"----",color:"var(--color-hk)"},
+        {key:"hklotto",name:"HK LOTTO",live:typeof LIVE_RESULT_HKLOTTO!=="undefined"?LIVE_RESULT_HKLOTTO.latestResult:"----",color:"var(--color-hk)"}
     ];
 
-    document.getElementById("liveDrawGrid").innerHTML=e.map((e=>{
-        let timeActive = checkLiveStatus(e.key);
-        let hasResult = isResultAvailable(e.live);
-        
-        // Animasi kelap-kelip hanya menyala jika waktu live aktif DAN result belum keluar
-        let t = (timeActive && !hasResult) ? "active-blink" : "";
-        
-        let n=e.live.split("").map((t=>`<div class="num-box" style="color:${e.color}">${t}</div>`)).join("");
-        return`
+    document.getElementById("liveDrawGrid").innerHTML = markets.map(m => {
+        let isLive = checkLiveStatus(m.key) && !isDataValid(m.live);
+        let blink = isLive ? "active-blink" : "";
+        let numBox = m.live.split("").map(n => `<div class="num-box" style="color:${m.color}">${n}</div>`).join("");
+        return `
             <div class="live-card">
-                <div class="market-name" style="color:${e.color}">${e.name}</div>
-                <div class="live-badge ${t}">LIVE</div>
-                <div class="number-box-container">${n}</div>
+                <div class="market-name" style="color:${m.color}">${m.name}</div>
+                <div class="live-badge ${blink}">LIVE</div>
+                <div class="number-box-container">${numBox}</div>
             </div>
         `;
-    })).join("");
+    }).join("");
 }
 
-document.addEventListener("DOMContentLoaded", (() => {
-    renderApp(), setInterval(renderApp, 1e4);
-    const e = parseData("undefined" != typeof DATA_PAITO_SDY ? DATA_PAITO_SDY : "").reverse(),
-          t = parseData("undefined" != typeof DATA_PAITO_SDYLOTTO ? DATA_PAITO_SDYLOTTO : "").reverse(),
-          n = parseData("undefined" != typeof DATA_PAITO_SGP ? DATA_PAITO_SGP : "").reverse(),
-          s = parseData("undefined" != typeof DATA_PAITO_HK ? DATA_PAITO_HK : "").reverse(),
-          l = parseData("undefined" != typeof DATA_PAITO_HKLOTTO ? DATA_PAITO_HKLOTTO : "").reverse(),
-          a = document.querySelector("#monthlyTable tbody");
-    a.innerHTML = "";
+document.addEventListener("DOMContentLoaded", () => {
+    renderApp(); setInterval(renderApp, 5000);
     
-    const r = new Date,
-          o = 60 * r.getHours() + r.getMinutes(),
-          d = o >= 840,
-          T = o >= 1095,
-          i = o >= 1395;
-
-    let indexSgp = 0;
-
+    const arrSDY = parseData(typeof DATA_PAITO_SDY !== "undefined" ? DATA_PAITO_SDY : "").reverse();
+    const arrSDYL = parseData(typeof DATA_PAITO_SDYLOTTO !== "undefined" ? DATA_PAITO_SDYLOTTO : "").reverse();
+    const arrSGP = parseData(typeof DATA_PAITO_SGP !== "undefined" ? DATA_PAITO_SGP : "").reverse();
+    const arrHK = parseData(typeof DATA_PAITO_HK !== "undefined" ? DATA_PAITO_HK : "").reverse();
+    const arrHKL = parseData(typeof DATA_PAITO_HKLOTTO !== "undefined" ? DATA_PAITO_HKLOTTO : "").reverse();
+    
+    const tbody = document.querySelector("#monthlyTable tbody");
+    tbody.innerHTML = "";
+    
+    let sgpIdx = 0;
     for (let r = 0; r < 15; r++) {
-        let o = new Date();
-        o.setDate(o.getDate() - r);
-        let dayOfWeek = o.getDay(),
-            u = `${String(o.getDate()).padStart(2,"0")}-${String(o.getMonth()+1).padStart(2,"0")}-${o.getFullYear()}`,
-            S = 0 === r,
-            c = "", E = "";
-
-        // Logika SDY
-        if (S) {
-            let liveSdy = "undefined" != typeof LIVE_RESULT_SDY ? LIVE_RESULT_SDY.latestResult : "";
-            let liveSdyLotto = "undefined" != typeof LIVE_RESULT_SDYLOTTO ? LIVE_RESULT_SDYLOTTO.latestResult : "";
-            
-            c = isResultAvailable(liveSdy) ? liveSdy : (d ? (e[0] || "----") : "-");
-            E = isResultAvailable(liveSdyLotto) ? liveSdyLotto : (d ? (t[0] || "----") : "-");
-        } else {
-            let idx = d ? r : r - 1;
-            c = e[idx] || "----";
-            E = t[idx] || "----";
+        let d = new Date(); d.setDate(d.getDate() - r);
+        let tgl = `${String(d.getDate()).padStart(2,"0")}-${String(d.getMonth()+1).padStart(2,"0")}-${d.getFullYear()}`;
+        
+        // Logika Data
+        let valSDY = (r === 0 && isDataValid(typeof LIVE_RESULT_SDY!=="undefined"?LIVE_RESULT_SDY.latestResult:"")) ? LIVE_RESULT_SDY.latestResult : (arrSDY[r] || "----");
+        let valSDYL = (r === 0 && isDataValid(typeof LIVE_RESULT_SDYLOTTO!=="undefined"?LIVE_RESULT_SDYLOTTO.latestResult:"")) ? LIVE_RESULT_SDYLOTTO.latestResult : (arrSDYL[r] || "----");
+        
+        let valSGP = "";
+        if (d.getDay() === 2 || d.getDay() === 5) { valSGP = "LIBUR"; } 
+        else {
+            valSGP = (r === 0 && isDataValid(typeof LIVE_RESULT_SGP!=="undefined"?LIVE_RESULT_SGP.latestResult:"")) ? LIVE_RESULT_SGP.latestResult : (arrSGP[sgpIdx] || "----");
+            sgpIdx++;
         }
+        
+        let valHK = (r === 0 && isDataValid(typeof LIVE_RESULT_HK!=="undefined"?LIVE_RESULT_HK.latestResult:"")) ? LIVE_RESULT_HK.latestResult : (arrHK[r] || "----");
+        let valHKL = (r === 0 && isDataValid(typeof LIVE_RESULT_HKLOTTO!=="undefined"?LIVE_RESULT_HKLOTTO.latestResult:"")) ? LIVE_RESULT_HKLOTTO.latestResult : (arrHKL[r] || "----");
 
-        // Logika SGP
-        let f = "";
-        if (dayOfWeek === 2 || dayOfWeek === 5) {
-            f = "LIBUR";
-        } else {
-            if (S) {
-                let liveSgp = "undefined" != typeof LIVE_RESULT_SGP ? LIVE_RESULT_SGP.latestResult : "";
-                if (isResultAvailable(liveSgp)) {
-                    f = liveSgp;
-                } else {
-                    f = T ? (n[0] || "-") : "-";
-                }
-                indexSgp++; 
-            } else {
-                f = n[indexSgp] || "----";
-                indexSgp++;
-            }
-        }
-
-        // Logika HK
-        let O = "", D = "";
-        if (S) {
-            let liveHk = "undefined" != typeof LIVE_RESULT_HK ? LIVE_RESULT_HK.latestResult : "";
-            let liveHkLotto = "undefined" != typeof LIVE_RESULT_HKLOTTO ? LIVE_RESULT_HKLOTTO.latestResult : "";
-            
-            O = isResultAvailable(liveHk) ? liveHk : (i ? (s[0] || "----") : "-");
-            D = isResultAvailable(liveHkLotto) ? liveHkLotto : (i ? (l[0] || "----") : "-");
-        } else {
-            let idxHk = i ? r : r - 1;
-            O = s[idxHk] || "----";
-            D = l[idxHk] || "----";
-        }
-
-        a.innerHTML += `
-            <tr>
-                <td class="date-col">${u}</td>
-                <td class="txt-sdy">${c}</td>
-                <td class="txt-sdy">${E}</td>
-                <td class="txt-sgp">${f}</td>
-                <td class="txt-hk">${O}</td>
-                <td class="txt-hk">${D}</td>
-            </tr>
-        `;
+        tbody.innerHTML += `<tr>
+            <td class="date-col">${tgl}</td>
+            <td class="txt-sdy">${valSDY}</td>
+            <td class="txt-sdy">${valSDYL}</td>
+            <td class="txt-sgp">${valSGP}</td>
+            <td class="txt-hk">${valHK}</td>
+            <td class="txt-hk">${valHKL}</td>
+        </tr>`;
     }
-}));
+});
 </script>
 <script>
     document.addEventListener('contextmenu', event => event.preventDefault());
@@ -201,6 +153,6 @@ document.addEventListener("DOMContentLoaded", (() => {
         if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
         if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
     }
-    </script>
+</script>
 </body>
 </html>
