@@ -184,11 +184,23 @@
       .split(',')
       .filter(n => n.length > 0);
 
+    // Ambil data hari ini
+    let todayResult = "-";
+    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-" && liveObj.latestResult.trim() !== "") {
+      todayResult = liveObj.latestResult.trim();
+    }
+
+    // FITUR ANTI-DOBEL OTOMATIS:
+    // Jika angka terakhir di DATA_PAITO_HKLOTTO sama dengan LIVE_RESULT_HKLOTTO hari ini,
+    // kita sembunyikan sementara angka terakhir itu supaya tidak masuk ke tanggal kemarin
+    if (numberList.length > 0 && todayResult !== "-" && numberList[numberList.length - 1] === todayResult) {
+      numberList.pop(); 
+    }
+
     const dataByDate = {};
-    
-    // Ambil data dari baris paling belakang agar sinkron dengan tanggal kemarin mundur ke bawah
     let numIndex = numberList.length - 1;
 
+    // Memasukkan data paito untuk tanggal-tanggal kemarin ke bawah
     for (let i = dates.length - 2; i >= 0; i--) {
       const d = dates[i];
       if (numIndex >= 0) {
@@ -199,16 +211,9 @@
       }
     }
 
-    // Tanggal Hari Ini
+    // Memasukkan data khusus untuk tanggal Hari Ini
     const todayStr = dates[dates.length - 1].dateStr;
-    let todayResult = "-";
-
-    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-" && liveObj.latestResult.trim() !== "") {
-      todayResult = liveObj.latestResult.trim();
-      dataByDate[todayStr] = todayResult; 
-    } else {
-      dataByDate[todayStr] = "-"; 
-    }
+    dataByDate[todayStr] = todayResult; 
 
     // Render Tabel
     const tbody = document.getElementById('table-body');
