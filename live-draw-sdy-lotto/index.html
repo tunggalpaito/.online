@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TUNGGAL PAITO LIVE DRAW - SYDNEY POOLS</title>
+  <title>TUNGGAL PAITO LIVE DRAW - SYDNEY LOTTO</title>
   <style>
     :root {
       --bg-amoled: #000000;
@@ -100,8 +100,8 @@
   <h1><a href="https://tunggalpaito.online/" target="_blank">TUNGGAL PAITO</a><br><span style="font-size: 1.5rem; color: #fff;">LIVE DRAW</span></h1>
 
   <div class="live-card">
-    <div class="market-title" id="market-name">SYDNEY POOLS</div>
-    <div class="live-status" id="live-status">Jadwal Live : Setiap Hari</div>
+    <div class="market-title" id="market-name">SYDNEY LOTTO</div>
+    <div class="live-status" id="live-status">Jadwal Live : Setiap Hari (13:55 WIB)</div>
     <div class="number-display" id="number-container">
       <div class="digit-box empty">-</div>
       <div class="digit-box empty">-</div>
@@ -124,8 +124,8 @@
   </div>
 
   <div class="seo-keywords">
-    <h3>Paito Warna & Live Result Sydney Pools</h3>
-    <p>Tunggal Paito Live Draw menyediakan data pengeluaran angka jitu dan live result Sydney Pools tercepat setiap hari.</p>
+    <h3>Paito Warna & Live Result Sydney Lotto</h3>
+    <p>Tunggal Paito Live Draw menyediakan data pengeluaran angka jitu dan live result Sydney Lotto tercepat setiap hari.</p>
   </div>
 
   <footer>
@@ -133,8 +133,8 @@
   </footer>
 </div>
 
-<!-- Panggil file JS SDY -->
-<script src="/result/sdy.js"></script>
+<!-- Panggil file JS SDY Lotto -->
+<script src="/result/sdylotto.js"></script>
 
 <script>
   document.getElementById("year").textContent = (new Date()).getFullYear();
@@ -175,40 +175,43 @@
   function renderView() {
     const dates = generateDateList();
     
-    // Variabel khusus SDY dari file sdy.js
-    const rawPaito = typeof DATA_PAITO_SDY !== 'undefined' ? DATA_PAITO_SDY : "";
-    const liveObj = typeof LIVE_RESULT_SDY !== 'undefined' ? LIVE_RESULT_SDY : { latestResult: "-" };
+    const rawPaito = typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "";
+    const liveObj = typeof LIVE_RESULT_SDYLOTTO !== 'undefined' ? LIVE_RESULT_SDYLOTTO : { latestResult: "-" };
 
+    // Membersihkan spasi, baris baru (\n), dan koma
     let numberList = rawPaito
-      .replace(/\s+/g, '')
+      .replace(/[\s,\n]+/g, ',')
       .split(',')
       .filter(n => n.length > 0);
 
-    const dataByDate = {};
-    let numIndex = 0;
+    // Ambil data hari ini
+    let todayResult = "-";
+    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-" && liveObj.latestResult.trim() !== "") {
+      todayResult = liveObj.latestResult.trim();
+    }
 
-    // Hanya ambil data paito untuk hari-hari sebelumnya
-    for (let i = 0; i < dates.length - 1; i++) {
+    // Fitur Anti-Dobel Otomatis
+    if (numberList.length > 0 && todayResult !== "-" && numberList[numberList.length - 1] === todayResult) {
+      numberList.pop(); 
+    }
+
+    const dataByDate = {};
+    let numIndex = numberList.length - 1;
+
+    // Memasukkan data paito untuk tanggal-tanggal kemarin ke bawah
+    for (let i = dates.length - 2; i >= 0; i--) {
       const d = dates[i];
-      if (numIndex < numberList.length) {
+      if (numIndex >= 0) {
         dataByDate[d.dateStr] = numberList[numIndex];
-        numIndex++;
+        numIndex--;
       } else {
         dataByDate[d.dateStr] = "-";
       }
     }
 
-    // Tanggal hari ini
+    // Memasukkan data khusus untuk tanggal Hari Ini
     const todayStr = dates[dates.length - 1].dateStr;
-    let todayResult = "-";
-
-    // KUNCI UTAMA: Hari ini wajib strip (-) kecuali file sdy.js benar-benar di-update
-    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-" && liveObj.latestResult.trim() !== "") {
-      todayResult = liveObj.latestResult.trim();
-      dataByDate[todayStr] = todayResult;
-    } else {
-      dataByDate[todayStr] = "-";
-    }
+    dataByDate[todayStr] = todayResult; 
 
     // Render Tabel
     const tbody = document.getElementById('table-body');
@@ -227,12 +230,12 @@
       tbody.appendChild(tr);
     }
 
-    // Logika Waktu Kelap-Kelip SDY (Contoh mulai pukul 13:30 WIB)
+    // Logika Waktu Kelap-Kelip (Diset tepat jam 13:55)
     const now = new Date();
     const currentHours = now.getHours();
     const currentMinutes = now.getMinutes();
     const currentTimeInMinutes = currentHours * 60 + currentMinutes;
-    const targetStartTime = 13 * 60 + 30; // Pukul 13:30
+    const targetStartTime = 13 * 60 + 55; // Pukul 13:55
 
     const container = document.getElementById('number-container');
 
@@ -249,12 +252,10 @@
       }
 
     } else if (currentTimeInMinutes >= targetStartTime) {
-      // Lewat jam 13:30 dan data belum diperbarui di file sdy.js -> Kelap-kelip
       container.classList.add('blinking');
       renderStaticDigits("----");
       lastRenderedResult = null;
     } else {
-      // Sebelum jam 13:30 -> Diam, tetap strip (-)
       container.classList.remove('blinking');
       renderStaticDigits("----");
       lastRenderedResult = null;
@@ -309,4 +310,4 @@
   }, 60000);
 </script>
 </body>
-  </html>
+</html>
