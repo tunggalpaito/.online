@@ -152,7 +152,6 @@
     const daysName = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const today = new Date();
 
-    // Membuat list 30 hari ke belakang (indeks terakhir [29] adalah hari ini)
     for (let i = 29; i >= 0; i--) {
       const d = new Date();
       d.setDate(today.getDate() - i);
@@ -179,15 +178,16 @@
     const rawPaito = typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "";
     const liveObj = typeof LIVE_RESULT_HKLOTTO !== 'undefined' ? LIVE_RESULT_HKLOTTO : { latestResult: "-" };
 
+    // Membersihkan spasi, baris baru (\n), dan koma agar menjadi array angka yang bersih
     let numberList = rawPaito
-      .replace(/\s+/g, '')
+      .replace(/[\s,\n]+/g, ',')
       .split(',')
       .filter(n => n.length > 0);
 
     const dataByDate = {};
     let numIndex = 0;
 
-    // AMBIL HANYA UNTUK HARI-HARI SEBELUMNYA (Mulai dari indeks 0 sampai sebelum hari ini)
+    // Memasukkan data paito ke tanggal-tanggal sebelumnya
     for (let i = 0; i < dates.length - 1; i++) {
       const d = dates[i];
       if (numIndex < numberList.length) {
@@ -198,16 +198,15 @@
       }
     }
 
-    // TANGGAL HARI INI (Posisi terakhir di array dates)
+    // Tanggal Hari Ini
     const todayStr = dates[dates.length - 1].dateStr;
     let todayResult = "-";
 
-    // KUNCI UTAMA: Hari ini WAJIB tetap strip (-) kecuali variabel live benar-benar di-update
     if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-" && liveObj.latestResult.trim() !== "") {
       todayResult = liveObj.latestResult.trim();
-      dataByDate[todayStr] = todayResult; // Hanya masuk jika sudah diperbarui di file JS
+      dataByDate[todayStr] = todayResult; 
     } else {
-      dataByDate[todayStr] = "-"; // Paksa tetap strip jika belum diperbarui
+      dataByDate[todayStr] = "-"; 
     }
 
     // Render Tabel
@@ -227,12 +226,12 @@
       tbody.appendChild(tr);
     }
 
-    // Logika Waktu Kelap-Kelip (Mulai 22:55 sampai data baru masuk)
+    // Logika Waktu Kelap-Kelip (Mulai 22:55)
     const now = new Date();
     const currentHours = now.getHours();
     const currentMinutes = now.getMinutes();
     const currentTimeInMinutes = currentHours * 60 + currentMinutes;
-    const targetStartTime = 22 * 60 + 55; // Pukul 22:55
+    const targetStartTime = 22 * 60 + 55;
 
     const container = document.getElementById('number-container');
 
@@ -249,12 +248,10 @@
       }
 
     } else if (currentTimeInMinutes >= targetStartTime) {
-      // Lewat jam 22:55 dan data belum diperbarui di file JS -> Kelap-kelip
       container.classList.add('blinking');
       renderStaticDigits("----");
       lastRenderedResult = null;
     } else {
-      // Sebelum jam 22:55 -> Diam tanpa kelap-kelip, tetap strip (-)
       container.classList.remove('blinking');
       renderStaticDigits("----");
       lastRenderedResult = null;
@@ -299,12 +296,11 @@
       } else {
         clearInterval(animationInterval);
       }
-    }, 3000); // Muncul berurutan tiap 3 detik
+    }, 3000);
   }
 
   renderView();
 
-  // Auto-refresh setiap 1 menit untuk memantau pembaruan file hklotto.js
   setInterval(() => {
     location.reload();
   }, 60000);
