@@ -34,9 +34,7 @@
       text-decoration: none;
       transition: opacity 0.3s ease;
     }
-    h1 a:hover {
-      opacity: 0.8;
-    }
+    h1 a:hover { opacity: 0.8; }
 
     .live-card { 
       background: var(--card-bg); 
@@ -97,7 +95,7 @@
 
   <div class="live-card">
     <div class="market-title" id="market-name">SDY LOTTO</div>
-    <div class="live-status" id="live-status">Jadwal Live: Setiap Hari</div>
+    <div class="live-status" id="live-status">Jadwal Live : Setiap Hari</div>
     <div class="number-display" id="number-container">
       <div class="digit-box">-</div>
       <div class="digit-box">-</div>
@@ -135,13 +133,12 @@
 <script>
   document.getElementById("year").textContent = (new Date()).getFullYear();
 
-  document.addEventListener("contextmenu", e => e.preventDefault());
+  // Pengaman halaman (Blokir Klik Kanan & Inspect Element)
+  document.addEventListener('contextmenu', e => e.preventDefault());
   document.onkeydown = function(e) {
-    if (123 == e.keyCode) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == "C".charCodeAt(0)) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) return false;
-    if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) return false;
+    if (e.keyCode == 123) return false; // F12
+    if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67 || e.keyCode == 75 || e.keyCode == 74)) return false; // Ctrl+Shift+I/C/J
+    if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U
   };
 
   function generateDateList() {
@@ -191,6 +188,17 @@
       }
     }
 
+    const todayStr = dates[dates.length - 1].dateStr;
+    let todayResult = "-";
+
+    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-") {
+      todayResult = liveObj.latestResult;
+      dataByDate[todayStr] = todayResult; // Otomatis masukkan ke tabel tanggal hari ini
+    } else {
+      todayResult = dataByDate[todayStr] || "-";
+    }
+
+    // Render Tabel
     const tbody = document.getElementById('table-body');
     tbody.innerHTML = '';
 
@@ -207,46 +215,35 @@
       tbody.appendChild(tr);
     }
 
-    const todayStr = dates[dates.length - 1].dateStr;
-    let todayResult = dataByDate[todayStr];
-
-    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-") {
-      todayResult = liveObj.latestResult;
-    }
+    // --- CEK WAKTU UNTUK EFEK KELAP-KELIP (Mulai Jam 13:55) ---
+    const now = new Date();
+    const currentHours = now.getHours();
+    const currentMinutes = now.getMinutes();
+    
+    const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+    const targetStartTime = 13 * 60 + 55; // Pukul 13:55 (835 menit)
 
     const container = document.getElementById('number-container');
-    if (todayResult !== "-") {
+
+    if (todayResult === "-" && currentTimeInMinutes >= targetStartTime) {
+      container.classList.add('blinking');
+      renderDigits("----");
+    } else if (todayResult !== "-") {
       container.classList.remove('blinking');
       renderDigits(todayResult);
     } else {
-      container.classList.add('blinking');
+      container.classList.remove('blinking');
       renderDigits("----");
     }
   }
 
-  function renderDigits(str) {
-    const container = document.getElementById('number-container');
-    container.innerHTML = '';
-    const digits = str.padStart(4, '-').split('');
-    digits.forEach(d => {
-      const box = document.createElement('div');
-      box.className = 'digit-box';
-      box.textContent = d;
-      container.appendChild(box);
-    });
-  }
-
+  // Render saat pertama kali dibuka
   renderView();
-</script>
-<script>
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123) return false; // Blokir F12 (Inspect Element)
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
-    }
+
+  // Auto-refresh halaman setiap 1 menit (60000ms) agar saat jam 13:55 web otomatis mengecek data baru
+  setInterval(() => {
+    location.reload();
+  }, 60000);
 </script>
 </body>
 </html>
