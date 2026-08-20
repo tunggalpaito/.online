@@ -17,6 +17,5 @@ const DATA_PAITO_SDYLOTTO = `
 `;
 
 const LIVE_RESULT_SDYLOTTO = {
-  date: "2026-08-21",
   latestResult: "-"
 };
