@@ -57,7 +57,7 @@
     .market-title { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 8px; letter-spacing: 1px; }
     .live-status { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 25px; }
     
-    .number-display { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+    .number-display { display: flex; justify-content: center; gap: 15px; margin: 20px 0; min-height: 75px; }
     .digit-box { 
       width: 65px; height: 75px; 
       background: #12141d; 
@@ -67,6 +67,13 @@
       font-size: 2.6rem; font-weight: 800; 
       color: var(--accent-neon); 
       box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8); 
+      transition: all 0.3s ease; /* Transisi halus saat angka muncul */
+    }
+
+    /* Styling untuk kotak kosong sebelum angka muncul */
+    .digit-box.empty {
+      color: #333;
+      border-color: #1a1f2b;
     }
 
     .blinking .digit-box { animation: blink 0.7s infinite alternate; color: #ffffff; }
@@ -96,11 +103,12 @@
   <div class="live-card">
     <div class="market-title" id="market-name">SDY LOTTO</div>
     <div class="live-status" id="live-status">Jadwal Live : Setiap Hari</div>
+    <!-- Tambahkan class 'number-display' di CSS agar tinggi container tetap terjaga saat animasi -->
     <div class="number-display" id="number-container">
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
+      <div class="digit-box empty">-</div>
+      <div class="digit-box empty">-</div>
+      <div class="digit-box empty">-</div>
+      <div class="digit-box empty">-</div>
     </div>
   </div>
 
@@ -133,12 +141,12 @@
 <script>
   document.getElementById("year").textContent = (new Date()).getFullYear();
 
-  // Pengaman halaman (Blokir Klik Kanan & Inspect Element)
+  // Pengaman halaman
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.onkeydown = function(e) {
-    if (e.keyCode == 123) return false; // F12
-    if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67 || e.keyCode == 75 || e.keyCode == 74)) return false; // Ctrl+Shift+I/C/J
-    if (e.ctrlKey && e.keyCode == 85) return false; // Ctrl+U
+    if (e.keyCode == 123) return false;
+    if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67 || e.keyCode == 75 || e.keyCode == 74)) return false;
+    if (e.ctrlKey && e.keyCode == 85) return false;
   };
 
   function generateDateList() {
@@ -163,10 +171,13 @@
     return dates;
   }
 
+  // Variabel global untuk menyimpan state animasi agar tidak double-render
+  let animationInterval = null;
+  let lastRenderedResult = null;
+
   function renderView() {
     const dates = generateDateList();
     
-    // Mengambil variabel langsung dari file sdylotto.js
     const rawPaito = typeof DATA_PAITO_SDYLOTTO !== 'undefined' ? DATA_PAITO_SDYLOTTO : "";
     const liveObj = typeof LIVE_RESULT_SDYLOTTO !== 'undefined' ? LIVE_RESULT_SDYLOTTO : { latestResult: "-" };
 
@@ -193,12 +204,12 @@
 
     if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-") {
       todayResult = liveObj.latestResult;
-      dataByDate[todayStr] = todayResult; // Otomatis masukkan ke tabel tanggal hari ini
+      dataByDate[todayStr] = todayResult; 
     } else {
       todayResult = dataByDate[todayStr] || "-";
     }
 
-    // Render Tabel
+    // Render Tabel (Tidak pakai animasi)
     const tbody = document.getElementById('table-body');
     tbody.innerHTML = '';
 
@@ -215,32 +226,99 @@
       tbody.appendChild(tr);
     }
 
-    // --- CEK WAKTU UNTUK EFEK KELAP-KELIP (Mulai Jam 13:55) ---
+    // --- LOGIKA WAKTU & ANIMASI ---
     const now = new Date();
     const currentHours = now.getHours();
     const currentMinutes = now.getMinutes();
-    
     const currentTimeInMinutes = currentHours * 60 + currentMinutes;
-    const targetStartTime = 13 * 60 + 55; // Pukul 13:55 (835 menit)
+    const targetStartTime = 13 * 60 + 55; // Pukul 13:55
 
     const container = document.getElementById('number-container');
 
-    if (todayResult === "-" && currentTimeInMinutes >= targetStartTime) {
+    // Hentikan interval animasi sebelumnya jika ada
+    if (animationInterval) clearInterval(animationInterval);
+
+    if (todayResult !== "-" && todayResult.length === 4) {
+      // Jika ada data baru dan formatnya benar (4 digit)
+      container.classList.remove('blinking');
+      
+      // Cek apakah ini hasil baru atau hasil lama yang dirender ulang (akibat auto-refresh)
+      if (lastRenderedResult !== todayResult) {
+        // JIKA HASIL BARU: Jalankan animasi ketik (typing effect)
+        lastRenderedResult = todayResult;
+        animateTypingDigits(todayResult);
+      } else {
+        // JIKA HASIL SAMA (hanya refresh halaman): Tampilkan langsung tanpa animasi
+        renderStaticDigits(todayResult);
+      }
+
+    } else if (currentTimeInMinutes >= targetStartTime) {
+      // Belum ada data, tapi sudah lewat jam 13:55: Kelap-kelip
       container.classList.add('blinking');
-      renderDigits("----");
-    } else if (todayResult !== "-") {
-      container.classList.remove('blinking');
-      renderDigits(todayResult);
+      renderStaticDigits("----");
+      lastRenderedResult = null; // Reset state
     } else {
+      // Belum waktunya: Tampilkan strip diam
       container.classList.remove('blinking');
-      renderDigits("----");
+      renderStaticDigits("----");
+      lastRenderedResult = null; // Reset state
     }
+  }
+
+  // Fungsi untuk merender angka statis (tanpa animasi)
+  function renderStaticDigits(str) {
+    const container = document.getElementById('number-container');
+    container.innerHTML = '';
+    const cleanStr = str.replace(/-/g, ''); // Hapus strip jika ada
+    // Jika string kurang dari 4 (misal "---1"), pad dengan strip di kiri
+    const displayStr = cleanStr.length < 4 ? str.padStart(4, '-') : str;
+    const digits = displayStr.split('');
+    
+    digits.forEach(d => {
+      const box = document.createElement('div');
+      // Jika isinya strip, beri class 'empty'
+      box.className = d === '-' ? 'digit-box empty' : 'digit-box';
+      box.textContent = d;
+      container.appendChild(box);
+    });
+  }
+
+  // --- FUNGSI BARU: ANIMASI KETIK (3 Detik/digit) ---
+  function animateTypingDigits(str) {
+    const container = document.getElementById('number-container');
+    container.innerHTML = '';
+    const digits = str.split('');
+    let currentIndex = 0;
+
+    // 1. Siapkan 4 kotak kosong terlebih dahulu
+    for(let i=0; i<4; i++) {
+      const box = document.createElement('div');
+      box.className = 'digit-box empty';
+      box.textContent = '-';
+      container.appendChild(box);
+    }
+
+    // 2. Ambil semua kotak yang baru dibuat
+    const boxes = container.querySelectorAll('.digit-box');
+
+    // 3. Buat interval untuk mengganti isi kotak setiap 3 detik
+    animationInterval = setInterval(() => {
+      if (currentIndex < 4) {
+        // Ubah kotak saat ini menjadi angka yang sesuai
+        boxes[currentIndex].textContent = digits[currentIndex];
+        boxes[currentIndex].classList.remove('empty');
+        currentIndex++;
+      } else {
+        // Selesai, hentikan interval
+        clearInterval(animationInterval);
+      }
+    }, 3000); // Jeda 3000ms (3 detik)
   }
 
   // Render saat pertama kali dibuka
   renderView();
 
-  // Auto-refresh halaman setiap 1 menit (60000ms) agar saat jam 13:55 web otomatis mengecek data baru
+  // Auto-refresh halaman setiap 1 menit agar skrip mengecek data baru dari file JS
   setInterval(() => {
     location.reload();
   }, 60000);
