@@ -17,6 +17,7 @@ const DATA_PAITO_HKLOTTO = `
 `;
 
 const LIVE_RESULT_HKLOTTO = {
+  date: "2026-08-20",
   latestResult: ""0762
 };
 
