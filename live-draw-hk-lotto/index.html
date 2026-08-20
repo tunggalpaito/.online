@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUNGGAL PAITO LIVE DRAW - HK LOTTO</title>
+  <style>
+    :root {
+      --bg-amoled: #000000;
+      --card-bg: #0b0c10;
+      --border-color: #1f2833;
+      --accent-gold: #ffb703;
+      --accent-neon: #00f5d4;
+      --text-main: #ffffff;
+      --text-muted: #888888;
+      --shadow-glow: rgba(0, 245, 212, 0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
+    body { background-color: var(--bg-amoled); color: var(--text-main); padding: 25px 10px; min-height: 100vh; }
+    .container { max-width: 850px; margin: 0 auto; }
+    
+    h1 { 
+      text-align: center; 
+      margin-bottom: 30px; 
+      font-size: 2rem; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      text-shadow: 0 0 12px rgba(255, 183, 3, 0.4); 
+    }
+    
+    h1 a {
+      color: var(--accent-gold);
+      text-decoration: none;
+      transition: opacity 0.3s ease;
+    }
+    h1 a:hover {
+      opacity: 0.8;
+    }
+
+    .live-card { 
+      background: var(--card-bg); 
+      border: 1px solid var(--border-color); 
+      border-radius: 14px; 
+      padding: 30px 20px; 
+      text-align: center; 
+      margin-bottom: 30px; 
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.9); 
+      position: relative; 
+      overflow: hidden; 
+    }
+    .live-card::before { 
+      content: ''; 
+      position: absolute; 
+      top: 0; left: 0; right: 0; height: 3px; 
+      background: linear-gradient(90deg, transparent, var(--accent-gold), transparent); 
+    }
+    
+    .market-title { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 8px; letter-spacing: 1px; }
+    .live-status { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 25px; }
+    
+    .number-display { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+    .digit-box { 
+      width: 65px; height: 75px; 
+      background: #12141d; 
+      border: 1px solid var(--border-color); 
+      border-radius: 12px; 
+      display: flex; align-items: center; justify-content: center; 
+      font-size: 2.6rem; font-weight: 800; 
+      color: var(--accent-neon); 
+      box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8); 
+    }
+
+    .blinking .digit-box { animation: blink 0.7s infinite alternate; color: #ffffff; }
+    @keyframes blink { 
+      0% { opacity: 0.2; background: #12141d; border-color: var(--border-color); box-shadow: none; } 
+      100% { opacity: 1; background: #1e2230; border-color: var(--accent-neon); box-shadow: 0 0 18px var(--shadow-glow); } 
+    }
+
+    .table-container { overflow-x: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 30px; }
+    table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.95rem; }
+    th, td { padding: 14px 10px; border-bottom: 1px solid var(--border-color); }
+    th { background: #12141d; color: var(--accent-gold); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+    tr:nth-child(even) { background: #08090c; }
+    tr:hover { background: #141722; }
+
+    .seo-keywords { background: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.7; }
+    .seo-keywords h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1rem; }
+    
+    footer { text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); line-height: 1.8; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1><a href="https://tunggalpaito.online/" target="_blank">TUNGGAL PAITO</a><br><span style="font-size: 1.5rem; color: #fff;">LIVE DRAW</span></h1>
+
+  <div class="live-card">
+    <div class="market-title" id="market-name">HK LOTTO</div>
+    <div class="live-status" id="live-status">Jadwal Live: Setiap Hari</div>
+    <div class="number-display" id="number-container">
+      <div class="digit-box">-</div>
+      <div class="digit-box">-</div>
+      <div class="digit-box">-</div>
+      <div class="digit-box">-</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Hari</th>
+          <th>Prize 1</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <div class="seo-keywords">
+    <h3>Paito Warna & Live Result HK Lotto</h3>
+    <p>Tunggal Paito Live Draw menyediakan data pengeluaran angka jitu dan live result HK Lotto tercepat setiap hari.</p>
+  </div>
+
+  <footer>
+    <p>&copy; <span id="year"></span> <a href="https://tunggalpaito.online/" style="color:#ffb703;text-decoration:none">TUNGGAL PAITO</a> All Rights Reserved.</p>
+  </footer>
+</div>
+
+
+<script src="/result/hklotto.js"></script>
+
+<script>
+  document.getElementById("year").textContent = (new Date()).getFullYear();
+
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  document.onkeydown = function(e) {
+    if (123 == e.keyCode) return false;
+    if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) return false;
+    if (e.ctrlKey && e.shiftKey && e.keyCode == "C".charCodeAt(0)) return false;
+    if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) return false;
+    if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) return false;
+  };
+
+  function generateDateList() {
+    const dates = [];
+    const daysName = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const today = new Date();
+
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const date = String(d.getDate()).padStart(2, '0');
+      
+      dates.push({
+        dateStr: `${year}-${month}-${date}`,
+        dayName: daysName[d.getDay()],
+        dayOfWeek: d.getDay()
+      });
+    }
+    return dates;
+  }
+
+  function renderView() {
+    const dates = generateDateList();
+    
+
+    const rawPaito = typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "";
+    const liveObj = typeof LIVE_RESULT_HKLOTTO !== 'undefined' ? LIVE_RESULT_HKLOTTO : { latestResult: "-" };
+
+    let numberList = rawPaito
+      .replace(/\s+/g, '')
+      .split(',')
+      .filter(n => n.length > 0);
+
+    const dataByDate = {};
+    let numIndex = 0;
+
+    for (let i = 0; i < dates.length; i++) {
+      const d = dates[i];
+      if (numIndex < numberList.length) {
+        dataByDate[d.dateStr] = numberList[numIndex];
+        numIndex++;
+      } else {
+        dataByDate[d.dateStr] = "-";
+      }
+    }
+
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = '';
+
+    for (let i = dates.length - 1; i >= 0; i--) {
+      const d = dates[i];
+      const result = dataByDate[d.dateStr];
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${d.dateStr}</td>
+        <td>${d.dayName}</td>
+        <td style="font-weight:bold; color:${result !== '-' ? 'var(--accent-neon)' : 'inherit'}">${result}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    const todayStr = dates[dates.length - 1].dateStr;
+    let todayResult = dataByDate[todayStr];
+
+    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-") {
+      todayResult = liveObj.latestResult;
+    }
+
+    const container = document.getElementById('number-container');
+    if (todayResult !== "-") {
+      container.classList.remove('blinking');
+      renderDigits(todayResult);
+    } else {
+      container.classList.add('blinking');
+      renderDigits("----");
+    }
+  }
+
+  function renderDigits(str) {
+    const container = document.getElementById('number-container');
+    container.innerHTML = '';
+    const digits = str.padStart(4, '-').split('');
+    digits.forEach(d => {
+      const box = document.createElement('div');
+      box.className = 'digit-box';
+      box.textContent = d;
+      container.appendChild(box);
+    });
+  }
+
+  renderView();
+</script>
+<script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if(e.keyCode == 123) return false; // Blokir F12 (Inspect Element)
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+    }
+</script>
+</body>
+</html>
