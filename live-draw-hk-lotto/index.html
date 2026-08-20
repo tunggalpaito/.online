@@ -34,9 +34,7 @@
       text-decoration: none;
       transition: opacity 0.3s ease;
     }
-    h1 a:hover {
-      opacity: 0.8;
-    }
+    h1 a:hover { opacity: 0.8; }
 
     .live-card { 
       background: var(--card-bg); 
@@ -59,7 +57,7 @@
     .market-title { font-size: 1.8rem; font-weight: 800; color: var(--accent-gold); margin-bottom: 8px; letter-spacing: 1px; }
     .live-status { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 25px; }
     
-    .number-display { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+    .number-display { display: flex; justify-content: center; gap: 15px; margin: 20px 0; min-height: 75px; }
     .digit-box { 
       width: 65px; height: 75px; 
       background: #12141d; 
@@ -69,6 +67,12 @@
       font-size: 2.6rem; font-weight: 800; 
       color: var(--accent-neon); 
       box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8); 
+      transition: all 0.3s ease; 
+    }
+
+    .digit-box.empty {
+      color: #333;
+      border-color: #1a1f2b;
     }
 
     .blinking .digit-box { animation: blink 0.7s infinite alternate; color: #ffffff; }
@@ -97,12 +101,12 @@
 
   <div class="live-card">
     <div class="market-title" id="market-name">HK LOTTO</div>
-    <div class="live-status" id="live-status">Jadwal Live: Setiap Hari</div>
+    <div class="live-status" id="live-status">Jadwal Live : Setiap Hari</div>
     <div class="number-display" id="number-container">
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
-      <div class="digit-box">-</div>
+      <div class="digit-box empty">-</div>
+      <div class="digit-box empty">-</div>
+      <div class="digit-box empty">-</div>
+      <div class="digit-box empty">-</div>
     </div>
   </div>
 
@@ -129,19 +133,18 @@
   </footer>
 </div>
 
-
+<!-- Panggil file JS HK Lotto -->
 <script src="/result/hklotto.js"></script>
 
 <script>
   document.getElementById("year").textContent = (new Date()).getFullYear();
 
-  document.addEventListener("contextmenu", e => e.preventDefault());
+  // Pengaman halaman
+  document.addEventListener('contextmenu', e => e.preventDefault());
   document.onkeydown = function(e) {
-    if (123 == e.keyCode) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == "C".charCodeAt(0)) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) return false;
-    if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) return false;
+    if (e.keyCode == 123) return false;
+    if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67 || e.keyCode == 75 || e.keyCode == 74)) return false;
+    if (e.ctrlKey && e.keyCode == 85) return false;
   };
 
   function generateDateList() {
@@ -166,10 +169,12 @@
     return dates;
   }
 
+  let animationInterval = null;
+  let lastRenderedResult = null;
+
   function renderView() {
     const dates = generateDateList();
     
-
     const rawPaito = typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "";
     const liveObj = typeof LIVE_RESULT_HKLOTTO !== 'undefined' ? LIVE_RESULT_HKLOTTO : { latestResult: "-" };
 
@@ -191,6 +196,16 @@
       }
     }
 
+    const todayStr = dates[dates.length - 1].dateStr;
+    let todayResult = "-";
+
+    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-") {
+      todayResult = liveObj.latestResult;
+      dataByDate[todayStr] = todayResult; 
+    } else {
+      todayResult = dataByDate[todayStr] || "-";
+    }
+
     const tbody = document.getElementById('table-body');
     tbody.innerHTML = '';
 
@@ -207,46 +222,85 @@
       tbody.appendChild(tr);
     }
 
-    const todayStr = dates[dates.length - 1].dateStr;
-    let todayResult = dataByDate[todayStr];
-
-    if (liveObj && liveObj.latestResult && liveObj.latestResult !== "-") {
-      todayResult = liveObj.latestResult;
-    }
+    const now = new Date();
+    const currentHours = now.getHours();
+    const currentMinutes = now.getMinutes();
+    const currentTimeInMinutes = currentHours * 60 + currentMinutes;
+    
+    // Jadwal Live baru: Pukul 22:55 (22 * 60 + 55 = 1375 menit)
+    const targetStartTime = 22 * 60 + 55; 
 
     const container = document.getElementById('number-container');
-    if (todayResult !== "-") {
+
+    if (animationInterval) clearInterval(animationInterval);
+
+    if (todayResult !== "-" && todayResult.length === 4) {
       container.classList.remove('blinking');
-      renderDigits(todayResult);
-    } else {
+      
+      if (lastRenderedResult !== todayResult) {
+        lastRenderedResult = todayResult;
+        animateTypingDigits(todayResult);
+      } else {
+        renderStaticDigits(todayResult);
+      }
+
+    } else if (currentTimeInMinutes >= targetStartTime) {
       container.classList.add('blinking');
-      renderDigits("----");
+      renderStaticDigits("----");
+      lastRenderedResult = null;
+    } else {
+      container.classList.remove('blinking');
+      renderStaticDigits("----");
+      lastRenderedResult = null;
     }
   }
 
-  function renderDigits(str) {
+  function renderStaticDigits(str) {
     const container = document.getElementById('number-container');
     container.innerHTML = '';
-    const digits = str.padStart(4, '-').split('');
+    const cleanStr = str.replace(/-/g, '');
+    const displayStr = cleanStr.length < 4 ? str.padStart(4, '-') : str;
+    const digits = displayStr.split('');
+    
     digits.forEach(d => {
       const box = document.createElement('div');
-      box.className = 'digit-box';
+      box.className = d === '-' ? 'digit-box empty' : 'digit-box';
       box.textContent = d;
       container.appendChild(box);
     });
   }
 
-  renderView();
-</script>
-<script>
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123) return false; // Blokir F12 (Inspect Element)
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+  function animateTypingDigits(str) {
+    const container = document.getElementById('number-container');
+    container.innerHTML = '';
+    const digits = str.split('');
+    let currentIndex = 0;
+
+    for(let i=0; i<4; i++) {
+      const box = document.createElement('div');
+      box.className = 'digit-box empty';
+      box.textContent = '-';
+      container.appendChild(box);
     }
+
+    const boxes = container.querySelectorAll('.digit-box');
+
+    animationInterval = setInterval(() => {
+      if (currentIndex < 4) {
+        boxes[currentIndex].textContent = digits[currentIndex];
+        boxes[currentIndex].classList.remove('empty');
+        currentIndex++;
+      } else {
+        clearInterval(animationInterval);
+      }
+    }, 3000); // Jeda 3 detik per digit
+  }
+
+  renderView();
+
+  setInterval(() => {
+    location.reload();
+  }, 60000);
 </script>
 </body>
 </html>
