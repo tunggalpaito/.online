@@ -17,6 +17,6 @@ const DATA_PAITO_HKLOTTO = `
 `;
 
 const LIVE_RESULT_HKLOTTO = {
-  latestResult: "0762"
+  latestResult: "-"
 };
 
