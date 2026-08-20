@@ -178,21 +178,22 @@
     const rawPaito = typeof DATA_PAITO_HKLOTTO !== 'undefined' ? DATA_PAITO_HKLOTTO : "";
     const liveObj = typeof LIVE_RESULT_HKLOTTO !== 'undefined' ? LIVE_RESULT_HKLOTTO : { latestResult: "-" };
 
-    // Membersihkan spasi, baris baru (\n), dan koma agar menjadi array angka yang bersih
+    // Membersihkan spasi, baris baru (\n), dan koma
     let numberList = rawPaito
       .replace(/[\s,\n]+/g, ',')
       .split(',')
       .filter(n => n.length > 0);
 
     const dataByDate = {};
-    let numIndex = 0;
+    
+    // Ambil data dari baris paling belakang agar sinkron dengan tanggal kemarin mundur ke bawah
+    let numIndex = numberList.length - 1;
 
-    // Memasukkan data paito ke tanggal-tanggal sebelumnya
-    for (let i = 0; i < dates.length - 1; i++) {
+    for (let i = dates.length - 2; i >= 0; i--) {
       const d = dates[i];
-      if (numIndex < numberList.length) {
+      if (numIndex >= 0) {
         dataByDate[d.dateStr] = numberList[numIndex];
-        numIndex++;
+        numIndex--;
       } else {
         dataByDate[d.dateStr] = "-";
       }
