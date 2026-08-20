@@ -102,7 +102,8 @@ Silakan pakai angka kuat hk hari ini dari <b>Tunggal Paito</b>. Jika cocok, teta
 <script>
 const TP_BIN_ID="6a853dafda38895dfef5a3e2";
 const TP_MASTER_KEY="$2a$10$kV7hv2G5X9H7o8vOKijQA.9E3P2DflLZrNMTTg/GH9406QDKmKzQS";
-const TP_API_URL=`https://api.jsonbin.io/v3/b/${TP_BIN_ID}/latest`;
+const TP_API_URL=`https://api.allorigins.win/raw?url=` + encodeURIComponent(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}/latest`);
+const TP_DIRECT_URL=`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`;
 const TP_HALAMAN_ID="cambodia";
 const TP_DISCORD_WEBHOOK="https://discord.com/api/webhooks/1539565887210790942/hBkTlCUM-KHDOv85jpDvrZshfAfk903muZhYiXjohgro_PtcrkVs_sgvtfZfDkmi1c1V";
 const TP_NAMA_ADMIN="Admin";
@@ -139,7 +140,7 @@ function tpTutupFormBalasNested(t,e){let a=document.getElementById(t);if(a){a.st
 
 async function tpMuatPublik(t=!1){
     try{
-        let e=await fetch(TP_API_URL),a=((await e.json()).record||{}).cambodia||[],n=JSON.stringify(a);
+        let e=await fetch(TP_API_URL + "&t=" + new Date().getTime()),a=((await e.json()).record||{}).cambodia||[],n=JSON.stringify(a);
         if(!t&&n===lastRenderedDataString)return;
         let o=tpHitungTotalSubItem(a),i=!t&&-1!==tpTotalItemBarisLama&&o>tpTotalItemBarisLama;
         lastRenderedDataString=n,dataKomentarCache=a,i&&tpMainkanSuaraNotifikasi(),tpTotalItemBarisLama=o;
@@ -166,10 +167,10 @@ async function tpKirimPublik(){
     o.innerText="Mengirim...",o.disabled=!0;
     let i=new Date,r=i.toLocaleDateString("en-CA"),l=`${i.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})}, ${i.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})} WIB`;
     try{
-        let n=await fetch(TP_API_URL),o=(await n.json()).record||{};
+        let n=await fetch(TP_API_URL + "&t=" + new Date().getTime()),o=(await n.json()).record||{};
         o.cambodia||(o.cambodia=[]),o.cambodia.unshift({nama:e,email:a,isi:t,waktu:l,tanggal:r,replies:[]});
         
-        let putRes=await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`,{
+        let putRes=await fetch(TP_DIRECT_URL,{
             method:"PUT",
             headers:{
                 "Content-Type":"application/json",
@@ -200,11 +201,11 @@ async function tpKirimBalasan(t,e,a,n,o,i){
     localStorage.setItem("tp_saved_nama",p),localStorage.setItem("tp_saved_email",m);
     let u=new Date,f=`${u.toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})}, ${u.toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"})} WIB`;
     try{
-        let a=await fetch(TP_API_URL),n=(await a.json()).record||{},o=n.cambodia||[];
+        let a=await fetch(TP_API_URL + "&t=" + new Date().getTime()),n=(await a.json()).record||{},o=n.cambodia||[];
         if(o[t]){
             o[t].replies||(o[t].replies=[]),o[t].replies.push({nama:p,email:m,isi:s,waktu:f});
             
-            let putRes=await fetch(`https://api.jsonbin.io/v3/b/${TP_BIN_ID}`,{
+            let putRes=await fetch(TP_DIRECT_URL,{
                 method:"PUT",
                 headers:{
                     "Content-Type":"application/json",
