@@ -85,6 +85,12 @@ Silakan pakai angka kuat hk hari ini dari <b>Tunggal Paito</b>. Jika cocok, teta
 </div>
 <button onclick="tpKirimPublik()" id="tp-btn-submit" style="background:#007bff;color:#fff;border:2px solid #0056b3;padding:10px 20px;font-weight:700;cursor:pointer;border-radius:3px;font-size:14px;width:100%;max-width:100%;box-sizing:border-box;text-shadow:0 0 5px rgba(0,0,0,.5)">Kirim Komentar</button>
 
+<!-- Kotak Notifikasi Batas Limit & Link WhatsApp Admin -->
+<div id="tp-notif-limit" style="display: none; background: #222; border: 1px dashed #ff3333; color: #ff3333; padding: 12px; margin-top: 10px; border-radius: 3px; font-size: 13px; font-family: Arial, sans-serif; text-align: center; line-height: 1.5;">
+    Batas kirim komentar Anda sudah habis (maksimal 10x dalam 24 jam).<br>
+    Bosku info lanjut <a href="https://wa.me/6288970383950" target="_blank" style="color: #39ff14; font-weight: bold; text-decoration: underline;">Kirim pesan ke ADMIN di WhatsApp</a>
+</div>
+
 <!-- Teks notifikasi reload yang awalnya tersembunyi (display: none) dan otomatis muncul setelah kirim komentar -->
 <div id="tp-notif-reload" style="display: none; background: #222; border: 1px dashed #39ff14; color: #39ff14; padding: 10px; margin-top: 10px; border-radius: 3px; font-size: 12px; font-family: Arial, sans-serif; text-align: center;">
     Silahkan reload halaman jika komentar bosku belum muncul
@@ -112,7 +118,7 @@ Silakan pakai angka kuat hk hari ini dari <b>Tunggal Paito</b>. Jika cocok, teta
 const firebaseConfig={apiKey:"AIzaSyCUaQixhT9BARrtqM6roT73FbDihy8WLAA",authDomain:"komentar-web-f9e2e.firebaseapp.com",databaseURL:"https://komentar-web-f9e2e-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"komentar-web-f9e2e",storageBucket:"komentar-web-f9e2e.firebasestorage.app",messagingSenderId:"126095632925",appId:"1:126095632925:web:77383efdc2daea2e7034f4"};
 firebase.apps.length||firebase.initializeApp(firebaseConfig);
 const db=firebase.database(),
-      TP_HALAMAN_ID="hk", /* Ubah teks ini jika dipasang di halaman lain (misal: "singapura", "hongkong") */
+      TP_HALAMAN_ID="hk",
       TP_DISCORD_WEBHOOK="https://discord.com/api/webhooks/1539565887210790942/hBkTlCUM-KHDOv85jpDvrZshfAfk903muZhYiXjohgro_PtcrkVs_sgvtfZfDkmi1c1V",
       TP_NAMA_ADMIN="Admin",
       TP_EMAIL_ADMIN="tunggalpaito@gmail.com";
@@ -220,6 +226,54 @@ function tpTutupFormBalasNested(e,t){
     }
 }
 
+function tpCekBatasLimitHarian(emailUser) {
+    if (!emailUser || emailUser === TP_EMAIL_ADMIN) return false; // Admin bebas limit
+    let dataLimit = JSON.parse(localStorage.getItem("tp_limit_komentar") || "{}");
+    let sekarang = new Date().getTime();
+    
+    // Jika data lama sudah lebih dari 24 jam (86400000 ms), reset
+    if (!dataLimit.waktuMulai || (sekarang - dataLimit.waktuMulai) > 86400000) {
+        dataLimit = { waktuMulai: sekarang, jumlah: 0 };
+        localStorage.setItem("tp_limit_komentar", JSON.stringify(dataLimit));
+        return false;
+    }
+    
+    return dataLimit.jumlah >= 10;
+}
+
+function tpTambahHitunganLimit(emailUser) {
+    if (!emailUser || emailUser === TP_EMAIL_ADMIN) return;
+    let dataLimit = JSON.parse(localStorage.getItem("tp_limit_komentar") || "{}");
+    let sekarang = new Date().getTime();
+    
+    if (!dataLimit.waktuMulai || (sekarang - dataLimit.waktuMulai) > 86400000) {
+        dataLimit = { waktuMulai: sekarang, jumlah: 1 };
+    } else {
+        dataLimit.jumlah = (dataLimit.jumlah || 0) + 1;
+    }
+    localStorage.setItem("tp_limit_komentar", JSON.stringify(dataLimit));
+}
+
+function tpPeriksaTombolLimitSaatKetik() {
+    let a = document.getElementById("tp-komentar-email").value.trim().toLowerCase();
+    let btnSubmit = document.getElementById("tp-btn-submit");
+    let notifLimit = document.getElementById("tp-notif-limit");
+    
+    if (tpCekBatasLimitHarian(a)) {
+        btnSubmit.disabled = true;
+        btnSubmit.style.background = "#555";
+        btnSubmit.style.cursor = "not-allowed";
+        btnSubmit.innerText = "Batas Komentar Habis";
+        if (notifLimit) notifLimit.style.display = "block";
+    } else {
+        btnSubmit.disabled = false;
+        btnSubmit.style.background = "#007bff";
+        btnSubmit.style.cursor = "pointer";
+        btnSubmit.innerText = "Kirim Komentar";
+        if (notifLimit) notifLimit.style.display = "none";
+    }
+}
+
 function tpMuatPublik(){
     db.ref("komentar/" + TP_HALAMAN_ID).once("value").then((e)=>{
         let t=e.val()||[];
@@ -254,6 +308,12 @@ async function tpKirimPublik(){
         
     if(!e||!t||!a)return void alert("Komentar, Nama, dan Email wajib diisi!");
     
+    // Cek limit sebelum kirim
+    if(tpCekBatasLimitHarian(a)){
+        tpPeriksaTombolLimitSaatKetik();
+        return;
+    }
+    
     let n=localStorage.getItem("tp_saved_email")?localStorage.getItem("tp_saved_email").toLowerCase():"";
     if(a===TP_EMAIL_ADMIN&&n!==TP_EMAIL_ADMIN)return void alert("Email ini adalah email khusus Admin! Silakan gunakan email lain.");
     
@@ -275,19 +335,22 @@ async function tpKirimPublik(){
         o.push({nama:t,email:a,isi:e,waktu:l,tanggal:r,replies:[]});
         await n.set(o);
         
+        // Catat penambahan kuota limit harian
+        tpTambahHitunganLimit(a);
+        
         document.getElementById("tp-komentar-isi").value="";
         
-        // Memunculkan teks instruksi reload secara otomatis setelah berhasil kirim
         let notifEl = document.getElementById("tp-notif-reload");
         if(notifEl){ notifEl.style.display = "block"; }
 
         await kirimNotifDiscord(`💬 **Komentar Baru di Room ${TP_HALAMAN_ID.toUpperCase()}!**\n**Nama:** ${t}\n**Pesan:**\n${e}`);
         
         tpMuatPublik();
+        tpPeriksaTombolLimitSaatKetik();
     }catch(e){
         alert("Terjadi kesalahan koneksi saat mengirim komentar.");
+        o.innerText="Kirim Komentar",o.disabled=!1;
     }
-    o.innerText="Kirim Komentar",o.disabled=!1;
 }
 
 async function tpKirimBalasan(e,t,a,n,o,i){
@@ -327,7 +390,13 @@ window.addEventListener("DOMContentLoaded",(()=>{
     let e=localStorage.getItem("tp_saved_nama"),
         t=localStorage.getItem("tp_saved_email");
     e&&(document.getElementById("tp-komentar-nama").value=e);
-    t&&(document.getElementById("tp-komentar-email").value=t);
+    if(t){
+        document.getElementById("tp-komentar-email").value=t;
+        tpPeriksaTombolLimitSaatKetik();
+    }
+    
+    // Cek limit saat pengguna mengetik email mereka
+    document.getElementById("tp-komentar-email").addEventListener("input", tpPeriksaTombolLimitSaatKetik);
 }));
 
 tpMuatPublik();
