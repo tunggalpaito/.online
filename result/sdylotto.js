@@ -17,5 +17,5 @@ const DATA_PAITO_SDYLOTTO = `
 `;
 
 const LIVE_RESULT_SDYLOTTO = {
-  latestResult: "7220"
+  latestResult: "-"
 };
